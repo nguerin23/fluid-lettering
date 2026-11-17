@@ -176,11 +176,16 @@ function getHandwrittenSVG(){
   const weight=state.thickness;
   let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
   const glyphPaths=[];
+  const visibleGlyphs=[];
   for(let i=0;i<chars.length;i++){
     const item=chars[i], d=item.outline[1];
     const x=item.x+item.dx,y=item.dy;
     const b=data.bounds[String(item.gid)];
-    if(b){minX=Math.min(minX,x+b[0]);maxX=Math.max(maxX,x+b[2]);minY=Math.min(minY,y+b[1]);maxY=Math.max(maxY,y+b[3]);}
+    if(b){
+      minX=Math.min(minX,x+b[0]);maxX=Math.max(maxX,x+b[2]);
+      minY=Math.min(minY,y+b[1]);maxY=Math.max(maxY,y+b[3]);
+      if(d && !item.mark) visibleGlyphs.push({x,y,b});
+    }
     if(!d)continue;
     glyphPaths.push(`<path id="tracé-${i+1}" data-glyph="${item.gid}" d="${d}" transform="translate(${x.toFixed(2)} ${y.toFixed(2)})" fill="#fff" stroke="#fff" stroke-width="${weight}" stroke-linecap="round" stroke-linejoin="round" paint-order="stroke fill"/>`);
   }
@@ -196,7 +201,22 @@ function getHandwrittenSVG(){
   const stops=palettes[state.palette].map((color,index)=>`<stop offset="${index*25}%" stop-color="${color}"/>`).join('');
   const bg=state.transparent?'':`<rect x="${viewMinX}" y="${viewMinY}" width="${viewW}" height="${viewH}" fill="#fff"/>`;
   const twist=state.seed===11?0:(seeded(19)-0.5)*2;
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${Math.ceil(viewW)}" height="${Math.ceil(viewH)}" viewBox="${viewMinX.toFixed(2)} ${viewMinY.toFixed(2)} ${viewW.toFixed(2)} ${viewH.toFixed(2)}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Lettrage manuscrit ${escapeXML(word)}"><title>${escapeXML(word)} — lettering manuscrit vectoriel</title><desc>Contours de Pecita (Philippe Cochy, SIL OFL 1.1). Dégradé horizontal continu sur tout le mot. Chemins SVG éditables dans un masque alpha.</desc><defs><linearGradient id="word-gradient" x1="${minX}" y1="0" x2="${maxX}" y2="0" gradientUnits="userSpaceOnUse">${stops}</linearGradient><mask id="word-mask" x="${viewMinX.toFixed(2)}" y="${viewMinY.toFixed(2)}" width="${viewW.toFixed(2)}" height="${viewH.toFixed(2)}" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" mask-type="alpha" style="mask-type:alpha"><g transform="rotate(${twist.toFixed(2)} ${(minX+maxX)/2} ${-(minY+maxY)/2}) skewX(${state.slant})"><g transform="scale(1,-1)">${glyphPaths.join('')}</g></g></mask></defs>${bg}<rect x="${viewMinX.toFixed(2)}" y="${viewMinY.toFixed(2)}" width="${viewW.toFixed(2)}" height="${viewH.toFixed(2)}" fill="url(#word-gradient)" mask="url(#word-mask)"/></svg>`;
+  let gradX1=minX, gradY1=-(minY+maxY)*0.5, gradX2=maxX, gradY2=-(minY+maxY)*0.5;
+  if(visibleGlyphs.length){
+    const first=visibleGlyphs[0], last=visibleGlyphs[visibleGlyphs.length-1];
+    const firstCx=first.x+(first.b[0]+first.b[2])*.5;
+    const lastCx=last.x+(last.b[0]+last.b[2])*.5;
+    const firstCy=-(first.y+(first.b[1]+first.b[3])*.5);
+    const lastCy=-(last.y+(last.b[1]+last.b[3])*.5);
+    const dx=lastCx-firstCx, dy=lastCy-firstCy;
+    const length=Math.hypot(dx,dy)||1;
+    const pad=Math.max(24, weight*.8);
+    gradX1=firstCx-(dx/length)*pad;
+    gradY1=firstCy-(dy/length)*pad;
+    gradX2=lastCx+(dx/length)*pad;
+    gradY2=lastCy+(dy/length)*pad;
+  }
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${Math.ceil(viewW)}" height="${Math.ceil(viewH)}" viewBox="${viewMinX.toFixed(2)} ${viewMinY.toFixed(2)} ${viewW.toFixed(2)} ${viewH.toFixed(2)}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Lettrage manuscrit ${escapeXML(word)}"><title>${escapeXML(word)} — lettering manuscrit vectoriel</title><desc>Contours de Pecita (Philippe Cochy, SIL OFL 1.1). Dégradé continu aligné sur la ligne du mot. Chemins SVG éditables dans un masque alpha.</desc><defs><linearGradient id="word-gradient" x1="${gradX1.toFixed(2)}" y1="${gradY1.toFixed(2)}" x2="${gradX2.toFixed(2)}" y2="${gradY2.toFixed(2)}" gradientUnits="userSpaceOnUse">${stops}</linearGradient><mask id="word-mask" x="${viewMinX.toFixed(2)}" y="${viewMinY.toFixed(2)}" width="${viewW.toFixed(2)}" height="${viewH.toFixed(2)}" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" mask-type="alpha" style="mask-type:alpha"><g transform="rotate(${twist.toFixed(2)} ${(minX+maxX)/2} ${-(minY+maxY)/2}) skewX(${state.slant})"><g transform="scale(1,-1)">${glyphPaths.join('')}</g></g></mask></defs>${bg}<rect x="${viewMinX.toFixed(2)}" y="${viewMinY.toFixed(2)}" width="${viewW.toFixed(2)}" height="${viewH.toFixed(2)}" fill="url(#word-gradient)" mask="url(#word-mask)"/></svg>`;
 }
 
 function maintainLetterProportions(){
