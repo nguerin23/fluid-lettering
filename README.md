@@ -12,6 +12,12 @@ Un atelier de lettering avec un **bouton « Générer »** et une sortie en **vr
 - Saisie d'un mot, puis clic sur **Générer le lettering** (aucun rendu recalculé à chaque frappe).
 - Le paramètre URL `?mot=Nicolas` préremplit le mot.
 
+## Proportions et dégradé global
+
+Les lettres conservent leur ratio et leur hauteur même lorsque le mot est long. L'aperçu propose un défilement horizontal, sans écrasement vertical. Les exports SVG/PNG conservent les proportions d'origine.
+
+Un **seul dégradé horizontal** traverse la totalité du mot, via un masque SVG vectoriel contenant tous les tracés. La couleur ne redémarre plus à chaque lettre.
+
 ## Utilisation locale
 
 Conserver `index.html` et `pecita-outlines.js` **dans le même dossier**, puis ouvrir `index.html` dans un navigateur avec JavaScript activé. Le site fonctionne sans dépendance externe.
