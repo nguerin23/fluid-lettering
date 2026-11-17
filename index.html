@@ -70,7 +70,7 @@
   <section class="card" aria-label="Éditeur de lettering">
     <div class="canvas-top"><span class="label-title">Ton lettrage</span><span id="liveStatus" class="live" aria-live="polite">Aperçu en direct</span></div>
     <div class="stage" id="stage"><div id="preview" role="img" aria-label="Lettrage vectoriel"><span class="empty">Chargement du tracé…</span></div></div>
-    <div class="stage-bottom"><span class="hint">SVG vectoriel · dégradé continu · défilement horizontal si nécessaire</span><div class="actions">
+    <div class="stage-bottom"><span class="hint">SVG vectoriel · couleur suivant les courbes · superposition subtile</span><div class="actions">
       <button id="downloadPNG" class="btn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>PNG</button>
       <button id="downloadSVG" class="btn primary" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>SVG</button>
     </div></div>
@@ -92,8 +92,39 @@ const state={word:'Nicolas',thickness:28,fusion:0,slant:0,palette:'jello',transp
 let currentSvg='',svgDimensions={width:1000,height:600},lastGeneratedWord='Nicolas',pendingFrame=0,toastTimer=0;
 function escapeXML(s){return String(s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]));}
 function seeded(n){const v=Math.sin(n*87.12+state.seed*19.31)*43758.5453;return v-Math.floor(v);}
-/* Les données de courbes manuscrites sont issues de Pecita sous licence SIL OFL 1.1.
-   Les exports SVG contiennent de vrais chemins et un dégradé continu sur toute la composition. */
+/* Les contours manuscrits proviennent de Pecita, sous licence SIL OFL 1.1.
+   Chaque contour est également échantillonné dans l'ordre de ses courbes de Bézier :
+   la coloration parcourt les lignes du dessin, et les traits superposés se mélangent légèrement.
+   Le résultat exporté reste un SVG avec des chemins, sans police ni image embarquée. */
+const contourCache=new Map();
+const SVG_NS='http://www.w3.org/2000/svg';
+function contourTrace(id, pathData){
+  const key=String(id);
+  if(contourCache.has(key))return contourCache.get(key);
+  const path=document.createElementNS(SVG_NS,'path');
+  path.setAttribute('d',pathData);
+  const length=path.getTotalLength();
+  if(!Number.isFinite(length)||length<1){const blank={length:0,points:[]};contourCache.set(key,blank);return blank;}
+  // Sample the *actual* Bézier contours. Gaps between independent subpaths are skipped.
+  // Cap complexity so live previews remain responsive, including on a phone.
+  const segments=Math.max(6,Math.min(100,Math.ceil(length/45)));
+  const points=[];
+  for(let i=0;i<=segments;i++){
+    const pos=length*i/segments,p=path.getPointAtLength(pos);
+    points.push([p.x,p.y,pos]);
+  }
+  const result={length,points};
+  contourCache.set(key,result);
+  return result;
+}
+function colorAtProgress(t){
+  const colors=palettes[state.palette];
+  const x=Math.max(0,Math.min(.999999,t))*(colors.length-1);
+  const a=Math.floor(x),b=Math.min(colors.length-1,a+1),u=x-a;
+  function rgb(hex){return [1,3,5].map(i=>parseInt(hex.slice(i,i+2),16));}
+  const ca=rgb(colors[a]),cb=rgb(colors[b]);
+  return '#'+ca.map((v,i)=>Math.round(v+(cb[i]-v)*u).toString(16).padStart(2,'0')).join('');
+}
 function getHandwrittenSVG(){
   const data=window.FLUID_HANDWRITTEN_DATA;
   if(!data) throw new Error('Les tracés manuscrits ne sont pas chargés. Recharge la page.');
@@ -176,6 +207,7 @@ function getHandwrittenSVG(){
   const weight=state.thickness;
   let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
   const glyphPaths=[];
+  const paintedContours=[];
   const visibleGlyphs=[];
   for(let i=0;i<chars.length;i++){
     const item=chars[i], d=item.outline[1];
@@ -187,7 +219,9 @@ function getHandwrittenSVG(){
       if(d && !item.mark) visibleGlyphs.push({x,y,b});
     }
     if(!d)continue;
-    glyphPaths.push(`<path id="tracé-${i+1}" data-glyph="${item.gid}" d="${d}" transform="translate(${x.toFixed(2)} ${y.toFixed(2)})" fill="#fff" stroke="#fff" stroke-width="${weight}" stroke-linecap="round" stroke-linejoin="round" paint-order="stroke fill"/>`);
+    const transform=`translate(${x.toFixed(2)} ${y.toFixed(2)})`;
+    glyphPaths.push(`<path id="tracé-${i+1}" data-glyph="${item.gid}" d="${d}" transform="${transform}" fill="#fff" stroke="#fff" stroke-width="${weight}" stroke-linecap="round" stroke-linejoin="round" paint-order="stroke fill"/>`);
+    paintedContours.push({gid:item.gid,trace:contourTrace(item.gid,d),transform});
   }
   if(!Number.isFinite(minX)){minX=0;maxX=Math.max(500,advance);minY=-100;maxY=500;}
   const padding=70+weight+Math.abs(state.slant)*8;
@@ -216,7 +250,28 @@ function getHandwrittenSVG(){
     gradX2=lastCx+(dx/length)*pad;
     gradY2=lastCy+(dy/length)*pad;
   }
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${Math.ceil(viewW)}" height="${Math.ceil(viewH)}" viewBox="${viewMinX.toFixed(2)} ${viewMinY.toFixed(2)} ${viewW.toFixed(2)} ${viewH.toFixed(2)}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Lettrage manuscrit ${escapeXML(word)}"><title>${escapeXML(word)} — lettering manuscrit vectoriel</title><desc>Contours de Pecita (Philippe Cochy, SIL OFL 1.1). Dégradé continu aligné sur la ligne du mot. Chemins SVG éditables dans un masque alpha.</desc><defs><linearGradient id="word-gradient" x1="${gradX1.toFixed(2)}" y1="${gradY1.toFixed(2)}" x2="${gradX2.toFixed(2)}" y2="${gradY2.toFixed(2)}" gradientUnits="userSpaceOnUse">${stops}</linearGradient><mask id="word-mask" x="${viewMinX.toFixed(2)}" y="${viewMinY.toFixed(2)}" width="${viewW.toFixed(2)}" height="${viewH.toFixed(2)}" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" mask-type="alpha" style="mask-type:alpha"><g transform="rotate(${twist.toFixed(2)} ${(minX+maxX)/2} ${-(minY+maxY)/2}) skewX(${state.slant})"><g transform="scale(1,-1)">${glyphPaths.join('')}</g></g></mask></defs>${bg}<rect x="${viewMinX.toFixed(2)}" y="${viewMinY.toFixed(2)}" width="${viewW.toFixed(2)}" height="${viewH.toFixed(2)}" fill="url(#word-gradient)" mask="url(#word-mask)"/></svg>`;
+  // A colour trace along the real outline geometry, in cumulative drawing order.
+  // Every short SVG stroke has modest transparency: at intersections, colours overlap
+  // instead of being flattened by a single rectangular linear gradient.
+  const totalInkLength=paintedContours.reduce((sum,item)=>sum+item.trace.length,0)||1;
+  let drawnLength=0;
+  const traces=[];
+  const brushWidth=Math.max(78,Math.min(142,100+weight*.40));
+  for(const ink of paintedContours){
+    const points=ink.trace.points;
+    const pieces=[];
+    for(let j=1;j<points.length;j++){
+      const a=points[j-1], b=points[j];
+      if(Math.hypot(b[0]-a[0],b[1]-a[1]) > (b[2]-a[2])*2.2)continue;
+      const t=(drawnLength+(a[2]+b[2])*.5)/totalInkLength;
+      const shade=colorAtProgress(t);
+      pieces.push(`<path d="M${a[0].toFixed(1)},${a[1].toFixed(1)}L${b[0].toFixed(1)},${b[1].toFixed(1)}" fill="none" stroke="${shade}" stroke-width="${brushWidth.toFixed(1)}" stroke-linecap="round" stroke-opacity=".28"/>`);
+    }
+    if(pieces.length)traces.push(`<g transform="${ink.transform}">${pieces.join('')}</g>`);
+    drawnLength+=ink.trace.length;
+  }
+  const handwritingTransform=`rotate(${twist.toFixed(2)} ${(minX+maxX)/2} ${-(minY+maxY)/2}) skewX(${state.slant})`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${Math.ceil(viewW)}" height="${Math.ceil(viewH)}" viewBox="${viewMinX.toFixed(2)} ${viewMinY.toFixed(2)} ${viewW.toFixed(2)} ${viewH.toFixed(2)}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Lettrage manuscrit ${escapeXML(word)}"><title>${escapeXML(word)} — lettering manuscrit vectoriel</title><desc>Lettrage en chemins SVG, couleur progressive suivant les courbes des tracés et transparence subtile aux superpositions. Pecita, Philippe Cochy, SIL OFL 1.1.</desc><defs><linearGradient id="word-gradient" x1="${gradX1.toFixed(2)}" y1="${gradY1.toFixed(2)}" x2="${gradX2.toFixed(2)}" y2="${gradY2.toFixed(2)}" gradientUnits="userSpaceOnUse">${stops}</linearGradient><mask id="word-mask" x="${viewMinX.toFixed(2)}" y="${viewMinY.toFixed(2)}" width="${viewW.toFixed(2)}" height="${viewH.toFixed(2)}" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" mask-type="alpha" style="mask-type:alpha"><g transform="${handwritingTransform}"><g transform="scale(1,-1)">${glyphPaths.join('')}</g></g></mask></defs>${bg}<rect x="${viewMinX.toFixed(2)}" y="${viewMinY.toFixed(2)}" width="${viewW.toFixed(2)}" height="${viewH.toFixed(2)}" fill="url(#word-gradient)" mask="url(#word-mask)"/><g mask="url(#word-mask)"><g transform="${handwritingTransform}"><g transform="scale(1,-1)">${traces.join('')}</g></g></g></svg>`;
 }
 
 function maintainLetterProportions(){
