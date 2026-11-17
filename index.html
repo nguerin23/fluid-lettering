@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="theme-color" content="#f6f7f4" />
-<title>Fluid — Générateur de lettering vectoriel</title>
+<title>Fluid — Lettrages manuscrits SVG</title>
 <style>
   :root{--ink:#19231f;--muted:#66736b;--border:#dbe2dc;--surface:#fff;--paper:#f6f7f4;--lime:#c4ff7a;--purple:#6552fa}
   *{box-sizing:border-box}html{font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--paper)}body{margin:0;min-width:320px}button,input{font:inherit}
@@ -26,37 +26,41 @@
   .preview-footer{padding:18px 21px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid #ecf0eb;flex-wrap:wrap}.footer-info{font-size:12px;color:#879388}.footer-info b{color:#445149}.icon-actions{display:flex;gap:8px;align-items:center}.btn{border:1px solid #dce4dc;background:white;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:12px;font-weight:850;padding:11px 14px;color:#2b3a2f;transition:.15s}.btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.btn:hover{background:#f5f8f4;transform:translateY(-1px)}.btn-primary{background:#242a26;color:white;border-color:#242a26}.btn-primary:hover{background:#454f47}.btn-gradient{border:0;background:#c2ff83;color:#182317}.btn-gradient:hover{background:#acf36f}
   .bottom{display:grid;grid-template-columns:1fr 1fr;gap:18px}.tip{padding:17px 20px;border:1px solid #dae2db;border-radius:13px;background:#eff3ee;display:flex;gap:12px;align-items:flex-start}.tip .tip-icon{font-size:20px;line-height:1}.tip strong{font-size:12px}.tip p{font-size:12px;color:#7d8c7e;line-height:1.55;margin:6px 0 0}.tech-note{font-size:12px;color:#7f8a80;align-self:center;line-height:1.7}.tech-note strong{color:#334336}.footer{display:flex;gap:12px;justify-content:space-between;align-items:center;color:#9aa79a;font-weight:700;font-size:11px;margin-top:24px;letter-spacing:.3px}.toast{position:fixed;bottom:23px;left:50%;transform:translate(-50%,20px);z-index:20;background:#1e2620;color:white;border-radius:10px;padding:12px 18px;font-size:13px;font-weight:750;opacity:0;pointer-events:none;transition:.25s}.toast.active{opacity:1;transform:translate(-50%,0)}
   @media (max-width:950px){.intro{align-items:start;flex-direction:column;gap:13px}.intro p{max-width:650px}.workspace{grid-template-columns:minmax(275px,320px) minmax(0,1fr)}.stage{min-height:340px}.preview-panel{min-height:470px}.bottom{grid-template-columns:1fr}.shell{padding:30px 22px}}@media (max-width:720px){.preview-area{order:-1}.preview-panel{min-height:350px}.mobile-quick{display:grid;gap:7px;padding:14px 16px 0}.mobile-quick label{font-size:12px;font-weight:800}.mobile-quick input{width:100%;font-size:20px;font-weight:800;min-height:50px;border:1px solid #d4dcd5;border-radius:10px;padding:8px 12px;color:#19231f;background:#fbfcfa}.stage{min-height:250px!important;padding:20px 14px!important}.header-inner{padding:0 20px;min-height:64px}.header-right{font-size:9px}.intro h1{letter-spacing:-2px}.workspace{grid-template-columns:1fr}.settings{padding:21px;gap:20px}.stage{min-height:300px;padding:25px 16px}.preview-panel{min-height:430px}.preview-footer{padding:16px;gap:14px}.icon-actions{width:100%}.icon-actions .btn{flex:1}.footer{align-items:flex-start;flex-direction:column}.shell{padding:28px 17px 30px}}
+  .style-picks{display:grid;grid-template-columns:1fr 1fr;gap:8px}.style-pick{background:#f7f9f6;border:1.5px solid #dbe2dc;border-radius:11px;padding:12px 10px;display:flex;flex-direction:column;gap:6px;text-align:left;min-height:70px}.style-pick strong{font-weight:900;font-size:12px}.style-pick small{font-size:10px;color:#7c8880}.style-pick[aria-pressed="true"]{border-color:#6a60f6;background:#f1f0ff;box-shadow:inset 0 0 0 1px #6a60f6}.style-pick[aria-pressed="true"] small{color:#655cbd}
 </style>
 </head>
 <body>
 <header><div class="header-inner"><div class="brand"><span class="brand-logo">f</span>fluid<span class="brand-dot">.</span></div><div class="header-right">Atelier de lettering vectoriel <span style="color:#b6bdb6">/ 01</span></div></div></header>
 <main class="shell">
   <div class="eyebrow">Design playground &nbsp; / &nbsp; 100% SVG</div>
-  <section class="intro"><h1>Les mots prennent<br>des <span style="background:linear-gradient(90deg,#6653f9,#50cfb9,#58fb77);background-clip:text;-webkit-background-clip:text;color:transparent">formes.</span></h1><p>Un mini-atelier pour créer des lettres organiques, généreuses et liées. Sans police de caractères : uniquement des courbes vectorielles.</p></section>
+  <section class="intro"><h1>Les mots prennent<br>des <span style="background:linear-gradient(90deg,#6653f9,#50cfb9,#58fb77);background-clip:text;-webkit-background-clip:text;color:transparent">formes.</span></h1><p>Crée des lettrages manuscrits et organiques en vrais chemins SVG. Nouveau style inspiré de Pecita, avec connexions naturelles et dégradés lumineux.</p></section>
   <div class="workspace">
     <aside class="panel settings" aria-label="Paramètres de génération">
       <div class="section-header"><h2>01 / Votre mot</h2><span class="meta">ÉDITEUR</span></div>
       <div class="field"><label class="small-label" for="word">Texte à dessiner</label><input id="word" class="word-input" placeholder="Écris un mot..." maxlength="22" autocomplete="off" spellcheck="false" value="Nicolas" /><div class="helper">Jusqu'à 22 caractères · Lettres, chiffres simples et accents français.</div></div><button type="button" class="generate-btn" id="generate"><svg viewBox="0 0 24 24"><path d="M12 3l1.9 6.1L20 11l-6.1 1.9L12 19l-1.9-6.1L4 11l6.1-1.9z"/></svg> Générer le lettering</button><div class="helper" style="margin-top:-14px">Le dessin ne change que lorsque tu appuies sur ce bouton.</div>
       <div class="suggestions" aria-label="Exemples"><button class="chip" data-word="Nicolas">Nicolas</button><button class="chip" data-word="Jello">Jello</button><button class="chip" data-word="Plénée">Plénée</button><button class="chip" data-word="Bonjour">Bonjour</button></div>
       <div class="divider"></div>
-      <div class="section-header"><h2>02 / Morphologie</h2><span class="meta">TRACÉS</span></div>
-      <div class="sliders"><div><div class="setting-line"><label class="small-label" for="thickness">Épaisseur des courbes</label><span id="thicknessValue" class="val">68</span></div><input class="range" id="thickness" type="range" min="45" max="90" value="68" /></div>
-      <div><div class="setting-line"><label class="small-label" for="fusion">Liaison entre les lettres</label><span id="fusionValue" class="val">18</span></div><input class="range" id="fusion" type="range" min="-15" max="38" value="18" /></div>
-      <div><div class="setting-line"><label class="small-label" for="slant">Inclinaison</label><span id="slantValue" class="val">−5°</span></div><input class="range" id="slant" type="range" min="-14" max="12" value="-5" /></div></div>
+      <div class="section-header"><h2>02 / Style du tracé</h2><span class="meta">2 MODES</span></div>
+      <div class="style-picks" role="group" aria-label="Style de lettres"><button class="style-pick" type="button" data-style="handwritten" aria-pressed="true"><strong>Manuscrit</strong><small>Lié · inspiré de Pecita</small></button><button class="style-pick" type="button" data-style="fluid" aria-pressed="false"><strong>Fluid original</strong><small>Épais · organique</small></button></div>
+      <div class="section-header"><h2>03 / Morphologie</h2><span class="meta">TRACÉS</span></div>
+      <div class="sliders"><div><div class="setting-line"><label class="small-label" for="thickness">Épaisseur des courbes</label><span id="thicknessValue" class="val">16</span></div><input class="range" id="thickness" type="range" min="0" max="48" value="16" /></div>
+      <div><div class="setting-line"><label class="small-label" for="fusion">Liaison entre les lettres</label><span id="fusionValue" class="val">0</span></div><input class="range" id="fusion" type="range" min="-25" max="25" value="0" /></div>
+      <div><div class="setting-line"><label class="small-label" for="slant">Inclinaison</label><span id="slantValue" class="val">0°</span></div><input class="range" id="slant" type="range" min="-14" max="12" value="0" /></div></div>
       <div class="divider"></div>
-      <div class="section-header"><h2>03 / Dégradé</h2><span class="meta">PALETTES</span></div>
+      <div class="section-header"><h2>04 / Dégradé</h2><span class="meta">PALETTES</span></div>
       <div class="palettes" role="group" aria-label="Choisir une palette"><button class="palette" data-palette="jello" title="Électrique" aria-label="Violet, bleu, vert" aria-pressed="true"><span></span></button><button class="palette" data-palette="sunset" title="Sunset" aria-label="Corail, orange, jaune" aria-pressed="false"><span></span></button><button class="palette" data-palette="dream" title="Dream" aria-label="Bleu, lilas, rose" aria-pressed="false"><span></span></button><button class="palette" data-palette="mint" title="Menthe" aria-label="Turquoise et vert" aria-pressed="false"><span></span></button></div>
       <div class="switch-line"><span>Fond transparent (export)</span><button class="switch" id="transparent" role="switch" aria-checked="true" aria-label="Fond transparent pour l'export"></button></div>
       <button class="btn" id="regenerate" style="align-self:stretch"><svg viewBox="0 0 24 24"><path d="M20 7v5h-5"/><path d="M4 17v-5h5"/><path d="M5.5 9A7 7 0 0 1 18 6l2 1M4 17l2 1a7 7 0 0 0 12.5-3"/></svg> Générer une autre variation</button>
     </aside>
     <div class="preview-area">
-      <section class="panel preview-panel" aria-label="Aperçu du lettering"><div class="preview-header"><h2 class="preview-title">Résultat</h2><span class="preview-meta" id="liveStatus">EXEMPLE : NICOLAS</span></div><div class="mobile-quick"><label for="wordMobile">Votre mot</label><input type="text" id="wordMobile" value="Nicolas" maxlength="22" autocomplete="off" spellcheck="false" aria-label="Mot à dessiner" /><button class="generate-btn" id="generateMobile" type="button"><svg viewBox="0 0 24 24"><path d="M12 3l1.9 6.1L20 11l-6.1 1.9L12 19l-1.9-6.1L4 11l6.1-1.9z"/></svg> Générer le lettering</button></div><div id="stage" class="stage"><div id="preview" role="img" aria-label="Lettrage vectoriel généré"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1486" height="580" viewBox="0 0 1486.00 580" role="img" aria-label="Lettrage vectoriel Nicolas"><title>Nicolas — lettering organique</title><desc>Logotype généré avec des courbes de Bézier, sans police. Chaque lettre est un groupe de chemins SVG modifiables.</desc><defs><linearGradient id="ink" x1="0" y1="230" x2="1486.00" y2="330" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6150f7"></stop><stop offset="25%" stop-color="#5e7bed"></stop><stop offset="50%" stop-color="#53b4cf"></stop><stop offset="75%" stop-color="#56dba2"></stop><stop offset="100%" stop-color="#55fa78"></stop></linearGradient><linearGradient id="ink-0" x1="-72.00" y1="230" x2="1414.00" y2="330" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6150f7"></stop><stop offset="25%" stop-color="#5e7bed"></stop><stop offset="50%" stop-color="#53b4cf"></stop><stop offset="75%" stop-color="#56dba2"></stop><stop offset="100%" stop-color="#55fa78"></stop></linearGradient><linearGradient id="ink-1" x1="-498.00" y1="230" x2="988.00" y2="330" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6150f7"></stop><stop offset="25%" stop-color="#5e7bed"></stop><stop offset="50%" stop-color="#53b4cf"></stop><stop offset="75%" stop-color="#56dba2"></stop><stop offset="100%" stop-color="#55fa78"></stop></linearGradient><linearGradient id="ink-2" x1="-577.00" y1="230" x2="909.00" y2="330" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6150f7"></stop><stop offset="25%" stop-color="#5e7bed"></stop><stop offset="50%" stop-color="#53b4cf"></stop><stop offset="75%" stop-color="#56dba2"></stop><stop offset="100%" stop-color="#55fa78"></stop></linearGradient><linearGradient id="ink-3" x1="-724.00" y1="230" x2="762.00" y2="330" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6150f7"></stop><stop offset="25%" stop-color="#5e7bed"></stop><stop offset="50%" stop-color="#53b4cf"></stop><stop offset="75%" stop-color="#56dba2"></stop><stop offset="100%" stop-color="#55fa78"></stop></linearGradient><linearGradient id="ink-4" x1="-907.00" y1="230" x2="579.00" y2="330" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6150f7"></stop><stop offset="25%" stop-color="#5e7bed"></stop><stop offset="50%" stop-color="#53b4cf"></stop><stop offset="75%" stop-color="#56dba2"></stop><stop offset="100%" stop-color="#55fa78"></stop></linearGradient><linearGradient id="ink-5" x1="-1050.00" y1="230" x2="436.00" y2="330" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6150f7"></stop><stop offset="25%" stop-color="#5e7bed"></stop><stop offset="50%" stop-color="#53b4cf"></stop><stop offset="75%" stop-color="#56dba2"></stop><stop offset="100%" stop-color="#55fa78"></stop></linearGradient><linearGradient id="ink-6" x1="-1240.00" y1="230" x2="246.00" y2="330" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6150f7"></stop><stop offset="25%" stop-color="#5e7bed"></stop><stop offset="50%" stop-color="#53b4cf"></stop><stop offset="75%" stop-color="#56dba2"></stop><stop offset="100%" stop-color="#55fa78"></stop></linearGradient></defs><g transform="skewX(-5) translate(15 0)"><g id="lettre-1" data-letter="N" transform="translate(72.00 4.68) rotate(0.63 215 350)"><g transform=""><path d="M 39 389 C 56 412 77 412 92 389 C 115 355 117 267 131 199 C 147 123 176 111 196 157 C 223 226 246 342 285 410 C 302 351 325 243 346 160 C 354 125 385 122 386 165 C 393 241 369 360 391 411 C 401 434 422 430 443 409" fill="none" stroke="url(#ink-0)" stroke-width="68.00" stroke-linecap="round" stroke-linejoin="round"></path></g></g><g id="lettre-2" data-letter="i" transform="translate(498.00 3.41) rotate(-0.70 41.5 350)"><g transform=""><path d="M 29 332 C 24 370 16 409 33 426 C 47 439 71 424 91 403" fill="none" stroke="url(#ink-1)" stroke-width="68.00" stroke-linecap="round" stroke-linejoin="round"></path><ellipse cx="45" cy="248" rx="29.0" ry="32.0" fill="url(#ink-1)"></ellipse></g></g><g id="lettre-3" data-letter="c" transform="translate(577.00 2.75) rotate(-0.18 75.5 350)"><g transform=""><path d="M 152 336 C 120 308 73 312 43 352 C 12 391 27 431 59 439 C 95 448 127 430 151 409" fill="none" stroke="url(#ink-2)" stroke-width="68.00" stroke-linecap="round" stroke-linejoin="round"></path></g></g><g id="lettre-4" data-letter="o" transform="translate(724.00 1.06) rotate(1.37 93.5 350)"><g transform=""><path d="M 149 350 C 129 316 82 308 51 334 C 17 362 14 406 40 430 C 73 458 121 434 145 397 C 170 356 146 316 125 336 C 102 361 115 422 172 424 C 181 424 191 418 200 406" fill="none" stroke="url(#ink-3)" stroke-width="68.00" stroke-linecap="round" stroke-linejoin="round"></path></g></g><g id="lettre-5" data-letter="l" transform="translate(907.00 -3.52) rotate(-0.56 73.5 350)"><g transform=""><path d="M 24 412 C 41 346 64 240 78 167 C 88 125 115 119 122 158 C 134 213 85 361 80 404 C 75 446 117 447 150 411" fill="none" stroke="url(#ink-4)" stroke-width="68.00" stroke-linecap="round" stroke-linejoin="round"></path></g></g><g id="lettre-6" data-letter="a" transform="translate(1050.00 0.65) rotate(0.60 97 350)"><g transform=""><path d="M 151 344 C 132 316 81 303 48 338 C 15 370 13 416 48 433 C 88 452 125 409 143 367 C 150 350 152 335 154 326 C 148 368 139 408 164 423 C 180 434 194 419 210 402" fill="none" stroke="url(#ink-5)" stroke-width="68.00" stroke-linecap="round" stroke-linejoin="round"></path></g></g><g id="lettre-7" data-letter="s" transform="translate(1240.00 -0.68) rotate(1.20 79.5 350)"><g transform=""><path d="M 148 326 C 117 300 68 314 45 342 C 17 376 65 381 105 397 C 159 419 130 469 84 463 C 55 458 34 442 19 427" fill="none" stroke="url(#ink-6)" stroke-width="68.00" stroke-linecap="round" stroke-linejoin="round"></path></g></g></g></svg></div><div class="stage-hint">COURBES DE BÉZIER • SANS FONT</div><div class="stage-dot">DESSIN SVG</div></div><noscript><p style="padding:10px 16px;font-size:12px;color:#8a3e3e">JavaScript est désactivé dans cet aperçu. Le visuel initial est affiché, et le bouton « Générer » ne fonctionnera pas dans cet aperçu. Ouvrez le fichier dans Safari ou Chrome avec JavaScript activé.</p></noscript><div class="preview-footer"><div class="footer-info"><b id="letterCount">7 caractères</b> &nbsp;·&nbsp; vectoriel &nbsp;·&nbsp; mise à l'échelle infinie</div><div class="icon-actions"><button class="btn" id="copy"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg> Lien</button><button class="btn btn-primary" id="downloadPNG"><svg viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg> PNG</button><button class="btn btn-gradient" id="downloadSVG"><svg viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg> SVG vectoriel</button></div></div></section>
-      <div class="bottom"><div class="tip"><div class="tip-icon">✳</div><div><strong>Un vrai dessin, pas une police.</strong><p>Chaque lettre est reconstruite avec des chemins SVG, des boucles, des courbes épaisses et des connexions. Les lettres restent personnalisables dans un éditeur vectoriel.</p></div></div><div class="tech-note"><strong>Astuce :</strong> ajoute <code>?mot=Hello</code> à l'adresse de cette page pour générer directement ton mot. Exporte en SVG pour le modifier dans Figma, Illustrator ou Penpot.</div></div>
+      <section class="panel preview-panel" aria-label="Aperçu du lettering"><div class="preview-header"><h2 class="preview-title">Résultat</h2><span class="preview-meta" id="liveStatus">EXEMPLE : NICOLAS</span></div><div class="mobile-quick"><label for="wordMobile">Votre mot</label><input type="text" id="wordMobile" value="Nicolas" maxlength="22" autocomplete="off" spellcheck="false" aria-label="Mot à dessiner" /><button class="generate-btn" id="generateMobile" type="button"><svg viewBox="0 0 24 24"><path d="M12 3l1.9 6.1L20 11l-6.1 1.9L12 19l-1.9-6.1L4 11l6.1-1.9z"/></svg> Générer le lettering</button></div><div id="stage" class="stage"><div id="preview" role="img" aria-label="Lettrage vectoriel généré"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1486" height="580" viewBox="0 0 1486.00 580" role="img" aria-label="Lettrage vectoriel Nicolas"><title>Nicolas — lettering organique</title><desc>Logotype généré avec des courbes de Bézier, sans police. Chaque lettre est un groupe de chemins SVG modifiables.</desc><defs><linearGradient id="ink" x1="0" y1="230" x2="1486.00" y2="330" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6150f7"></stop><stop offset="25%" stop-color="#5e7bed"></stop><stop offset="50%" stop-color="#53b4cf"></stop><stop offset="75%" stop-color="#56dba2"></stop><stop offset="100%" stop-color="#55fa78"></stop></linearGradient><linearGradient id="ink-0" x1="-72.00" y1="230" x2="1414.00" y2="330" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6150f7"></stop><stop offset="25%" stop-color="#5e7bed"></stop><stop offset="50%" stop-color="#53b4cf"></stop><stop offset="75%" stop-color="#56dba2"></stop><stop offset="100%" stop-color="#55fa78"></stop></linearGradient><linearGradient id="ink-1" x1="-498.00" y1="230" x2="988.00" y2="330" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6150f7"></stop><stop offset="25%" stop-color="#5e7bed"></stop><stop offset="50%" stop-color="#53b4cf"></stop><stop offset="75%" stop-color="#56dba2"></stop><stop offset="100%" stop-color="#55fa78"></stop></linearGradient><linearGradient id="ink-2" x1="-577.00" y1="230" x2="909.00" y2="330" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6150f7"></stop><stop offset="25%" stop-color="#5e7bed"></stop><stop offset="50%" stop-color="#53b4cf"></stop><stop offset="75%" stop-color="#56dba2"></stop><stop offset="100%" stop-color="#55fa78"></stop></linearGradient><linearGradient id="ink-3" x1="-724.00" y1="230" x2="762.00" y2="330" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6150f7"></stop><stop offset="25%" stop-color="#5e7bed"></stop><stop offset="50%" stop-color="#53b4cf"></stop><stop offset="75%" stop-color="#56dba2"></stop><stop offset="100%" stop-color="#55fa78"></stop></linearGradient><linearGradient id="ink-4" x1="-907.00" y1="230" x2="579.00" y2="330" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6150f7"></stop><stop offset="25%" stop-color="#5e7bed"></stop><stop offset="50%" stop-color="#53b4cf"></stop><stop offset="75%" stop-color="#56dba2"></stop><stop offset="100%" stop-color="#55fa78"></stop></linearGradient><linearGradient id="ink-5" x1="-1050.00" y1="230" x2="436.00" y2="330" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6150f7"></stop><stop offset="25%" stop-color="#5e7bed"></stop><stop offset="50%" stop-color="#53b4cf"></stop><stop offset="75%" stop-color="#56dba2"></stop><stop offset="100%" stop-color="#55fa78"></stop></linearGradient><linearGradient id="ink-6" x1="-1240.00" y1="230" x2="246.00" y2="330" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6150f7"></stop><stop offset="25%" stop-color="#5e7bed"></stop><stop offset="50%" stop-color="#53b4cf"></stop><stop offset="75%" stop-color="#56dba2"></stop><stop offset="100%" stop-color="#55fa78"></stop></linearGradient></defs><g transform="skewX(-5) translate(15 0)"><g id="lettre-1" data-letter="N" transform="translate(72.00 4.68) rotate(0.63 215 350)"><g transform=""><path d="M 39 389 C 56 412 77 412 92 389 C 115 355 117 267 131 199 C 147 123 176 111 196 157 C 223 226 246 342 285 410 C 302 351 325 243 346 160 C 354 125 385 122 386 165 C 393 241 369 360 391 411 C 401 434 422 430 443 409" fill="none" stroke="url(#ink-0)" stroke-width="68.00" stroke-linecap="round" stroke-linejoin="round"></path></g></g><g id="lettre-2" data-letter="i" transform="translate(498.00 3.41) rotate(-0.70 41.5 350)"><g transform=""><path d="M 29 332 C 24 370 16 409 33 426 C 47 439 71 424 91 403" fill="none" stroke="url(#ink-1)" stroke-width="68.00" stroke-linecap="round" stroke-linejoin="round"></path><ellipse cx="45" cy="248" rx="29.0" ry="32.0" fill="url(#ink-1)"></ellipse></g></g><g id="lettre-3" data-letter="c" transform="translate(577.00 2.75) rotate(-0.18 75.5 350)"><g transform=""><path d="M 152 336 C 120 308 73 312 43 352 C 12 391 27 431 59 439 C 95 448 127 430 151 409" fill="none" stroke="url(#ink-2)" stroke-width="68.00" stroke-linecap="round" stroke-linejoin="round"></path></g></g><g id="lettre-4" data-letter="o" transform="translate(724.00 1.06) rotate(1.37 93.5 350)"><g transform=""><path d="M 149 350 C 129 316 82 308 51 334 C 17 362 14 406 40 430 C 73 458 121 434 145 397 C 170 356 146 316 125 336 C 102 361 115 422 172 424 C 181 424 191 418 200 406" fill="none" stroke="url(#ink-3)" stroke-width="68.00" stroke-linecap="round" stroke-linejoin="round"></path></g></g><g id="lettre-5" data-letter="l" transform="translate(907.00 -3.52) rotate(-0.56 73.5 350)"><g transform=""><path d="M 24 412 C 41 346 64 240 78 167 C 88 125 115 119 122 158 C 134 213 85 361 80 404 C 75 446 117 447 150 411" fill="none" stroke="url(#ink-4)" stroke-width="68.00" stroke-linecap="round" stroke-linejoin="round"></path></g></g><g id="lettre-6" data-letter="a" transform="translate(1050.00 0.65) rotate(0.60 97 350)"><g transform=""><path d="M 151 344 C 132 316 81 303 48 338 C 15 370 13 416 48 433 C 88 452 125 409 143 367 C 150 350 152 335 154 326 C 148 368 139 408 164 423 C 180 434 194 419 210 402" fill="none" stroke="url(#ink-5)" stroke-width="68.00" stroke-linecap="round" stroke-linejoin="round"></path></g></g><g id="lettre-7" data-letter="s" transform="translate(1240.00 -0.68) rotate(1.20 79.5 350)"><g transform=""><path d="M 148 326 C 117 300 68 314 45 342 C 17 376 65 381 105 397 C 159 419 130 469 84 463 C 55 458 34 442 19 427" fill="none" stroke="url(#ink-6)" stroke-width="68.00" stroke-linecap="round" stroke-linejoin="round"></path></g></g></g></svg></div><div class="stage-hint">TRACÉS VECTORIELS • BÉZIER</div><div class="stage-dot">DESSIN SVG</div></div><noscript><p style="padding:10px 16px;font-size:12px;color:#8a3e3e">JavaScript est désactivé dans cet aperçu. Le visuel initial est affiché, et le bouton « Générer » ne fonctionnera pas dans cet aperçu. Ouvrez le fichier dans Safari ou Chrome avec JavaScript activé.</p></noscript><div class="preview-footer"><div class="footer-info"><b id="letterCount">7 caractères</b> &nbsp;·&nbsp; vectoriel &nbsp;·&nbsp; mise à l'échelle infinie</div><div class="icon-actions"><button class="btn" id="copy"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg> Lien</button><button class="btn btn-primary" id="downloadPNG"><svg viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg> PNG</button><button class="btn btn-gradient" id="downloadSVG"><svg viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg> SVG vectoriel</button></div></div></section>
+      <div class="bottom"><div class="tip"><div class="tip-icon">✳</div><div><strong>De vrais tracés SVG éditables.</strong><p>Le style manuscrit reprend les contours et ligatures de Pecita (Philippe Cochy, licence OFL 1.1). Les formes restent des chemins SVG, pas du texte dépendant d’une police.</p></div></div><div class="tech-note"><strong>Astuce :</strong> ajoute <code>?mot=Hello</code> à l'adresse pour remplir le champ, puis clique sur « Générer ». Exporte en SVG pour le modifier dans Figma, Illustrator ou Penpot.</div></div>
     </div>
   </div>
-  <footer class="footer"><span>FLUID® — UNE EXPÉRIENCE DE LETTERING PARAMÉTRIQUE</span><span>UN FICHIER HTML • AUCUNE BIBLIOTHÈQUE • FONCTIONNE HORS LIGNE</span></footer>
+  <footer class="footer"><span>FLUID® — UNE EXPÉRIENCE DE LETTERING PARAMÉTRIQUE</span><span>TRACÉS SVG • <a style="color:inherit" href="PECITA-OFL.txt" target="_blank" rel="noopener">CRÉDITS &amp; LICENCE OFL 1.1</a></span></footer>
 </main>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="pecita-outlines.js"></script>
 <script>
 'use strict';
 // Chaque glyphe est un ensemble de tracés de Bézier dessinés à la main.
@@ -136,7 +140,7 @@ const palettes={
   mint:['#009e90','#39b6ab','#78d4c8','#a0e4c8','#d0f7a1']
 };
 const $=id=>document.getElementById(id);
-const state={word:'Nicolas',thickness:68,fusion:18,slant:-5,palette:'jello',transparent:true,seed:11};
+const state={word:'Nicolas',thickness:16,fusion:0,slant:0,palette:'jello',transparent:true,seed:11,style:'handwritten'};
 let currentSvg='',svgDimensions={width:1486,height:580},lastGeneratedWord='Nicolas';let toastTimeout;
 function escapeXML(s){return s.replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]));}
 function seeded(n){let v=Math.sin(n*87.12+state.seed*19.31)*43758.5453;return v-Math.floor(v);}
@@ -158,7 +162,7 @@ function accentFor(char,idx,x,width){
   if(/\u0327/.test(marks)) markup+=`<path d="M ${x+width*.50} 447 Q ${x+width*.69} 478 ${x+width*.43} 487" stroke="url(#ink)" stroke-width="20" fill="none" stroke-linecap="round"/>`;
   return markup;
 }
-function getSVG(){
+function getOriginalSVG(){
   const text=state.word.trim().slice(0,22);if(!text) return '';
   let x=72;const paths=[];const width=state.thickness;
   const chars=[...text];
@@ -191,6 +195,116 @@ function getSVG(){
   svgDimensions={width:vWidth,height:vHeight};
   return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${Math.round(vWidth)}" height="${vHeight}" viewBox="0 0 ${vWidth.toFixed(2)} ${vHeight}" role="img" aria-label="Lettrage vectoriel ${escapeXML(text)}"><title>${escapeXML(text)} — lettering organique</title><desc>Logotype généré avec des courbes de Bézier, sans police. Chaque lettre est un groupe de chemins SVG modifiables.</desc><defs><linearGradient id="ink" x1="0" y1="230" x2="${vWidth.toFixed(2)}" y2="330" gradientUnits="userSpaceOnUse">${stops}</linearGradient>${gradients.join('')}</defs>${bg}<g transform="skewX(${state.slant}) translate(${Math.abs(state.slant)*3} 0)">${paths.join('')}</g></svg>`;
 }
+/* Fluid handwritten contours engine. The data in pecita-outlines.js is derived
+   from Pecita by Philippe Cochy, SIL Open Font License 1.1 (see PECITA-OFL.txt).
+   No SVG <text> and no browser-installed font are used for this mode. */
+function getHandwrittenSVG(){
+  const data=window.FLUID_HANDWRITTEN_DATA;
+  if(!data) throw new Error('Les tracés manuscrits ne sont pas chargés. Recharge la page.');
+  const word=state.word.trim().slice(0,22);
+  if(!word)return '';
+  const markSet=new Set(data.isMark.map(Number));
+  const seq=Array.from(word).map(ch => data.cmap[String(ch.codePointAt(0))] ?? data.cmap['63']);
+  // A minimal contextual OpenType substitution engine. It preserves initial,
+  // medial and final letter forms and mandatory joining ligatures.
+  function substitute(list, lookupId, pos, depth=0){
+    if(depth>9 || pos>=list.length)return false;
+    const lookup=data.lookups[String(lookupId)]||[];
+    const ignoreMarks=[10,11,12,13].includes(Number(lookupId));
+    for(const table of lookup){
+      const key=String(list[pos]);
+      if(table.t===1 && Object.prototype.hasOwnProperty.call(table.m,key)){
+        list.splice(pos,1,table.m[key]);return true;
+      }
+      if(table.t===2 && Object.prototype.hasOwnProperty.call(table.m,key)){
+        list.splice(pos,1,...table.m[key]);return true;
+      }
+      if(table.t===4 && table.m[key]){
+        for(const combination of table.m[key]){
+          const components=combination.slice(0,-1);
+          if(components.every((v,j)=>list[pos+1+j]===v)){
+            list.splice(pos,components.length+1,combination[combination.length-1]);return true;
+          }
+        }
+      }
+      if(table.t===5 && table.cov.includes(list[pos])){
+        const classes=table.cls;
+        const cls=classes[key]||0;
+        for(const [following,replacements] of (table.sets[String(cls)]||[])){
+          const places=[pos];let cursor=pos;let valid=true;
+          for(const expected of following){
+            cursor++;
+            if(ignoreMarks){while(cursor<list.length && markSet.has(list[cursor]))cursor++;}
+            if(cursor>=list.length || (classes[String(list[cursor])]||0)!==expected){valid=false;break;}
+            places.push(cursor);
+          }
+          if(!valid)continue;
+          let applied=false;
+          for(const [sequenceIndex,target] of replacements){
+            const targetIndex=places[sequenceIndex];
+            if(targetIndex!==undefined && substitute(list,target,targetIndex,depth+1))applied=true;
+          }
+          if(applied)return true;
+        }
+      }
+    }
+    return false;
+  }
+  // OpenType lookup order, with ligatures and contextual alternates.
+  for(const lookupId of data.lookupOrder.slice().sort((a,b)=>a-b)){
+    for(let position=0;position<seq.length;position++)substitute(seq,lookupId,position);
+  }
+  const chars=[];
+  let advance=0;
+  for(const gid of seq){
+    const outline=data.paths[String(gid)];
+    if(!outline)continue;
+    const isMark=markSet.has(gid);
+    chars.push({gid,outline,x:advance,dx:0,dy:0,mark:isMark});
+    advance+=outline[0]+(isMark?0:state.fusion);
+  }
+  // Position diacritics using mark-to-base GPOS anchors in original font units.
+  let lastBase=null;
+  for(const glyph of chars){
+    if(!glyph.mark){lastBase=glyph;continue;}
+    if(!lastBase)continue;
+    for(const table of data.gpos){
+      const mark=table.marks[String(glyph.gid)],anchors=table.bases[String(lastBase.gid)];
+      if(!mark || !anchors || !anchors[mark[0]])continue;
+      const [x,y]=anchors[mark[0]];
+      glyph.dx=lastBase.x+lastBase.dx+x-mark[1]-glyph.x;
+      glyph.dy=lastBase.dy+y-mark[2];
+      break;
+    }
+  }
+  const weight=state.thickness;
+  let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
+  const glyphPaths=[];
+  for(let i=0;i<chars.length;i++){
+    const item=chars[i], d=item.outline[1];
+    const x=item.x+item.dx,y=item.dy;
+    const b=data.bounds[String(item.gid)];
+    if(b){minX=Math.min(minX,x+b[0]);maxX=Math.max(maxX,x+b[2]);minY=Math.min(minY,y+b[1]);maxY=Math.max(maxY,y+b[3]);}
+    if(!d)continue;
+    glyphPaths.push(`<path id="tracé-${i+1}" data-glyph="${item.gid}" d="${d}" transform="translate(${x.toFixed(2)} ${y.toFixed(2)})" fill="url(#handwriting-ink-${i})" stroke="url(#handwriting-ink-${i})" stroke-width="${weight}" stroke-linecap="round" stroke-linejoin="round" paint-order="stroke fill"/>`);
+  }
+  if(!Number.isFinite(minX)){minX=0;maxX=Math.max(500,advance);minY=-100;maxY=500;}
+  const padding=70+weight+Math.abs(state.slant)*8;
+  minX=Math.min(0,minX); maxX=Math.max(advance,maxX);
+  // Keep enough space for accents, capitals and descenders.
+  minY=Math.min(-170,minY);maxY=Math.max(650,maxY);
+  const viewMinX=minX-padding,viewMinY=-(maxY+padding);
+  const viewW=Math.max(300,maxX-minX+padding*2);
+  const viewH=Math.max(360,maxY-minY+padding*2);
+  svgDimensions={width:Math.ceil(viewW),height:Math.ceil(viewH)};
+  const stops=palettes[state.palette].map((color,index)=>`<stop offset="${index*25}%" stop-color="${color}"/>`).join('');
+  const inkDefs=chars.map((g,i)=>`<linearGradient id="handwriting-ink-${i}" x1="${(minX-g.x-g.dx).toFixed(2)}" y1="0" x2="${(maxX-g.x-g.dx).toFixed(2)}" y2="0" gradientUnits="userSpaceOnUse">${stops}</linearGradient>`).join('');
+  const bg=state.transparent?'':`<rect x="${viewMinX}" y="${viewMinY}" width="${viewW}" height="${viewH}" fill="#fff"/>`;
+  const twist=state.seed===11?0:(seeded(19)-0.5)*2;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${Math.ceil(viewW)}" height="${Math.ceil(viewH)}" viewBox="${viewMinX.toFixed(2)} ${viewMinY.toFixed(2)} ${viewW.toFixed(2)} ${viewH.toFixed(2)}" role="img" aria-label="Lettrage manuscrit ${escapeXML(word)}"><title>${escapeXML(word)} — lettering manuscrit vectoriel</title><desc>Contours SVG issus des courbes de la police Pecita, copyright Philippe Cochy, sous licence SIL Open Font License 1.1. Chaque tracé est éditable, sans police à installer.</desc><defs>${inkDefs}</defs>${bg}<g transform="rotate(${twist.toFixed(2)} ${(minX+maxX)/2} ${-(minY+maxY)/2}) skewX(${state.slant})"><g transform="scale(1,-1)">${glyphPaths.join('')}</g></g></svg>`;
+}
+
+function getSVG(){return state.style==='handwritten'?getHandwrittenSVG():getOriginalSVG();}
 function render(){
   currentSvg=getSVG();
   lastGeneratedWord=state.word.trim();
@@ -206,6 +320,19 @@ function flash(message){const el=$('toast');el.textContent=message;el.classList.
 function download(blob,name){const href=URL.createObjectURL(blob),a=document.createElement('a');a.href=href;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(href),1000)}
 function fileName(){return (lastGeneratedWord||'lettering').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9_-]/g,'-').replace(/-+/g,'-').toLowerCase();}
 // Les champs et les réglages mettent l'état en attente ; aucun calcul SVG en direct.
+// Explicit generate click only: no SVG recalculation on each keystroke.
+document.querySelectorAll('[data-style]').forEach(btn=>btn.addEventListener('click',()=>{
+  state.style=btn.dataset.style;
+  document.querySelectorAll('[data-style]').forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));
+  const handwritten=state.style==='handwritten';
+  const thickness=$('thickness'); thickness.min=handwritten?0:45;thickness.max=handwritten?48:90;
+  thickness.value=state.thickness=handwritten?16:68;
+  const fusion=$('fusion');fusion.min=handwritten?-25:-15;fusion.max=handwritten?25:38;
+  fusion.value=state.fusion=handwritten?0:18;
+  $('slant').value=state.slant=handwritten?0:-5;
+  for(const n of ['thickness','fusion','slant']) $(n+'Value').textContent=n==='slant'?state.slant+'°':state[n];
+  markPending();
+}));
 function markPending(){
   $('liveStatus').textContent='À GÉNÉRER';
   $('liveStatus').style.color='#6c55e8';
