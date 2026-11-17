@@ -1,200 +1,99 @@
 <!doctype html>
 <html lang="fr">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<meta name="theme-color" content="#f6f7f4" />
-<title>Fluid — Lettrages manuscrits SVG</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f8f5">
+<meta name="description" content="Fluid : créez des lettrages manuscrits en SVG, avec épaisseur et espacement réglables en direct.">
+<title>Fluid — Atelier de lettering</title>
 <style>
-  :root{--ink:#19231f;--muted:#66736b;--border:#dbe2dc;--surface:#fff;--paper:#f6f7f4;--lime:#c4ff7a;--purple:#6552fa}
-  *{box-sizing:border-box}html{font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--paper)}body{margin:0;min-width:320px}button,input{font:inherit}
-  button{cursor:pointer}button:focus-visible,input:focus-visible{outline:3px solid #8876ff;outline-offset:3px}
-  header{border-bottom:1px solid var(--border);background:rgba(255,255,255,.68)}
-  .header-inner{max-width:1540px;margin:auto;min-height:76px;padding:0 36px;display:flex;align-items:center;justify-content:space-between;gap:20px}
-  .brand{display:flex;align-items:center;gap:11px;font-size:23px;font-weight:850;letter-spacing:-1.5px}.brand-logo{width:31px;height:31px;display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(130deg,#6452fa,#4af67b);border-radius:10px;transform:rotate(-8deg);font-weight:900;color:#fff;font-size:22px}.brand-dot{color:#7862fc}
-  .header-right{font-size:11px;color:#68756b;letter-spacing:1.3px;font-weight:800;display:flex;align-items:center;gap:12px;text-transform:uppercase}.header-right:before{content:"";width:7px;height:7px;border-radius:50%;background:#59e992;box-shadow:0 0 0 4px #e5ffec}
-  .shell{max-width:1540px;margin:0 auto;padding:43px 36px 36px}.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#697970;font-weight:800}.intro{display:flex;justify-content:space-between;gap:30px;align-items:end;margin:10px 0 32px}.intro h1{font-size:clamp(36px,4vw,62px);line-height:1.04;letter-spacing:-3.5px;max-width:850px;margin:6px 0 0;font-weight:830}.intro p{margin:0 0 4px;color:#657168;max-width:290px;line-height:1.6;font-size:14px}
-  .workspace{display:grid;grid-template-columns:minmax(300px,350px) minmax(0,1fr);gap:24px;align-items:stretch}
-  .panel{border:1px solid var(--border);background:var(--surface);border-radius:19px;box-shadow:0 6px 22px #1c3b2508}.settings{padding:25px 25px 22px;display:flex;flex-direction:column;gap:22px}.section-header{display:flex;align-items:baseline;justify-content:space-between;gap:10px}.section-header h2,.preview-title{font-size:14px;letter-spacing:-.3px;margin:0;font-weight:850}.section-header .meta{font-size:11px;font-weight:800;color:#96a097;letter-spacing:.75px}.field{display:grid;gap:9px}label.small-label{font-size:12px;font-weight:750}.word-input{width:100%;height:53px;border:1.5px solid #d4dcd5;background:#fbfcfa;padding:0 14px;font-size:21px;font-weight:730;letter-spacing:-.5px;border-radius:10px;color:#1e2821}.word-input:focus{background:white;border-color:#8171ed;outline:3px solid #8271f322}
-  .helper{font-size:11px;color:#89958c;line-height:1.5}.suggestions{display:flex;flex-wrap:wrap;gap:7px}.chip{border:1px solid var(--border);border-radius:999px;background:white;padding:7px 11px;font-size:12px;font-weight:700;color:#56645b;transition:.16s}.chip:hover{border-color:#9287fa;background:#f6f4ff;color:#554aca}
-  .divider{height:1px;background:#e7ece7;margin:0 -2px}.setting-line{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}.val{font-size:12px;font-weight:850;min-width:30px;text-align:right;color:#6e5af5;font-variant-numeric:tabular-nums}.range{width:100%;accent-color:#6855f7;cursor:pointer;height:5px}.sliders{display:grid;gap:20px}
-  .palettes{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.palette{height:45px;border:3px solid transparent;border-radius:11px;padding:3px;background:transparent}.palette span{display:block;width:100%;height:100%;border-radius:7px}.palette[aria-pressed="true"]{border-color:#171d1a;box-shadow:0 0 0 1px #fff inset}.palette:focus-visible{outline:2px solid #6754ff}.palette:nth-child(1) span{background:linear-gradient(100deg,#6051fa,#52acd6,#5bf977)}.palette:nth-child(2) span{background:linear-gradient(100deg,#ff5b73,#fdab5c,#f4ed63)}.palette:nth-child(3) span{background:linear-gradient(100deg,#243bc9,#8e5beb,#ef7cf1)}.palette:nth-child(4) span{background:linear-gradient(100deg,#13a18c,#86d9d5,#c8f2a2)}
-  .switch-line{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:12px;font-weight:750}.switch{position:relative;width:40px;height:23px;border-radius:20px;border:none;background:#cbd5ce;transition:.2s;flex-shrink:0}.switch[aria-checked="true"]{background:#6554ff}.switch:after{content:"";position:absolute;width:17px;height:17px;left:3px;top:3px;border-radius:100%;background:white;transition:transform .2s}.switch[aria-checked="true"]:after{transform:translateX(17px)}
-  .generate-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:54px;background:linear-gradient(110deg,#6453f7,#4bcdb2,#58f77c);border:none;border-radius:11px;color:#131c24;font-size:15px;font-weight:900;letter-spacing:-.2px;cursor:pointer;box-shadow:none}.generate-btn:hover{filter:saturate(1.2) brightness(1.02)}.generate-btn:focus-visible{outline:3px solid #6552f7;outline-offset:4px}.generate-btn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}.mobile-quick{display:none} .preview-area{min-width:0;display:flex;flex-direction:column;gap:20px}.preview-panel{overflow:hidden;display:flex;flex-direction:column;min-height:540px;flex:1}.preview-header{padding:18px 21px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #ecf0eb}.preview-title{display:flex;align-items:center;gap:9px}.preview-title:before{content:"";width:8px;height:8px;background:#5af18b;border-radius:50%}.preview-meta{font-size:11px;letter-spacing:.8px;font-weight:750;color:#87968a}.stage{background:#fff;min-height:410px;flex:1;display:flex;align-items:center;justify-content:flex-start;padding:42px 30px;position:relative;isolation:isolate;transition:background .2s;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;scrollbar-width:thin;scrollbar-color:#c7c5e8 transparent}.stage.checker{background-color:#fff;background-image:linear-gradient(45deg,#eef2ef 25%,transparent 25%),linear-gradient(-45deg,#eef2ef 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#eef2ef 75%),linear-gradient(-45deg,transparent 75%,#eef2ef 75%);background-size:24px 24px;background-position:0 0,0 12px,12px -12px,-12px 0}
-  #preview{flex:0 0 auto;width:max-content;max-height:none;min-height:0;margin-inline:auto;filter:none}#preview svg{display:block;width:auto;height:auto;max-width:none;max-height:none;overflow:visible;aspect-ratio:auto} .stage-empty{font-size:17px;color:#97a59a;font-weight:700}
-  .stage-hint{position:absolute;left:23px;bottom:18px;font-size:10px;letter-spacing:1.2px;color:#abb4ac;font-weight:800}.stage-dot{position:absolute;right:23px;bottom:18px;border:1px solid #e9eee9;border-radius:6px;padding:6px 9px;font-size:10px;letter-spacing:.5px;color:#88958b;font-weight:800;background:#ffffffcf}
-  .preview-footer{padding:18px 21px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid #ecf0eb;flex-wrap:wrap}.footer-info{font-size:12px;color:#879388}.footer-info b{color:#445149}.icon-actions{display:flex;gap:8px;align-items:center}.btn{border:1px solid #dce4dc;background:white;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:12px;font-weight:850;padding:11px 14px;color:#2b3a2f;transition:.15s}.btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.btn:hover{background:#f5f8f4;transform:translateY(-1px)}.btn-primary{background:#242a26;color:white;border-color:#242a26}.btn-primary:hover{background:#454f47}.btn-gradient{border:0;background:#c2ff83;color:#182317}.btn-gradient:hover{background:#acf36f}
-  .bottom{display:grid;grid-template-columns:1fr 1fr;gap:18px}.tip{padding:17px 20px;border:1px solid #dae2db;border-radius:13px;background:#eff3ee;display:flex;gap:12px;align-items:flex-start}.tip .tip-icon{font-size:20px;line-height:1}.tip strong{font-size:12px}.tip p{font-size:12px;color:#7d8c7e;line-height:1.55;margin:6px 0 0}.tech-note{font-size:12px;color:#7f8a80;align-self:center;line-height:1.7}.tech-note strong{color:#334336}.footer{display:flex;gap:12px;justify-content:space-between;align-items:center;color:#9aa79a;font-weight:700;font-size:11px;margin-top:24px;letter-spacing:.3px}.toast{position:fixed;bottom:23px;left:50%;transform:translate(-50%,20px);z-index:20;background:#1e2620;color:white;border-radius:10px;padding:12px 18px;font-size:13px;font-weight:750;opacity:0;pointer-events:none;transition:.25s}.toast.active{opacity:1;transform:translate(-50%,0)}
-  @media (max-width:950px){.intro{align-items:start;flex-direction:column;gap:13px}.intro p{max-width:650px}.workspace{grid-template-columns:minmax(275px,320px) minmax(0,1fr)}.stage{min-height:340px}.preview-panel{min-height:470px}.bottom{grid-template-columns:1fr}.shell{padding:30px 22px}}@media (max-width:720px){.preview-area{order:-1}.preview-panel{min-height:350px}.mobile-quick{display:grid;gap:7px;padding:14px 16px 0}.mobile-quick label{font-size:12px;font-weight:800}.mobile-quick input{width:100%;font-size:20px;font-weight:800;min-height:50px;border:1px solid #d4dcd5;border-radius:10px;padding:8px 12px;color:#19231f;background:#fbfcfa}.stage{min-height:250px!important;padding:20px 14px!important}.header-inner{padding:0 20px;min-height:64px}.header-right{font-size:9px}.intro h1{letter-spacing:-2px}.workspace{grid-template-columns:1fr}.settings{padding:21px;gap:20px}.stage{min-height:300px;padding:25px 16px}.preview-panel{min-height:430px}.preview-footer{padding:16px;gap:14px}.icon-actions{width:100%}.icon-actions .btn{flex:1}.footer{align-items:flex-start;flex-direction:column}.shell{padding:28px 17px 30px}}
-  .style-picks{display:grid;grid-template-columns:1fr 1fr;gap:8px}.style-pick{background:#f7f9f6;border:1.5px solid #dbe2dc;border-radius:11px;padding:12px 10px;display:flex;flex-direction:column;gap:6px;text-align:left;min-height:70px}.style-pick strong{font-weight:900;font-size:12px}.style-pick small{font-size:10px;color:#7c8880}.style-pick[aria-pressed="true"]{border-color:#6a60f6;background:#f1f0ff;box-shadow:inset 0 0 0 1px #6a60f6}.style-pick[aria-pressed="true"] small{color:#655cbd}
+  :root { color-scheme:light; --ink:#1c2923;--muted:#73817a;--line:#e4e9e5;--paper:#f7f8f5;--purple:#6150f7; }
+  * {box-sizing:border-box}
+  html {font:16px/1.5 Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--paper);color:var(--ink)}
+  body {margin:0;min-width:320px}
+  button,input {font:inherit}
+  button {cursor:pointer}
+  button:focus-visible,input:focus-visible {outline:3px solid #8a7df6;outline-offset:3px}
+  .wrap {max-width:1180px;margin:0 auto;padding:0 27px}
+  header {border-bottom:1px solid var(--line);background:#ffffffa8}
+  .head {min-height:78px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+  .brand {font-weight:850;font-size:27px;letter-spacing:-1.9px;text-decoration:none;color:var(--ink);display:flex;align-items:center;gap:9px}
+  .brand-mark {display:grid;place-items:center;width:30px;height:30px;border-radius:8px;font-size:19px;line-height:1;color:#fff;background:linear-gradient(145deg,#6452fa,#4bdab6,#57f979);font-weight:850}
+  .head-note {font-size:11px;letter-spacing:1.8px;color:#87958c;font-weight:750;text-transform:uppercase}
+  main {padding-top:45px;padding-bottom:50px}
+  .heading {display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:24px}
+  .eyebrow {color:#7864e7;text-transform:uppercase;font-size:11px;letter-spacing:2px;font-weight:820}
+  h1 {font-size:clamp(30px,4.5vw,52px);line-height:1.06;letter-spacing:-2.3px;margin:9px 0 0;font-weight:850}
+  .subtitle {max-width:270px;font-size:13px;line-height:1.6;color:var(--muted);margin:0 0 4px}
+  .card {border-radius:19px;background:#fff;border:1px solid var(--line);overflow:hidden}
+  .canvas-top {height:54px;padding:0 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:15px;align-items:center}
+  .label-title {font-size:12px;font-weight:850}
+  .live {font-size:11px;font-weight:780;color:#34875f;letter-spacing:.5px;display:flex;align-items:center;gap:8px}
+  .live::before {content:'';background:#46db8c;width:7px;height:7px;border-radius:50%}
+  .stage {height:365px;display:flex;align-items:center;justify-content:flex-start;padding:28px 32px 36px;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;scrollbar-color:#b8b3de #fafafa;overscroll-behavior-x:contain;background:#fff}
+  #preview {flex:0 0 auto;margin-inline:auto;width:max-content;line-height:0}
+  #preview svg {display:block;max-width:none;max-height:none;overflow:visible}
+  .empty {color:#9ca9a0;font-size:16px;line-height:1.4}
+  .stage-bottom {border-top:1px solid var(--line);padding:17px 21px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .hint {font-size:11px;color:var(--muted);font-weight:650}
+  .actions {display:flex;gap:9px}
+  .btn {border:1px solid #dae3dc;background:#fff;color:#203128;border-radius:9px;font-size:12px;font-weight:850;padding:11px 17px;display:inline-flex;align-items:center;gap:9px;min-height:41px}
+  .btn.primary {border-color:#202823;background:#202823;color:#fff}
+  .btn:hover {background:#f6f8f5}
+  .btn.primary:hover {background:#3e4942}
+  .btn:disabled {opacity:.45;cursor:not-allowed}
+  .btn svg {width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .editor {padding:25px 25px 26px;display:grid;grid-template-columns:minmax(210px,1.4fr) minmax(170px,1fr) minmax(190px,1fr);gap:24px;align-items:start}
+  .control {min-width:0}
+  .control label,.control-head label {font-size:12px;font-weight:820}
+  .control-head {display:flex;justify-content:space-between;gap:12px;align-items:baseline;margin-bottom:14px}
+  output {font-size:12px;font-variant-numeric:tabular-nums;color:#5e4fdb;font-weight:850}
+  input[type=text] {margin-top:10px;min-width:0;width:100%;border:1.5px solid #d9e0d9;border-radius:10px;height:53px;padding:0 15px;background:#fafbf9;font-size:20px;font-weight:720;letter-spacing:-.5px;color:var(--ink)}
+  input[type=text]:focus {border-color:#7c6af4;background:#fff}
+  input[type=range] {width:100%;accent-color:#6654f5;cursor:pointer;margin:2px 0 7px;height:23px;touch-action:pan-y}
+  .range-ends {display:flex;justify-content:space-between;color:#9ca7a0;font-size:10px;font-weight:680;font-variant-numeric:tabular-nums}
+  .note {font-size:11px;color:#88978c;margin:10px 0 0}
+  .note strong {color:#4d5d53}
+  .error {color:#c03838;font-size:12px;font-weight:700;min-height:18px;margin:0}
+  .bottom-note {display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:23px;color:#8c9a91;font-size:11px;flex-wrap:wrap}
+  .bottom-note a {color:inherit;text-decoration:underline;text-underline-offset:2px}
+  .toast {position:fixed;left:50%;bottom:24px;transform:translate(-50%,12px);opacity:0;pointer-events:none;background:#213029;color:#fff;padding:12px 17px;border-radius:10px;font-size:12px;font-weight:750;transition:.17s;z-index:3;white-space:nowrap}
+  .toast.show {transform:translate(-50%,0);opacity:1}
+  @media(max-width:820px){.editor{grid-template-columns:1fr 1fr}.control.word{grid-column:1/-1}.heading{align-items:start;flex-direction:column;gap:10px}.subtitle{max-width:570px}.stage{height:320px}}
+  @media(max-width:520px){.wrap{padding:0 16px}.head{min-height:64px}.brand{font-size:25px}.head-note{font-size:9px;letter-spacing:1px}main{padding-top:29px;padding-bottom:26px}h1{letter-spacing:-1.4px}.stage{height:235px;padding:14px 16px 20px}.editor{grid-template-columns:1fr;gap:21px;padding:21px 18px}.control.word{grid-column:auto}.canvas-top{padding:0 16px}.stage-bottom{padding:15px;gap:15px}.actions{width:100%}.btn{flex:1;justify-content:center}.hint{font-size:10px}.bottom-note{margin-top:17px}}
 </style>
 </head>
 <body>
-<header><div class="header-inner"><div class="brand"><span class="brand-logo">f</span>fluid<span class="brand-dot">.</span></div><div class="header-right">Atelier de lettering vectoriel <span style="color:#b6bdb6">/ 01</span></div></div></header>
-<main class="shell">
-  <div class="eyebrow">Design playground &nbsp; / &nbsp; 100% SVG</div>
-  <section class="intro"><h1>Les mots prennent<br>des <span style="background:linear-gradient(90deg,#6653f9,#50cfb9,#58fb77);background-clip:text;-webkit-background-clip:text;color:transparent">formes.</span></h1><p>Crée des lettrages manuscrits et organiques en vrais chemins SVG. Nouveau style inspiré de Pecita, avec connexions naturelles et dégradés lumineux.</p></section>
-  <div class="workspace">
-    <aside class="panel settings" aria-label="Paramètres de génération">
-      <div class="section-header"><h2>01 / Votre mot</h2><span class="meta">ÉDITEUR</span></div>
-      <div class="field"><label class="small-label" for="word">Texte à dessiner</label><input id="word" class="word-input" placeholder="Écris un mot..." maxlength="22" autocomplete="off" spellcheck="false" value="Nicolas" /><div class="helper">Jusqu'à 22 caractères · Lettres, chiffres simples et accents français.</div></div><button type="button" class="generate-btn" id="generate"><svg viewBox="0 0 24 24"><path d="M12 3l1.9 6.1L20 11l-6.1 1.9L12 19l-1.9-6.1L4 11l6.1-1.9z"/></svg> Générer le lettering</button><div class="helper" style="margin-top:-14px">Le dessin ne change que lorsque tu appuies sur ce bouton.</div>
-      <div class="suggestions" aria-label="Exemples"><button class="chip" data-word="Nicolas">Nicolas</button><button class="chip" data-word="Jello">Jello</button><button class="chip" data-word="Plénée">Plénée</button><button class="chip" data-word="Bonjour">Bonjour</button></div>
-      <div class="divider"></div>
-      <div class="section-header"><h2>02 / Style du tracé</h2><span class="meta">2 MODES</span></div>
-      <div class="style-picks" role="group" aria-label="Style de lettres"><button class="style-pick" type="button" data-style="handwritten" aria-pressed="true"><strong>Manuscrit</strong><small>Lié · inspiré de Pecita · plus gras</small></button><button class="style-pick" type="button" data-style="fluid" aria-pressed="false"><strong>Fluid original</strong><small>Épais · organique</small></button></div>
-      <div class="section-header"><h2>03 / Morphologie</h2><span class="meta">TRACÉS</span></div>
-      <div class="sliders"><div><div class="setting-line"><label class="small-label" for="thickness">Épaisseur des courbes</label><span id="thicknessValue" class="val">24</span></div><input class="range" id="thickness" type="range" min="8" max="72" value="24" /></div>
-      <div><div class="setting-line"><label class="small-label" for="fusion">Liaison entre les lettres</label><span id="fusionValue" class="val">0</span></div><input class="range" id="fusion" type="range" min="-25" max="25" value="0" /></div>
-      <div><div class="setting-line"><label class="small-label" for="slant">Inclinaison</label><span id="slantValue" class="val">0°</span></div><input class="range" id="slant" type="range" min="-14" max="12" value="0" /></div></div>
-      <div class="divider"></div>
-      <div class="section-header"><h2>04 / Dégradé</h2><span class="meta">PALETTES</span></div>
-      <div class="palettes" role="group" aria-label="Choisir une palette"><button class="palette" data-palette="jello" title="Électrique" aria-label="Violet, bleu, vert" aria-pressed="true"><span></span></button><button class="palette" data-palette="sunset" title="Sunset" aria-label="Corail, orange, jaune" aria-pressed="false"><span></span></button><button class="palette" data-palette="dream" title="Dream" aria-label="Bleu, lilas, rose" aria-pressed="false"><span></span></button><button class="palette" data-palette="mint" title="Menthe" aria-label="Turquoise et vert" aria-pressed="false"><span></span></button></div>
-      <div class="switch-line"><span>Fond transparent (export)</span><button class="switch" id="transparent" role="switch" aria-checked="true" aria-label="Fond transparent pour l'export"></button></div>
-      <button class="btn" id="regenerate" style="align-self:stretch"><svg viewBox="0 0 24 24"><path d="M20 7v5h-5"/><path d="M4 17v-5h5"/><path d="M5.5 9A7 7 0 0 1 18 6l2 1M4 17l2 1a7 7 0 0 0 12.5-3"/></svg> Générer une autre variation</button>
-    </aside>
-    <div class="preview-area">
-      <section class="panel preview-panel" aria-label="Aperçu du lettering"><div class="preview-header"><h2 class="preview-title">Résultat</h2><span class="preview-meta" id="liveStatus">EXEMPLE : NICOLAS</span></div><div class="mobile-quick"><label for="wordMobile">Votre mot</label><input type="text" id="wordMobile" value="Nicolas" maxlength="22" autocomplete="off" spellcheck="false" aria-label="Mot à dessiner" /><button class="generate-btn" id="generateMobile" type="button"><svg viewBox="0 0 24 24"><path d="M12 3l1.9 6.1L20 11l-6.1 1.9L12 19l-1.9-6.1L4 11l6.1-1.9z"/></svg> Générer le lettering</button></div><div id="stage" class="stage"><div id="preview" role="img" aria-label="Lettrage vectoriel généré"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1486" height="580" viewBox="0 0 1486.00 580" role="img" aria-label="Lettrage vectoriel Nicolas"><title>Nicolas — lettering organique</title><desc>Logotype généré avec des courbes de Bézier, sans police. Chaque lettre est un groupe de chemins SVG modifiables.</desc><defs><linearGradient id="ink" x1="0" y1="230" x2="1486.00" y2="330" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6150f7"></stop><stop offset="25%" stop-color="#5e7bed"></stop><stop offset="50%" stop-color="#53b4cf"></stop><stop offset="75%" stop-color="#56dba2"></stop><stop offset="100%" stop-color="#55fa78"></stop></linearGradient><linearGradient id="ink-0" x1="-72.00" y1="230" x2="1414.00" y2="330" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6150f7"></stop><stop offset="25%" stop-color="#5e7bed"></stop><stop offset="50%" stop-color="#53b4cf"></stop><stop offset="75%" stop-color="#56dba2"></stop><stop offset="100%" stop-color="#55fa78"></stop></linearGradient><linearGradient id="ink-1" x1="-498.00" y1="230" x2="988.00" y2="330" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6150f7"></stop><stop offset="25%" stop-color="#5e7bed"></stop><stop offset="50%" stop-color="#53b4cf"></stop><stop offset="75%" stop-color="#56dba2"></stop><stop offset="100%" stop-color="#55fa78"></stop></linearGradient><linearGradient id="ink-2" x1="-577.00" y1="230" x2="909.00" y2="330" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6150f7"></stop><stop offset="25%" stop-color="#5e7bed"></stop><stop offset="50%" stop-color="#53b4cf"></stop><stop offset="75%" stop-color="#56dba2"></stop><stop offset="100%" stop-color="#55fa78"></stop></linearGradient><linearGradient id="ink-3" x1="-724.00" y1="230" x2="762.00" y2="330" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6150f7"></stop><stop offset="25%" stop-color="#5e7bed"></stop><stop offset="50%" stop-color="#53b4cf"></stop><stop offset="75%" stop-color="#56dba2"></stop><stop offset="100%" stop-color="#55fa78"></stop></linearGradient><linearGradient id="ink-4" x1="-907.00" y1="230" x2="579.00" y2="330" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6150f7"></stop><stop offset="25%" stop-color="#5e7bed"></stop><stop offset="50%" stop-color="#53b4cf"></stop><stop offset="75%" stop-color="#56dba2"></stop><stop offset="100%" stop-color="#55fa78"></stop></linearGradient><linearGradient id="ink-5" x1="-1050.00" y1="230" x2="436.00" y2="330" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6150f7"></stop><stop offset="25%" stop-color="#5e7bed"></stop><stop offset="50%" stop-color="#53b4cf"></stop><stop offset="75%" stop-color="#56dba2"></stop><stop offset="100%" stop-color="#55fa78"></stop></linearGradient><linearGradient id="ink-6" x1="-1240.00" y1="230" x2="246.00" y2="330" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6150f7"></stop><stop offset="25%" stop-color="#5e7bed"></stop><stop offset="50%" stop-color="#53b4cf"></stop><stop offset="75%" stop-color="#56dba2"></stop><stop offset="100%" stop-color="#55fa78"></stop></linearGradient></defs><g transform="skewX(-5) translate(15 0)"><g id="lettre-1" data-letter="N" transform="translate(72.00 4.68) rotate(0.63 215 350)"><g transform=""><path d="M 39 389 C 56 412 77 412 92 389 C 115 355 117 267 131 199 C 147 123 176 111 196 157 C 223 226 246 342 285 410 C 302 351 325 243 346 160 C 354 125 385 122 386 165 C 393 241 369 360 391 411 C 401 434 422 430 443 409" fill="none" stroke="url(#ink-0)" stroke-width="68.00" stroke-linecap="round" stroke-linejoin="round"></path></g></g><g id="lettre-2" data-letter="i" transform="translate(498.00 3.41) rotate(-0.70 41.5 350)"><g transform=""><path d="M 29 332 C 24 370 16 409 33 426 C 47 439 71 424 91 403" fill="none" stroke="url(#ink-1)" stroke-width="68.00" stroke-linecap="round" stroke-linejoin="round"></path><ellipse cx="45" cy="248" rx="29.0" ry="32.0" fill="url(#ink-1)"></ellipse></g></g><g id="lettre-3" data-letter="c" transform="translate(577.00 2.75) rotate(-0.18 75.5 350)"><g transform=""><path d="M 152 336 C 120 308 73 312 43 352 C 12 391 27 431 59 439 C 95 448 127 430 151 409" fill="none" stroke="url(#ink-2)" stroke-width="68.00" stroke-linecap="round" stroke-linejoin="round"></path></g></g><g id="lettre-4" data-letter="o" transform="translate(724.00 1.06) rotate(1.37 93.5 350)"><g transform=""><path d="M 149 350 C 129 316 82 308 51 334 C 17 362 14 406 40 430 C 73 458 121 434 145 397 C 170 356 146 316 125 336 C 102 361 115 422 172 424 C 181 424 191 418 200 406" fill="none" stroke="url(#ink-3)" stroke-width="68.00" stroke-linecap="round" stroke-linejoin="round"></path></g></g><g id="lettre-5" data-letter="l" transform="translate(907.00 -3.52) rotate(-0.56 92 350)"><g transform=""><path d="M 33 414 C 41 372 49 325 58 272 C 67 219 78 165 94 132 C 107 106 132 103 143 132 C 156 169 151 227 145 286 C 140 335 137 378 139 409 C 141 436 153 441 170 427 C 176 421 182 414 191 405" fill="none" stroke="url(#ink-4)" stroke-width="68.00" stroke-linecap="round" stroke-linejoin="round"></path></g></g><g id="lettre-6" data-letter="a" transform="translate(1050.00 0.65) rotate(0.60 97 350)"><g transform=""><path d="M 151 344 C 132 316 81 303 48 338 C 15 370 13 416 48 433 C 88 452 125 409 143 367 C 150 350 152 335 154 326 C 148 368 139 408 164 423 C 180 434 194 419 210 402" fill="none" stroke="url(#ink-5)" stroke-width="68.00" stroke-linecap="round" stroke-linejoin="round"></path></g></g><g id="lettre-7" data-letter="s" transform="translate(1240.00 -0.68) rotate(1.20 79.5 350)"><g transform=""><path d="M 148 326 C 117 300 68 314 45 342 C 17 376 65 381 105 397 C 159 419 130 469 84 463 C 55 458 34 442 19 427" fill="none" stroke="url(#ink-6)" stroke-width="68.00" stroke-linecap="round" stroke-linejoin="round"></path></g></g></g></svg></div><div class="stage-hint">TRACÉS SVG • DÉFILEMENT HORIZONTAL SI BESOIN</div><div class="stage-dot">DESSIN SVG</div></div><noscript><p style="padding:10px 16px;font-size:12px;color:#8a3e3e">JavaScript est désactivé dans cet aperçu. Le visuel initial est affiché, et le bouton « Générer » ne fonctionnera pas dans cet aperçu. Ouvrez le fichier dans Safari ou Chrome avec JavaScript activé.</p></noscript><div class="preview-footer"><div class="footer-info"><b id="letterCount">7 caractères</b> &nbsp;·&nbsp; vectoriel &nbsp;·&nbsp; mise à l'échelle infinie</div><div class="icon-actions"><button class="btn" id="copy"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg> Lien</button><button class="btn btn-primary" id="downloadPNG"><svg viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg> PNG</button><button class="btn btn-gradient" id="downloadSVG"><svg viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg> SVG vectoriel</button></div></div></section>
-      <div class="bottom"><div class="tip"><div class="tip-icon">✳</div><div><strong>De vrais tracés SVG éditables.</strong><p>Les lettres gardent leur hauteur et leur proportion, même dans les mots longs : fais défiler le dessin horizontalement. Un seul dégradé traverse tout le mot. Les tracés de Pecita (Philippe Cochy, licence OFL 1.1) restent vectoriels.</p></div></div><div class="tech-note"><strong>Astuce :</strong> le mode manuscrit démarre désormais plus gras. Ajoute <code>?mot=Hello</code> à l'adresse pour remplir le champ, puis clique sur « Générer ». Exporte en SVG pour le modifier dans Figma, Illustrator ou Penpot.</div></div>
+<header><div class="wrap head"><div class="brand"><span class="brand-mark">f</span>fluid<span style="color:#6c58f6">.</span></div><span class="head-note">Vector lettering studio</span></div></header>
+<main class="wrap">
+  <div class="heading"><div><div class="eyebrow">Atelier typographique</div><h1>Un mot, une forme.</h1></div><p class="subtitle">Écris ton mot, ajuste les deux curseurs et regarde ton lettering évoluer instantanément.</p></div>
+  <section class="card" aria-label="Éditeur de lettering">
+    <div class="canvas-top"><span class="label-title">Ton lettrage</span><span id="liveStatus" class="live" aria-live="polite">Aperçu en direct</span></div>
+    <div class="stage" id="stage"><div id="preview" role="img" aria-label="Lettrage vectoriel"><span class="empty">Chargement du tracé…</span></div></div>
+    <div class="stage-bottom"><span class="hint">SVG vectoriel · dégradé continu · défilement horizontal si nécessaire</span><div class="actions">
+      <button id="downloadPNG" class="btn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>PNG</button>
+      <button id="downloadSVG" class="btn primary" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>SVG</button>
+    </div></div>
+    <div class="editor">
+      <div class="control word"><label for="word">Ton mot</label><input id="word" type="text" maxlength="22" autocomplete="off" spellcheck="false" value="Nicolas" placeholder="Écris ici…"><p class="note">22 caractères maximum, accents inclus.</p></div>
+      <div class="control"><div class="control-head"><label for="thickness">Épaisseur</label><output id="thicknessValue" for="thickness">28</output></div><input id="thickness" type="range" min="0" max="110" step="1" value="28"><div class="range-ends"><span>Fin</span><span>Très gras</span></div></div>
+      <div class="control"><div class="control-head"><label for="spacing">Espacement</label><output id="spacingValue" for="spacing">0</output></div><input id="spacing" type="range" min="-200" max="180" step="1" value="0"><div class="range-ends"><span>−200 · superposition</span><span>+180 · espacé</span></div><p class="note">Passe en négatif pour superposer les formes liées.</p></div>
     </div>
-  </div>
-  <footer class="footer"><span>FLUID® — UNE EXPÉRIENCE DE LETTERING PARAMÉTRIQUE</span><span>TRACÉS SVG • <a style="color:inherit" href="PECITA-OFL.txt" target="_blank" rel="noopener">CRÉDITS &amp; LICENCE OFL 1.1</a></span></footer>
+  </section>
+  <footer class="bottom-note"><span>FLUID · Lettres manuscrites en chemins SVG</span><span>Contours inspirés de Pecita · Philippe Cochy · <a href="PECITA-OFL.txt" target="_blank" rel="noopener">Licence OFL 1.1</a></span></footer>
 </main>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 <script src="pecita-outlines.js"></script>
 <script>
 'use strict';
-// Chaque glyphe est un ensemble de tracés de Bézier dessinés à la main.
-// Coordonnées locales, axe y commun (capitals ~140, x-height ~315, baseline ~420).
-// Les chemins sont dessinés directement : aucun élément SVG <text>, aucune fonte.
-const glyphs = {
-  a:{w:194,p:['M 151 344 C 132 316 81 303 48 338 C 15 370 13 416 48 433 C 88 452 125 409 143 367 C 150 350 152 335 154 326 C 148 368 139 408 164 423 C 180 434 194 419 210 402']},
-  b:{w:184,p:['M 18 411 C 42 326 72 210 86 158 C 96 120 124 130 124 163 C 124 223 80 328 49 408 C 70 355 103 326 137 329 C 184 331 189 399 150 428 C 123 449 78 438 64 421']},
-  c:{w:151,p:['M 152 336 C 120 308 73 312 43 352 C 12 391 27 431 59 439 C 95 448 127 430 151 409']},
-  d:{w:189,p:['M 139 351 C 122 311 75 311 47 345 C 13 385 23 429 58 439 C 93 448 131 414 147 373','M 159 163 C 164 124 192 124 192 162 C 185 240 150 349 144 399 C 138 433 168 441 193 412']},
-  e:{w:153,p:['M 56 396 C 114 382 155 352 139 329 C 120 303 70 321 47 345 C 5 388 23 429 61 439 C 96 450 131 428 154 409']},
-  f:{w:118,p:['M 34 454 C 48 363 69 275 90 198 C 106 138 119 123 139 144','M 24 301 C 59 310 101 300 140 279']},
-  g:{w:180,p:['M 151 345 C 124 311 71 309 43 346 C 9 388 31 435 66 437 C 107 441 143 392 155 348 C 169 295 142 428 123 473 C 106 518 61 540 31 508']},
-  h:{w:189,p:['M 16 415 C 34 352 67 226 83 165 C 95 124 125 127 123 163 C 117 222 82 347 53 419 C 80 373 99 341 125 331 C 156 318 172 347 164 380 C 155 418 163 433 193 410']},
-  i:{w:83,p:['M 29 332 C 24 370 16 409 33 426 C 47 439 71 424 91 403'],dots:[[45,248,29,32]]},
-  j:{w:110,p:['M 66 330 C 61 393 54 457 33 491 C 10 528 -18 520 -33 503'],dots:[[76,247,29,31]]},
-  k:{w:163,p:['M 13 413 C 31 349 58 236 76 171 C 88 122 114 124 116 159 C 121 222 78 356 51 420','M 154 328 C 122 336 88 364 63 385 C 90 375 109 397 119 421 C 131 444 159 437 181 410']},
-  l:{w:184,p:['M 33 414 C 41 372 49 325 58 272 C 67 219 78 165 94 132 C 107 106 132 103 143 132 C 156 169 151 227 145 286 C 140 335 137 378 139 409 C 141 436 153 441 170 427 C 176 421 182 414 191 405']},
-  m:{w:278,p:['M 10 420 C 21 380 29 354 41 322 C 34 369 28 416 49 427 C 70 433 87 337 119 333 C 152 328 132 398 130 419 C 151 385 174 331 204 334 C 238 336 217 393 223 418 C 229 445 258 433 284 410']},
-  n:{w:188,p:['M 11 417 C 24 367 36 343 43 323 C 37 363 34 405 50 425 C 65 434 84 341 116 333 C 147 322 164 347 156 383 C 149 426 159 441 191 412']},
-  o:{w:187,p:['M 149 350 C 129 316 82 308 51 334 C 17 362 14 406 40 430 C 73 458 121 434 145 397 C 170 356 146 316 125 336 C 102 361 115 422 172 424 C 181 424 191 418 200 406']},
-  p:{w:177,p:['M 17 421 C 30 370 44 326 49 312 C 38 373 17 461 8 510','M 43 385 C 68 347 94 324 127 331 C 169 336 172 404 135 428 C 100 450 65 438 51 417']},
-  q:{w:191,p:['M 149 347 C 130 312 80 311 49 343 C 17 378 26 425 58 438 C 94 451 127 409 146 370','M 162 329 C 148 395 137 461 130 506 C 124 527 145 531 159 501']},
-  r:{w:135,p:['M 16 415 C 29 371 35 346 44 327 C 43 376 35 413 55 424 C 72 431 84 347 112 333 C 129 324 141 334 147 344']},
-  s:{w:159,p:['M 148 326 C 117 300 68 314 45 342 C 17 376 65 381 105 397 C 159 419 130 469 84 463 C 55 458 34 442 19 427']},
-  t:{w:127,p:['M 75 210 C 69 284 51 352 46 392 C 38 439 67 448 111 406','M 13 312 C 51 312 97 309 134 292']},
-  u:{w:179,p:['M 40 322 C 30 353 18 394 26 414 C 37 449 73 430 97 398 C 115 373 125 345 131 326 C 124 363 119 407 138 423 C 157 439 172 422 191 406']},
-  v:{w:177,p:['M 25 324 C 19 363 14 404 27 425 C 42 446 68 419 91 388 C 113 360 139 324 145 335 C 163 365 111 432 162 424']},
-  w:{w:264,p:['M 22 328 C 14 375 13 412 34 427 C 56 441 87 358 108 338 C 104 378 97 409 116 424 C 134 442 167 355 193 334 C 193 370 178 413 197 423 C 216 435 240 408 268 371']},
-  x:{w:158,p:['M 24 330 C 62 340 82 391 118 428','M 149 329 C 121 346 87 379 55 411 C 38 429 27 438 12 432']},
-  y:{w:170,p:['M 34 327 C 15 375 19 420 46 426 C 78 434 115 359 139 326 C 132 366 104 468 75 496 C 55 516 28 520 10 501']},
-  z:{w:166,p:['M 25 340 C 66 321 116 325 145 327 C 103 371 72 398 38 431 C 78 419 126 420 164 407']},
-  '0':{w:185,p:['M 93 170 C 38 167 22 235 27 317 C 30 390 61 438 101 427 C 151 415 168 340 157 266 C 149 203 129 175 93 170']},
-  '1':{w:120,p:['M 19 234 C 54 209 76 180 90 166 C 78 253 67 343 60 419']},
-  '2':{w:173,p:['M 27 227 C 56 151 150 140 152 220 C 153 288 76 360 32 421 C 83 408 126 410 169 405']},
-  '3':{w:170,p:['M 29 209 C 77 154 157 168 148 231 C 144 266 100 296 65 297 C 107 286 159 310 151 375 C 140 454 54 444 19 414']},
-  '4':{w:173,p:['M 133 165 C 102 232 60 301 22 355 C 70 352 121 350 158 344','M 139 267 C 132 331 128 378 125 419']},
-  '5':{w:174,p:['M 157 177 C 115 180 74 185 42 187 C 40 226 34 269 32 300 C 86 264 149 289 154 357 C 158 426 67 461 22 410']},
-  '6':{w:171,p:['M 145 190 C 96 148 51 204 37 275 C 18 363 43 428 97 431 C 143 433 166 386 142 347 C 123 319 81 320 49 357']},
-  '7':{w:170,p:['M 17 193 C 67 174 116 179 162 190 C 133 254 103 326 78 420']},
-  '8':{w:170,p:['M 91 292 C 21 256 46 174 102 173 C 162 172 167 246 89 298 C 11 338 17 429 91 432 C 167 436 189 354 91 292']},
-  '9':{w:169,p:['M 140 295 C 117 327 69 328 46 295 C 14 247 48 173 102 178 C 164 183 163 285 131 356 C 110 402 88 422 45 427']},
-  '?':{w:145,p:['M 24 225 C 40 181 100 164 127 199 C 157 245 94 271 78 321','M 79 410 C 79 410 79 412 79 414']},
-  '!':{w:84,p:['M 45 174 C 44 257 40 320 39 342','M 38 410 C 38 410 38 413 38 415']},
-  '-':{w:115,p:['M 24 365 C 56 360 85 358 117 356']},
-  '.':{w:73,p:['M 35 417 C 35 418 37 419 37 420']},
-  "'":{w:65,p:['M 47 181 C 44 212 36 236 21 256']},
-  '&':{w:220,p:['M 187 387 C 135 442 48 442 39 386 C 28 321 119 302 132 252 C 147 199 110 157 76 178 C 35 204 70 274 119 323 C 156 359 190 393 219 426']}
-};
-// Dessins majuscules distincts pour les premières lettres les plus fréquentes.
-const capitals = {
-  N:{w:430,p:['M 39 389 C 56 412 77 412 92 389 C 115 355 117 267 131 199 C 147 123 176 111 196 157 C 223 226 246 342 285 410 C 302 351 325 243 346 160 C 354 125 385 122 386 165 C 393 241 369 360 391 411 C 401 434 422 430 443 409']},
-  J:{w:260,p:['M 22 338 C 53 302 107 282 155 246 C 200 211 220 166 208 149 C 199 136 175 138 169 175 C 156 253 170 352 127 408 C 99 446 42 455 26 419 C 14 391 32 370 60 360']},
-  A:{w:244,p:['M 28 415 C 55 337 96 228 153 155 C 186 114 193 145 178 209 C 157 285 140 361 152 414 C 159 440 194 432 221 411','M 75 346 C 119 363 175 358 216 330']},
-  B:{w:232,p:['M 22 427 C 46 345 71 250 93 166 C 117 122 167 139 190 170 C 227 224 170 288 109 300 C 182 268 231 301 220 360 C 206 441 93 459 61 414']},
-  C:{w:218,p:['M 205 221 C 187 158 125 146 76 197 C 18 258 13 363 67 411 C 112 456 172 438 211 401']},
-  D:{w:250,p:['M 23 412 C 48 339 76 237 97 166 C 108 128 148 150 178 174 C 235 217 241 313 195 378 C 161 427 94 453 59 422']},
-  E:{w:219,p:['M 191 181 C 136 158 82 172 69 231 C 48 313 51 373 44 421 C 102 445 163 433 209 402','M 52 307 C 93 297 140 293 175 294']},
-  F:{w:197,p:['M 59 416 C 78 327 105 218 118 169','M 51 182 C 98 163 144 169 190 175','M 61 310 C 95 299 135 298 170 295']},
-  G:{w:256,p:['M 227 226 C 195 159 139 153 85 197 C 21 249 15 364 73 414 C 115 450 173 433 211 402 C 232 382 234 338 227 318 C 201 319 181 320 158 330']},
-  H:{w:260,p:['M 27 413 C 52 334 81 232 109 156','M 214 151 C 195 233 170 339 169 418','M 44 308 C 99 286 158 285 231 306']},
-  I:{w:138,p:['M 49 166 C 76 154 107 154 132 168','M 93 168 C 75 245 61 336 50 420','M 19 425 C 49 434 95 428 125 410']},
-  L:{w:180,p:['M 107 154 C 93 232 63 345 44 424 C 82 436 138 421 172 399']},
-  M:{w:358,p:['M 22 420 C 40 335 65 242 89 160 C 98 130 120 139 129 184 C 145 244 152 315 169 370 C 196 288 232 198 266 157 C 291 126 310 140 301 193 C 291 264 272 363 283 410 C 289 431 328 425 352 405']},
-  O:{w:269,p:['M 146 171 C 79 150 34 207 28 283 C 18 358 51 426 120 429 C 189 434 235 377 238 297 C 243 220 212 173 146 171']},
-  P:{w:211,p:['M 29 424 C 48 347 77 245 92 168 C 127 146 177 150 192 191 C 217 263 144 328 75 306']},
-  R:{w:244,p:['M 27 421 C 47 342 73 233 91 169 C 131 147 189 155 196 212 C 205 276 151 304 92 300 C 139 302 162 360 190 407 C 203 433 227 429 241 412']},
-  S:{w:225,p:['M 201 190 C 157 153 98 168 67 203 C 18 257 61 308 119 323 C 204 347 192 428 123 437 C 81 443 44 418 19 397']},
-  T:{w:227,p:['M 25 199 C 86 175 159 168 226 183','M 133 174 C 119 248 94 343 82 418']},
-  V:{w:235,p:['M 31 176 C 24 262 25 343 56 411 C 85 472 171 322 207 166']},
-  Y:{w:226,p:['M 22 174 C 38 240 62 310 105 338 C 144 311 176 247 207 167','M 109 341 C 99 378 91 408 87 433']}
-};
-const palettes={
-  jello:['#6150f7','#5e7bed','#53b4cf','#56dba2','#55fa78'],
-  sunset:['#ff526e','#fa8265','#ffb768','#ffe666','#fff278'],
-  dream:['#2742d1','#5f67ee','#a278ed','#dc76eb','#f78bd7'],
-  mint:['#009e90','#39b6ab','#78d4c8','#a0e4c8','#d0f7a1']
-};
 const $=id=>document.getElementById(id);
-const state={word:'Nicolas',thickness:24,fusion:0,slant:0,palette:'jello',transparent:true,seed:11,style:'handwritten'};
-let currentSvg='',svgDimensions={width:1486,height:580},lastGeneratedWord='Nicolas';let toastTimeout;
-function escapeXML(s){return s.replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]));}
-function seeded(n){let v=Math.sin(n*87.12+state.seed*19.31)*43758.5453;return v-Math.floor(v);}
-function glyphFor(char){
-  if (capitals[char]) return capitals[char];
-  let norm=char.normalize('NFD');let base=norm[0];
-  if(glyphs[base.toLowerCase()]) return glyphs[base.toLowerCase()];
-  if(glyphs[char]) return glyphs[char];
-  if(char===' ' ) return {w:76,p:[]};
-  return glyphs['?'];
-}
-function accentFor(char,idx,x,width){
-  let norm=char.normalize('NFD');if(norm.length<2)return '';
-  let marks=norm.slice(1),markup='';
-  if(/\u0301/.test(marks)) markup+=`<path d="M ${x+width*.43} 226 Q ${x+width*.50} 205 ${x+width*.65} 185" stroke="#fff" stroke-width="${(state.thickness*.32).toFixed(1)}" fill="none" stroke-linecap="round"/>`;
-  if(/\u0300/.test(marks)) markup+=`<path d="M ${x+width*.58} 226 Q ${x+width*.48} 205 ${x+width*.35} 185" stroke="#fff" stroke-width="${(state.thickness*.32).toFixed(1)}" fill="none" stroke-linecap="round"/>`;
-  if(/\u0302/.test(marks)) markup+=`<path d="M ${x+width*.29} 226 L ${x+width*.50} 189 L ${x+width*.71} 226" stroke="#fff" stroke-width="${(state.thickness*.25).toFixed(1)}" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
-  if(/\u0308/.test(marks)) markup+=`<ellipse cx="${x+width*.35}" cy="211" rx="12" ry="15" fill="#fff"/><ellipse cx="${x+width*.68}" cy="211" rx="12" ry="15" fill="#fff"/>`;
-  if(/\u0327/.test(marks)) markup+=`<path d="M ${x+width*.50} 447 Q ${x+width*.69} 478 ${x+width*.43} 487" stroke="#fff" stroke-width="20" fill="none" stroke-linecap="round"/>`;
-  return markup;
-}
-function getOriginalSVG(){
-  const text=state.word.trim().slice(0,22);if(!text) return '';
-  let x=72;const paths=[];const width=state.thickness;
-  const chars=[...text];
-  const totalW=72+chars.reduce((sum,char)=>sum+glyphFor(char).w+14-state.fusion,0)-14+60;
-  const vWidth=Math.max(280,totalW+45),vHeight=580;
-  const colors=palettes[state.palette];
-  const stops=colors.map((c,i)=>`<stop offset="${i*25}%" stop-color="${c}"/>`).join('');
-  chars.forEach((char,i)=>{
-    const glyph=glyphFor(char);
-    const isCapital=/^[A-ZÀ-ÖØ-Þ]$/.test(char);
-    const capVariant= isCapital && !capitals[char];
-    const shapeTrans=capVariant?'translate(0 -23) scale(1 1.075)':'';
-    const localW=glyph.w;
-    // Chaque lettre alimente le même masque alpha ; un unique dégradé peint le mot entier.
-    const letterRot=(seeded(i+1)-.5)*3.2;
-    const shiftY=(seeded(i+23)-.5)*10;
-    // Les glyphes s'entrelacent par superposition des chemins, sans calque image.
-    let inner=glyph.p.map((d,k)=>`<path d="${d}" fill="none" stroke="#fff" stroke-width="${(width*(k>0?.95:1)).toFixed(2)}" stroke-linecap="round" stroke-linejoin="round"/>`).join('');
-    if(glyph.dots) inner+=glyph.dots.map(d=>`<ellipse cx="${d[0]}" cy="${d[1]}" rx="${(d[2]*width/68).toFixed(1)}" ry="${(d[3]*width/68).toFixed(1)}" fill="#fff"/>`).join('');
-    paths.push(`<g id="lettre-${i+1}" data-letter="${escapeXML(char)}" transform="translate(${x.toFixed(2)} ${shiftY.toFixed(2)}) rotate(${letterRot.toFixed(2)} ${localW/2} 350)"><g transform="${shapeTrans}">${inner}</g></g>`);
-    // Les accents reçoivent exactement le même dégradé que le reste du mot.
-    if(char.normalize('NFD').length>1) paths.push(accentFor(char,i,x,localW));
-    x+=localW+14-state.fusion;
-  });
-  // minY libre pour capitales et descendeurs, avec marge pour la rondeur des extrémités.
-  const bg=state.transparent?'':`<rect width="100%" height="100%" fill="#fff"/>`;
-  svgDimensions={width:vWidth,height:vHeight};
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${Math.round(vWidth)}" height="${vHeight}" viewBox="0 0 ${vWidth.toFixed(2)} ${vHeight}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Lettrage vectoriel ${escapeXML(text)}"><title>${escapeXML(text)} — lettering organique</title><desc>Courbes de Bézier sous un seul dégradé sur tout le mot, avec les lettres dans un masque SVG éditable.</desc><defs><linearGradient id="word-gradient" x1="72" y1="0" x2="${(vWidth-100).toFixed(2)}" y2="0" gradientUnits="userSpaceOnUse">${stops}</linearGradient><mask id="word-mask" x="0" y="0" width="${vWidth.toFixed(2)}" height="${vHeight}" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" mask-type="alpha" style="mask-type:alpha"><g transform="skewX(${state.slant}) translate(${Math.abs(state.slant)*3} 0)">${paths.join('')}</g></mask></defs>${bg}<rect x="0" y="0" width="${vWidth.toFixed(2)}" height="${vHeight}" fill="url(#word-gradient)" mask="url(#word-mask)"/></svg>`;
-}
-/* Fluid handwritten contours engine. The data in pecita-outlines.js is derived
-   from Pecita by Philippe Cochy, SIL Open Font License 1.1 (see PECITA-OFL.txt).
-   No SVG <text> and no browser-installed font are used for this mode. */
+const palettes={jello:['#6150f7','#5e7bed','#53b4cf','#56dba2','#55fa78']};
+const state={word:'Nicolas',thickness:28,fusion:0,slant:0,palette:'jello',transparent:true,seed:11};
+let currentSvg='',svgDimensions={width:1000,height:600},lastGeneratedWord='Nicolas',pendingFrame=0,toastTimer=0;
+function escapeXML(s){return String(s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]));}
+function seeded(n){const v=Math.sin(n*87.12+state.seed*19.31)*43758.5453;return v-Math.floor(v);}
+/* Les données de courbes manuscrites sont issues de Pecita sous licence SIL OFL 1.1.
+   Les exports SVG contiennent de vrais chemins et un dégradé continu sur toute la composition. */
 function getHandwrittenSVG(){
   const data=window.FLUID_HANDWRITTEN_DATA;
   if(!data) throw new Error('Les tracés manuscrits ne sont pas chargés. Recharge la page.');
@@ -300,154 +199,39 @@ function getHandwrittenSVG(){
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${Math.ceil(viewW)}" height="${Math.ceil(viewH)}" viewBox="${viewMinX.toFixed(2)} ${viewMinY.toFixed(2)} ${viewW.toFixed(2)} ${viewH.toFixed(2)}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Lettrage manuscrit ${escapeXML(word)}"><title>${escapeXML(word)} — lettering manuscrit vectoriel</title><desc>Contours de Pecita (Philippe Cochy, SIL OFL 1.1). Dégradé horizontal continu sur tout le mot. Chemins SVG éditables dans un masque alpha.</desc><defs><linearGradient id="word-gradient" x1="${minX}" y1="0" x2="${maxX}" y2="0" gradientUnits="userSpaceOnUse">${stops}</linearGradient><mask id="word-mask" x="${viewMinX.toFixed(2)}" y="${viewMinY.toFixed(2)}" width="${viewW.toFixed(2)}" height="${viewH.toFixed(2)}" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" mask-type="alpha" style="mask-type:alpha"><g transform="rotate(${twist.toFixed(2)} ${(minX+maxX)/2} ${-(minY+maxY)/2}) skewX(${state.slant})"><g transform="scale(1,-1)">${glyphPaths.join('')}</g></g></mask></defs>${bg}<rect x="${viewMinX.toFixed(2)}" y="${viewMinY.toFixed(2)}" width="${viewW.toFixed(2)}" height="${viewH.toFixed(2)}" fill="url(#word-gradient)" mask="url(#word-mask)"/></svg>`;
 }
 
-function getSVG(){return state.style==='handwritten'?getHandwrittenSVG():getOriginalSVG();}
 function maintainLetterProportions(){
-  const svg=$('preview').querySelector('svg');
-  if(!svg)return;
-  // Set a consistent visual height; use the SVG viewBox ratio for its exact width.
-  // Long words remain full-size and may be scrolled horizontally, not squeezed.
-  const vb=svg.viewBox.baseVal;
-  if(!vb || !vb.width || !vb.height)return;
-  const targetHeight=window.matchMedia('(max-width:720px)').matches?178:268;
-  const displayWidth=Math.max(1,Math.ceil(targetHeight*vb.width/vb.height));
-  svg.style.width=displayWidth+'px';
-  svg.style.height=targetHeight+'px';
-  $('preview').style.width=displayWidth+'px';
-  // Starting at the left is intentional for long words; shorter ones are centered.
-  $('stage').scrollLeft=0;
+ const svg=$('preview').querySelector('svg');if(!svg)return;
+ const vb=svg.viewBox.baseVal;if(!vb||!vb.width||!vb.height)return;
+ const targetHeight=matchMedia('(max-width:520px)').matches?173:253;
+ const displayWidth=Math.max(1,Math.ceil(targetHeight*vb.width/vb.height));
+ svg.style.height=targetHeight+'px';svg.style.width=displayWidth+'px';
+ $('preview').style.width=displayWidth+'px';
 }
 function render(){
-  currentSvg=getSVG();
-  lastGeneratedWord=state.word.trim();
-  $('preview').innerHTML=currentSvg||'<div class="stage-empty">Écris un mot pour commencer</div>';
-  maintainLetterProportions();
-  $('liveStatus').textContent='GÉNÉRÉ ✓';
-  if($('word').value!==state.word) $('word').value=state.word;
-  if($('wordMobile').value!==state.word) $('wordMobile').value=state.word;
-  $('preview').setAttribute('aria-label',state.word?'Lettrage du mot '+state.word:'Aucun mot saisi');
-  $('letterCount').textContent=[...state.word.trim()].length+' caractère'+([ ...state.word.trim()].length>1?'s':'');
-  try{const url=new URL(location.href);if(state.word.trim())url.searchParams.set('mot',state.word.trim());else url.searchParams.delete('mot');history.replaceState(null,'',url.toString())}catch(e){}
+ const word=state.word.trim();lastGeneratedWord=word;
+ if(!word){currentSvg='';$('preview').style.width='auto';$('preview').innerHTML='<span class="empty">Écris un mot pour commencer</span>';}
+ else {
+   currentSvg=getHandwrittenSVG();
+   $('preview').innerHTML=currentSvg;
+   maintainLetterProportions();
+ }
+ $('preview').setAttribute('aria-label',word?'Lettrage du mot '+word:'Aucun mot');
+ $('downloadSVG').disabled=!word;$('downloadPNG').disabled=!word;
+ $('liveStatus').textContent='Aperçu en direct';$('liveStatus').style.color='#34875f';
+ try {const url=new URL(location.href);if(word)url.searchParams.set('mot',word);else url.searchParams.delete('mot');history.replaceState(null,'',url.toString());}catch(e){}
 }
-function flash(message){const el=$('toast');el.textContent=message;el.classList.add('active');clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>el.classList.remove('active'),2600)}
-function download(blob,name){const href=URL.createObjectURL(blob),a=document.createElement('a');a.href=href;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(href),1000)}
-function fileName(){return (lastGeneratedWord||'lettering').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9_-]/g,'-').replace(/-+/g,'-').toLowerCase();}
-// Les champs et les réglages mettent l'état en attente ; aucun calcul SVG en direct.
-// Explicit generate click only: no SVG recalculation on each keystroke.
-document.querySelectorAll('[data-style]').forEach(btn=>btn.addEventListener('click',()=>{
-  state.style=btn.dataset.style;
-  document.querySelectorAll('[data-style]').forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));
-  const handwritten=state.style==='handwritten';
-  const thickness=$('thickness'); thickness.min=handwritten?8:45;thickness.max=handwritten?72:90;
-  thickness.value=state.thickness=handwritten?24:68;
-  const fusion=$('fusion');fusion.min=handwritten?-25:-15;fusion.max=handwritten?25:38;
-  fusion.value=state.fusion=handwritten?0:18;
-  $('slant').value=state.slant=handwritten?0:-5;
-  for(const n of ['thickness','fusion','slant']) $(n+'Value').textContent=n==='slant'?state.slant+'°':state[n];
-  markPending();
-}));
-function markPending(){
-  $('liveStatus').textContent='À GÉNÉRER';
-  $('liveStatus').style.color='#6c55e8';
-}
-for(const id of ['word','wordMobile']){
-  $(id).addEventListener('input',e=>{
-    state.word=e.target.value.slice(0,22);
-    const other=id==='word'?'wordMobile':'word';
-    $(other).value=state.word;
-    markPending();
-  });
-  $(id).addEventListener('keydown',e=>{
-    if(e.key==='Enter'){
-      e.preventDefault();
-      generateLettering();
-    }
-  });
-}
-document.querySelectorAll('[data-word]').forEach(el=>el.addEventListener('click',()=>{
-  state.word=el.dataset.word;
-  $('word').value=state.word;
-  $('wordMobile').value=state.word;
-  markPending();
-}));
-for(const name of ['thickness','fusion','slant']){
-  $(name).addEventListener('input',e=>{
-    state[name]=Number(e.target.value);
-    $(name+'Value').textContent=name==='slant'?(state.slant>0?'+':'')+state.slant+'°':state[name];
-    markPending();
-  });
-}
-document.querySelectorAll('[data-palette]').forEach(btn=>btn.addEventListener('click',()=>{
-  state.palette=btn.dataset.palette;
-  document.querySelectorAll('[data-palette]').forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));
-  markPending();
-}));
-$('transparent').addEventListener('click',()=>{
-  state.transparent=!state.transparent;
-  $('transparent').setAttribute('aria-checked',String(state.transparent));
-  markPending();
-});
-function generateLettering(randomize=false){
-  const word=state.word.trim();
-  if(!word){
-    $('liveStatus').textContent='SAISIS UN MOT';
-    flash('Saisis un mot avant de générer');
-    return;
-  }
-  if(randomize)state.seed=Math.floor(Math.random()*100000);
-  try{
-    render();
-    $('liveStatus').textContent='GÉNÉRÉ ✓';
-    $('liveStatus').style.color='#24895d';
-    flash('Lettrage « '+word+' » généré');
-  }catch(e){
-    console.error('Erreur génération Fluid',e);
-    $('liveStatus').textContent='ERREUR';
-    flash('Une erreur est survenue pendant la génération');
-  }
-}
-$('generate').addEventListener('click',()=>generateLettering());
-$('generateMobile').addEventListener('click',()=>generateLettering());
-$('regenerate').addEventListener('click',()=>generateLettering(true));
-$('downloadSVG').addEventListener('click',()=>{
-  if(!currentSvg){flash('Génère d’abord ton mot');return;}
-  download(new Blob([currentSvg],{type:'image/svg+xml;charset=utf-8'}),fileName()+'-fluid.svg');
-  flash('SVG vectoriel exporté');
-});
-$('downloadPNG').addEventListener('click',()=>{
-  if(!currentSvg){flash('Génère d’abord ton mot');return;}
-  const img=new Image(),url=URL.createObjectURL(new Blob([currentSvg],{type:'image/svg+xml;charset=utf-8'}));
-  img.onload=()=>{
-    const scale=Math.min(3,Math.max(1,4096/svgDimensions.width));
-    const canvas=document.createElement('canvas');
-    canvas.width=Math.round(svgDimensions.width*scale);
-    canvas.height=Math.round(svgDimensions.height*scale);
-    const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,canvas.width,canvas.height);
-    canvas.toBlob(blob=>{
-      if(blob)download(blob,fileName()+'-fluid.png');
-      URL.revokeObjectURL(url);
-      flash(blob?'PNG exporté':'Erreur de conversion PNG');
-    },'image/png');
-  };
-  img.onerror=()=>{URL.revokeObjectURL(url);flash('Impossible de préparer le PNG')};
-  img.src=url;
-});
-$('copy').addEventListener('click',async()=>{
-  try{await navigator.clipboard.writeText(location.href);flash('Lien copié')}
-  catch(e){const t=document.createElement('textarea');t.value=location.href;document.body.append(t);t.select();document.execCommand('copy');t.remove();flash('Lien copié')}
-});
-// Le paramètre ?mot= préremplit le formulaire mais ne déclenche pas le calcul.
-const initial=new URLSearchParams(location.search).get('mot')||new URLSearchParams(location.search).get('word');
-if(initial){
-  state.word=initial.slice(0,22);
-  $('word').value=state.word;
-  $('wordMobile').value=state.word;
-  markPending();
-}
-// Un exemple de Nicolas est intégré directement dans le HTML ; rien n'est généré au chargement.
-// Référence d'export du visuel initial, sans exécuter le moteur.
-currentSvg=$('preview').querySelector('svg')?.outerHTML||'';
-maintainLetterProportions();
-window.addEventListener('resize',maintainLetterProportions);
+function requestRender(){if(pendingFrame)return;pendingFrame=requestAnimationFrame(()=>{pendingFrame=0;try{render()}catch(e){console.error(e);$('liveStatus').textContent='Erreur de rendu';$('liveStatus').style.color='#c03838';}});}
+function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2200);}
+function download(blob,name){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+function exportName(){return (lastGeneratedWord||'lettering').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9_-]/g,'-').replace(/-+/g,'-').toLowerCase();}
+$('word').addEventListener('input',e=>{state.word=e.target.value.slice(0,22);requestRender();});
+$('thickness').addEventListener('input',e=>{state.thickness=Number(e.target.value);$('thicknessValue').textContent=state.thickness;requestRender();});
+$('spacing').addEventListener('input',e=>{state.fusion=Number(e.target.value);$('spacingValue').textContent=(state.fusion>0?'+':'')+state.fusion;requestRender();});
+$('downloadSVG').addEventListener('click',()=>{if(!currentSvg)return;download(new Blob([currentSvg],{type:'image/svg+xml;charset=utf-8'}),exportName()+'-fluid.svg');toast('SVG vectoriel exporté');});
+$('downloadPNG').addEventListener('click',()=>{if(!currentSvg)return;const img=new Image(),src=URL.createObjectURL(new Blob([currentSvg],{type:'image/svg+xml;charset=utf-8'}));img.onload=()=>{const factor=Math.min(3,Math.max(1,4096/svgDimensions.width));const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(svgDimensions.width*factor));canvas.height=Math.max(1,Math.round(svgDimensions.height*factor));canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);canvas.toBlob(blob=>{if(blob)download(blob,exportName()+'-fluid.png');URL.revokeObjectURL(src);toast(blob?'PNG exporté':'Impossible de créer le PNG')},'image/png');};img.onerror=()=>{URL.revokeObjectURL(src);toast('Impossible de créer le PNG');};img.src=src;});
+const wordFromUrl=new URLSearchParams(location.search).get('mot')||new URLSearchParams(location.search).get('word');
+if(wordFromUrl){state.word=wordFromUrl.slice(0,22);$('word').value=state.word;}
+requestRender();window.addEventListener('resize',maintainLetterProportions);
 </script>
 </body>
 </html>
