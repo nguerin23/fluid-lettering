@@ -25,3 +25,10 @@ L'extraction des lignes centrales est **une approximation du geste**, non une re
 Données dérivées de **Pecita**, Philippe Cochy (2009–2015), licence **SIL Open Font License 1.1**. Voir `PECITA-OFL.txt`.
 
 Lien GitHub Pages : https://nguerin23.github.io/fluid-lettering/
+
+
+## Dernière évolution
+
+- Le **mot principal est maintenant rendu comme un trait continu** (hors accents).
+- Les polylignes sont **lissées** avec un adoucissement avant rendu.
+- Les petits morceaux sont ensuite exportés en SVG avec des **courbes cubiques** pour un rendu plus naturel.
