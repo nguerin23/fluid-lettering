@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#f7f8f5">
-<meta name="description" content="Fluid : tracez des lettrages manuscrits en SVG à partir de lignes centrales, avec un dégradé qui suit la longueur du geste.">
+<meta name="description" content="Fluid : lettering vectoriel utilisant les courbes ouvertes originales de Mistral SingleLine, épaisseur, espacement et dégradé selon le tracé.">
 <title>Fluid — Atelier de lettering</title>
 <style>
   :root { color-scheme:light; --ink:#1c2923;--muted:#73817a;--line:#e4e9e5;--paper:#f7f8f5;--purple:#6150f7; }
@@ -66,254 +66,168 @@
 <body>
 <header><div class="wrap head"><div class="brand"><span class="brand-mark">f</span>fluid<span style="color:#6c58f6">.</span></div><span class="head-note">Vector lettering studio</span></div></header>
 <main class="wrap">
-  <div class="heading"><div><div class="eyebrow">Atelier typographique</div><h1>Un mot, des courbes.</h1></div><p class="subtitle">Écris ton mot, ajuste les deux curseurs et regarde les tracés lissés évoluer en direct.</p></div>
+  <div class="heading"><div><div class="eyebrow">Atelier typographique</div><h1>Un mot, des courbes.</h1></div><p class="subtitle">Mistral SingleLine : des courbes originales, sans lissage artificiel, avec couleur suivant le trait.</p></div>
   <section class="card" aria-label="Éditeur de lettering">
     <div class="canvas-top"><span class="label-title">Ton lettrage</span><span id="liveStatus" class="live" aria-live="polite">Aperçu en direct</span></div>
     <div class="stage" id="stage"><div id="preview" role="img" aria-label="Lettrage vectoriel"><span class="empty">Chargement du tracé…</span></div></div>
-    <div class="stage-bottom"><span class="hint">SVG monoligne · dégradé suivant le trait · défilement horizontal si nécessaire</span><div class="actions">
+    <div class="stage-bottom"><span class="hint">Mistral SingleLine · dégradé suivant le trait · SVG ouvert</span><div class="actions">
       <button id="downloadPNG" class="btn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>PNG</button>
       <button id="downloadSVG" class="btn primary" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>SVG</button>
     </div></div>
     <div class="editor">
-      <div class="control word"><label for="word">Ton mot</label><input id="word" type="text" maxlength="22" autocomplete="off" spellcheck="false" value="Nicolas" placeholder="Écris ici…"><p class="note">22 caractères maximum, accents inclus.</p></div>
-      <div class="control"><div class="control-head"><label for="thickness">Épaisseur</label><output id="thicknessValue" for="thickness">64</output></div><input id="thickness" type="range" min="12" max="160" step="1" value="64"><div class="range-ends"><span>Fin</span><span>Très gras</span></div></div>
+      <div class="control word"><label for="word">Ton mot</label><input id="word" type="text" maxlength="22" autocomplete="off" spellcheck="false" value="Nicolas" placeholder="Écris ici…"><p class="note">Mistral SingleLine, 22 caractères maximum, accents inclus.</p></div>
+      <div class="control"><div class="control-head"><label for="thickness">Épaisseur</label><output id="thicknessValue" for="thickness">42</output></div><input id="thickness" type="range" min="12" max="160" step="1" value="42"><div class="range-ends"><span>Fin</span><span>Très gras</span></div></div>
       <div class="control"><div class="control-head"><label for="spacing">Espacement</label><output id="spacingValue" for="spacing">0</output></div><input id="spacing" type="range" min="-200" max="180" step="1" value="0"><div class="range-ends"><span>−200 · superposition</span><span>+180 · espacé</span></div><p class="note">Passe en négatif pour superposer les formes liées.</p></div>
     </div>
   </section>
-  <footer class="bottom-note"><span>FLUID · Traits SVG centraux éditables</span><span>Tracés centraux adaptés de Pecita · Philippe Cochy · <a href="PECITA-OFL.txt" target="_blank" rel="noopener">Licence OFL 1.1</a></span></footer>
+  <footer class="bottom-note"><span>FLUID · Courbes originales Mistral SingleLine</span><span>isdaT-type · <a href="MISTRAL-OFL.txt" target="_blank" rel="noopener">Licence SIL OFL 1.1</a></span></footer>
 </main>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
-<script src="pecita-outlines.js"></script>
-<script src="pecita-centerlines.js"></script>
+<script src="mistral-strokes.js"></script>
 <script>
 'use strict';
 const $=id=>document.getElementById(id);
 const palettes={jello:['#6150f7','#5e7bed','#53b4cf','#56dba2','#55fa78']};
-const state={word:'Nicolas',thickness:64,fusion:0,slant:0,palette:'jello',transparent:true,seed:11};
+const state={word:'Nicolas',thickness:42,fusion:0,palette:'jello'};
 let currentSvg='',svgDimensions={width:1000,height:600},lastGeneratedWord='Nicolas',pendingFrame=0,toastTimer=0;
 function escapeXML(s){return String(s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]));}
 function seeded(n){const v=Math.sin(n*87.12+state.seed*19.31)*43758.5453;return v-Math.floor(v);}
 /* Les données de courbes manuscrites sont issues de Pecita sous licence SIL OFL 1.1.
    Les exports SVG contiennent de vrais chemins et un dégradé continu sur toute la composition. */
 function getHandwrittenSVG(){
-  const data=window.FLUID_HANDWRITTEN_DATA;
-  if(!data) throw new Error('Les tracés manuscrits ne sont pas chargés. Recharge la page.');
-  const word=state.word.trim().slice(0,22);
-  if(!word)return '';
-  const markSet=new Set(data.isMark.map(Number));
-  const seq=Array.from(word).map(ch => data.cmap[String(ch.codePointAt(0))] ?? data.cmap['63']);
-  // A minimal contextual OpenType substitution engine. It preserves initial,
-  // medial and final letter forms and mandatory joining ligatures.
-  function substitute(list, lookupId, pos, depth=0){
-    if(depth>9 || pos>=list.length)return false;
-    const lookup=data.lookups[String(lookupId)]||[];
-    const ignoreMarks=[10,11,12,13].includes(Number(lookupId));
-    for(const table of lookup){
-      const key=String(list[pos]);
-      if(table.t===1 && Object.prototype.hasOwnProperty.call(table.m,key)){
-        list.splice(pos,1,table.m[key]);return true;
-      }
-      if(table.t===2 && Object.prototype.hasOwnProperty.call(table.m,key)){
-        list.splice(pos,1,...table.m[key]);return true;
-      }
-      if(table.t===4 && table.m[key]){
-        for(const combination of table.m[key]){
-          const components=combination.slice(0,-1);
-          if(components.every((v,j)=>list[pos+1+j]===v)){
-            list.splice(pos,components.length+1,combination[combination.length-1]);return true;
-          }
-        }
-      }
-      if(table.t===5 && table.cov.includes(list[pos])){
-        const classes=table.cls;
-        const cls=classes[key]||0;
-        for(const [following,replacements] of (table.sets[String(cls)]||[])){
-          const places=[pos];let cursor=pos;let valid=true;
-          for(const expected of following){
-            cursor++;
-            if(ignoreMarks){while(cursor<list.length && markSet.has(list[cursor]))cursor++;}
-            if(cursor>=list.length || (classes[String(list[cursor])]||0)!==expected){valid=false;break;}
-            places.push(cursor);
-          }
-          if(!valid)continue;
-          let applied=false;
-          for(const [sequenceIndex,target] of replacements){
-            const targetIndex=places[sequenceIndex];
-            if(targetIndex!==undefined && substitute(list,target,targetIndex,depth+1))applied=true;
-          }
-          if(applied)return true;
+  const font=window.FLUID_MISTRAL_DATA;
+  if(!font)throw new Error('Mistral SingleLine indisponible : le fichier mistral-strokes.js est manquant.');
+  const word=state.word.slice(0,22);
+  if(!word.trim())return '';
+  const NS='http://www.w3.org/2000/svg';
+  const fmt=n=>Number(n).toFixed(2);
+  const esc=escapeXML;
+
+  // Open paths from the ORIGINAL skeletal Glyphs source, never from outlined fonts.
+  // Component glyphs (including accents) are recursively composed.
+  function getContours(name, depth=0){
+    if(depth>7)return [];
+    const glyph=font.glyphs[name];
+    if(!glyph)return [];
+    let paths=[];
+    for(const part of glyph.parts){
+      if(part.n){paths.push(part.n.map(([x,y,t])=>[x,y,t]));}
+      else if(part.r){
+        const angle=(part.a||0)*Math.PI/180,c=Math.cos(angle),s=Math.sin(angle);
+        const sx=part.sx??1,sy=part.sy??1;
+        for(const nodes of getContours(part.r,depth+1)){
+          paths.push(nodes.map(([x,y,t])=>{
+            x*=sx;y*=sy;
+            return [x*c-y*s+(part.x||0),x*s+y*c+(part.y||0),t];
+          }));
         }
       }
     }
-    return false;
+    return paths;
   }
-  // OpenType lookup order, with ligatures and contextual alternates.
-  for(const lookupId of data.lookupOrder.slice().sort((a,b)=>a-b)){
-    for(let position=0;position<seq.length;position++)substitute(seq,lookupId,position);
-  }
-  const chars=[];
-  let advance=0;
-  for(const gid of seq){
-    const outline=data.paths[String(gid)];
-    if(!outline)continue;
-    const isMark=markSet.has(gid);
-    chars.push({gid,outline,x:advance,dx:0,dy:0,mark:isMark});
-    advance+=outline[0]+(isMark?0:state.fusion);
-  }
-  // Position diacritics using mark-to-base GPOS anchors in original font units.
-  let lastBase=null;
-  for(const glyph of chars){
-    if(!glyph.mark){lastBase=glyph;continue;}
-    if(!lastBase)continue;
-    for(const table of data.gpos){
-      const mark=table.marks[String(glyph.gid)],anchors=table.bases[String(lastBase.gid)];
-      if(!mark || !anchors || !anchors[mark[0]])continue;
-      const [x,y]=anchors[mark[0]];
-      glyph.dx=lastBase.x+lastBase.dx+x-mark[1]-glyph.x;
-      glyph.dy=lastBase.dy+y-mark[2];
-      break;
-    }
-  }
-  const centers=window.FLUID_CENTERLINES;
-  if(!centers)throw new Error('Les lignes centrales ne sont pas chargées. Recharge la page.');
-  const weight=state.thickness;
-  let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
-  const baseContours=[],accentContours=[];
-  for(const item of chars){
-    const b=data.bounds[String(item.gid)];
-    if(b){
-      minX=Math.min(minX,item.x+item.dx+b[0]);
-      maxX=Math.max(maxX,item.x+item.dx+b[2]);
-      minY=Math.min(minY,item.dy+b[1]);
-      maxY=Math.max(maxY,item.dy+b[3]);
-    }
-    const paths=centers[String(item.gid)]||[];
-    for(const points of paths){
-      if(points.length<2)continue;
-      const shifted=points.map(pt=>[item.x+item.dx+pt[0],item.dy+pt[1]]);
-      (item.mark?accentContours:baseContours).push(shifted);
-    }
-  }
-  if(!Number.isFinite(minX)){minX=0;maxX=Math.max(500,advance);minY=-100;maxY=500;}
-  const padding=80+weight+Math.abs(state.slant)*8;
-  minX=Math.min(minX,0);maxX=Math.max(maxX,advance);
-  minY=Math.min(-170,minY);maxY=Math.max(650,maxY);
-  const viewMinX=minX-padding,viewMinY=-(maxY+padding);
-  const viewW=Math.max(300,maxX-minX+2*padding),viewH=Math.max(360,maxY-minY+2*padding);
-  svgDimensions={width:Math.ceil(viewW),height:Math.ceil(viewH)};
-  const round=x=>Number(x).toFixed(2);
-  const distance=(a,b)=>Math.hypot(b[0]-a[0],b[1]-a[1]);
-  // Strong smoothing without any synthetic joins between independent pen strokes:
-  // uniform arc-length resampling + repeated Gaussian convolution. Endpoints stay fixed.
-  function resample(points,step=10){
-    const clean=[points[0]];
-    for(let i=1;i<points.length;i++){
-      if(distance(points[i],clean[clean.length-1])>.01)clean.push(points[i]);
-    }
-    if(clean.length<2)return clean;
-    const cumulative=[0];
-    for(let i=1;i<clean.length;i++)cumulative.push(cumulative[i-1]+distance(clean[i-1],clean[i]));
-    const total=cumulative[cumulative.length-1];
-    if(total<step*2)return clean;
-    const result=[clean[0]];let seg=1;
-    for(let d=step;d<total-step*.35;d+=step){
-      while(seg<cumulative.length-1&&cumulative[seg]<d)seg++;
-      const len=cumulative[seg]-cumulative[seg-1]||1;
-      const t=(d-cumulative[seg-1])/len;
-      result.push([clean[seg-1][0]+(clean[seg][0]-clean[seg-1][0])*t,
-                   clean[seg-1][1]+(clean[seg][1]-clean[seg-1][1])*t]);
-    }
-    result.push(clean[clean.length-1]);
-    return result;
-  }
-  function smoothStroke(points){
-    let current=resample(points,9);
-    if(current.length<4)return current;
-    // Twelve smoothing passes remove pixel-skeleton jitter and harsh corners.
-    // Small strokes/diacritics need less smoothing to preserve their shape.
-    const passes=current.length<10?4:12;
-    for(let pass=0;pass<passes;pass++){
-      const last=current.length-1, next=[current[0]];
-      for(let i=1;i<last;i++){
-        const at=j=>current[Math.min(last,Math.max(0,j))];
-        const a=at(i-2),b=at(i-1),c=at(i),d=at(i+1),e=at(i+2);
-        next.push([(a[0]+4*b[0]+6*c[0]+4*d[0]+e[0])/16,
-                   (a[1]+4*b[1]+6*c[1]+4*d[1]+e[1])/16]);
-      }
-      next.push(current[last]);
-      current=next;
-    }
-    return current;
-  }
-  function pathFromPoints(points){
-    if(points.length<2)return '';
-    let d=`M ${round(points[0][0])} ${round(points[0][1])}`;
-    if(points.length===2)return d+` L ${round(points[1][0])} ${round(points[1][1])}`;
-    // Cubic Catmull–Rom conversion: tangent continuity across every point.
-    for(let i=0;i<points.length-1;i++){
-      const p0=points[i-1]||points[i],p1=points[i],p2=points[i+1],p3=points[i+2]||p2;
-      const cp1=[p1[0]+(p2[0]-p0[0])/6,p1[1]+(p2[1]-p0[1])/6];
-      const cp2=[p2[0]-(p3[0]-p1[0])/6,p2[1]-(p3[1]-p1[1])/6];
-      d+=` C ${round(cp1[0])} ${round(cp1[1])} ${round(cp2[0])} ${round(cp2[1])} ${round(p2[0])} ${round(p2[1])}`;
+  function makePath(nodes,tx){
+    if(!nodes.length)return '';
+    let d=`M ${fmt(nodes[0][0]+tx)} ${fmt(nodes[0][1])}`;
+    let off=[];
+    for(let i=1;i<nodes.length;i++){
+      const [x,y,type]=nodes[i];
+      if(type==='o'){off.push([x+tx,y]);continue;}
+      if(type==='c'||type==='cs'){
+        if(off.length>=2){const a=off[off.length-2],b=off[off.length-1];d+=` C ${fmt(a[0])} ${fmt(a[1])} ${fmt(b[0])} ${fmt(b[1])} ${fmt(x+tx)} ${fmt(y)}`;}
+        else if(off.length===1){d+=` Q ${fmt(off[0][0])} ${fmt(off[0][1])} ${fmt(x+tx)} ${fmt(y)}`;}
+        else d+=` L ${fmt(x+tx)} ${fmt(y)}`;
+      }else d+=` L ${fmt(x+tx)} ${fmt(y)}`;
+      off=[];
     }
     return d;
   }
-  function splitAtLength(points,maxLength=65){
-    const pieces=[];let current=[points[0]],accumulated=0;
-    for(let i=1;i<points.length;i++){
-      const end=points[i],start=points[i-1];
-      const dx=end[0]-start[0],dy=end[1]-start[1];
-      const segmentLength=Math.hypot(dx,dy);
-      if(segmentLength<.01)continue;
-      let used=0;
-      while(used<segmentLength-1e-6){
-        const take=Math.min(maxLength-accumulated,segmentLength-used);
-        if(take<1e-7)break;
-        used+=take;accumulated+=take;
-        const p=[start[0]+dx*used/segmentLength,start[1]+dy*used/segmentLength];
-        current.push(p);
-        if(accumulated>=maxLength-1e-6){
-          pieces.push({points:current,length:accumulated});
-          current=[p];accumulated=0;
-        }
+  // Respect a few documented ligatures; no invented joining strokes.
+  const text=Array.from(word),items=[];
+  let xAdvance=0;
+  for(let i=0;i<text.length;){
+    let name=null,used=1;
+    if(i+1<text.length){
+      const pair=(text[i]+text[i+1]).toLowerCase();
+      const candidate=font.ligatures[pair];
+      if(candidate&&font.glyphs[candidate]&&text[i]===text[i].toLowerCase()){
+        name=candidate;used=2;
       }
     }
-    if(accumulated>.3&&current.length>=2)pieces.push({points:current,length:accumulated});
-    return pieces;
+    if(!name)name=font.cmap[String(text[i].codePointAt(0))]||font.cmap['63'];
+    // For final lowercase letters, prefer original Mistral terminal alternates when available.
+    if(used===1&&i===text.length-1&&font.glyphs[name+'.fina'])name+='.fina';
+    const glyph=font.glyphs[name];
+    if(!glyph){i+=used;continue;}
+    const contours=getContours(name);
+    for(const nodes of contours){const d=makePath(nodes,xAdvance);if(d)items.push({d,name});}
+    xAdvance+=glyph.w+state.fusion;
+    i+=used;
   }
-  // Every original contour stays independent. No bridges, no single continuous word path.
-  const strokeGroups=[];
-  for(const contour of baseContours){
-    const smoothed=smoothStroke(contour);
-    if(smoothed.length>=2)strokeGroups.push(smoothed);
-  }
-  for(const contour of accentContours){
-    const smoothed=smoothStroke(contour);
-    if(smoothed.length>=2)strokeGroups.push(smoothed);
-  }
-  const pieces=strokeGroups.flatMap(points=>splitAtLength(points));
-  const totalLength=Math.max(1,pieces.reduce((n,p)=>n+p.length,0));
-  const colors=palettes[state.palette];
-  function colorAt(t){
-    t=Math.max(0,Math.min(1,t));const location=t*(colors.length-1);
-    const i=Math.min(colors.length-2,Math.floor(location)),f=location-i;
-    const rgb=(hex)=>[1,3,5].map(pos=>parseInt(hex.slice(pos,pos+2),16));
-    const a=rgb(colors[i]),b=rgb(colors[i+1]);
-    return '#'+a.map((v,k)=>Math.round(v+(b[k]-v)*f).toString(16).padStart(2,'0')).join('');
-  }
-  let progress=0;
-  const gradients=[],strokePaths=[];
-  for(let i=0;i<pieces.length;i++){
-    const piece=pieces[i],p0=piece.points[0],p1=piece.points[piece.points.length-1];
-    const c0=colorAt(progress/totalLength);
-    progress+=piece.length;
-    const c1=colorAt(progress/totalLength);
-    const id='ink-segment-'+i;
-    gradients.push(`<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${round(p0[0])}" y1="${round(p0[1])}" x2="${round(p1[0])}" y2="${round(p1[1])}"><stop offset="0%" stop-color="${c0}"/><stop offset="100%" stop-color="${c1}"/></linearGradient>`);
-    strokePaths.push(`<path d="${pathFromPoints(piece.points)}" fill="none" stroke="url(#${id})" stroke-width="${weight}" stroke-linecap="round" stroke-linejoin="round"/>`);
-  }
-  const bg=state.transparent?'':`<rect x="${viewMinX}" y="${viewMinY}" width="${viewW}" height="${viewH}" fill="#fff"/>`;
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${Math.ceil(viewW)}" height="${Math.ceil(viewH)}" viewBox="${round(viewMinX)} ${round(viewMinY)} ${round(viewW)} ${round(viewH)}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Lettrage monoligne ${escapeXML(word)}"><title>${escapeXML(word)} — lettering SVG monoligne</title><desc>Tracés centraux indépendants, fortement lissés en courbes de Bézier et colorés selon leur longueur cumulée.</desc><defs>${gradients.join('')}</defs>${bg}<g transform="scale(1,-1)">${strokePaths.join('')}</g></svg>`;
+  if(items.length===0)return '';
+  const measure=document.createElementNS(NS,'svg');
+  measure.setAttribute('xmlns',NS);
+  measure.setAttribute('width','0');measure.setAttribute('height','0');
+  measure.style.cssText='position:absolute;left:-99999px;top:-99999px;opacity:0;pointer-events:none';
+  document.body.appendChild(measure);
+  let lengths=[],total=0,minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
+  const geometries=[];
+  try{
+    for(const item of items){
+      const p=document.createElementNS(NS,'path');p.setAttribute('d',item.d);measure.appendChild(p);
+      let length=0;
+      try{length=p.getTotalLength()}catch(e){length=0}
+      if(length<0.001){p.remove();continue;}
+      lengths.push(length);total+=length;
+      geometries.push({p,d:item.d,length});
+      // Source may have exceptionally long flourishes; sample the actual curves.
+      const samples=Math.max(16,Math.ceil(length/14));
+      for(let j=0;j<=samples;j++){
+        const pt=p.getPointAtLength(length*j/samples);
+        minX=Math.min(minX,pt.x);maxX=Math.max(maxX,pt.x);
+        minY=Math.min(minY,pt.y);maxY=Math.max(maxY,pt.y);
+      }
+    }
+    const colors=palettes[state.palette];
+    const rgb=s=>[1,3,5].map(i=>parseInt(s.slice(i,i+2),16));
+    function colorAt(t){
+      t=Math.max(0,Math.min(1,t));const k=t*(colors.length-1),i=Math.min(colors.length-2,Math.floor(k)),v=k-i;
+      const a=rgb(colors[i]),b=rgb(colors[i+1]);
+      return '#'+a.map((n,j)=>Math.round(n+(b[j]-n)*v).toString(16).padStart(2,'0')).join('');
+    }
+    const weight=state.thickness;
+    const paths=[],gradients=[];
+    let progress=0,serial=0;
+    for(const shape of geometries){
+      const p=shape.p,len=shape.length;
+      // The source path is the ground truth. A continuous base stroke avoids seams.
+      paths.push(`<path d="${shape.d}" fill="none" stroke="${colorAt(progress/total)}" stroke-width="${weight}" stroke-linecap="round" stroke-linejoin="round"/>`);
+      const n=Math.max(1,Math.ceil(len/16));
+      for(let i=0;i<n;i++){
+        const d0=len*i/n,d1=len*(i+1)/n;
+        const a=p.getPointAtLength(d0),b=p.getPointAtLength(d1);
+        const id='ink'+serial++;
+        const c0=colorAt((progress+d0)/total),c1=colorAt((progress+d1)/total);
+        // Tangent-aware cubic subdivision: smooth segments, no straight polyline faceting.
+        const eps=Math.max(.1,Math.min(1,(d1-d0)*.15));
+        const a0=p.getPointAtLength(Math.min(len,d0+eps)),b0=p.getPointAtLength(Math.max(0,d1-eps));
+        const da=Math.hypot(a0.x-a.x,a0.y-a.y)||1,db=Math.hypot(b.x-b0.x,b.y-b0.y)||1;
+        const chord=Math.hypot(b.x-a.x,b.y-a.y);
+        const control=Math.min((d1-d0)/3,chord*.55);
+        const cpx1=a.x+(a0.x-a.x)/da*control,cpy1=a.y+(a0.y-a.y)/da*control;
+        const cpx2=b.x-(b.x-b0.x)/db*control,cpy2=b.y-(b.y-b0.y)/db*control;
+        const seg=`M ${fmt(a.x)} ${fmt(a.y)} C ${fmt(cpx1)} ${fmt(cpy1)} ${fmt(cpx2)} ${fmt(cpy2)} ${fmt(b.x)} ${fmt(b.y)}`;
+        gradients.push(`<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${fmt(a.x)}" y1="${fmt(a.y)}" x2="${fmt(b.x+(Math.abs(b.x-a.x)<.01?.01:0))}" y2="${fmt(b.y+(Math.abs(b.y-a.y)<.01?.01:0))}"><stop offset="0%" stop-color="${c0}"/><stop offset="100%" stop-color="${c1}"/></linearGradient>`);
+        paths.push(`<path d="${seg}" fill="none" stroke="url(#${id})" stroke-width="${weight}" stroke-linecap="butt" stroke-linejoin="round"/>`);
+      }
+      const first=p.getPointAtLength(0),last=p.getPointAtLength(len);
+      paths.push(`<circle cx="${fmt(first.x)}" cy="${fmt(first.y)}" r="${fmt(weight/2)}" fill="${colorAt(progress/total)}"/><circle cx="${fmt(last.x)}" cy="${fmt(last.y)}" r="${fmt(weight/2)}" fill="${colorAt((progress+len)/total)}"/>`);
+      progress+=len;
+    }
+    const margin=weight/2+38;
+    const left=minX-margin,top=-(maxY+margin),width=maxX-minX+2*margin,height=maxY-minY+2*margin;
+    svgDimensions={width:Math.ceil(width),height:Math.ceil(height)};
+    return `<svg xmlns="${NS}" width="${Math.ceil(width)}" height="${Math.ceil(height)}" viewBox="${fmt(left)} ${fmt(top)} ${fmt(width)} ${fmt(height)}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${esc(word)} en Mistral SingleLine"><title>${esc(word)} — Mistral SingleLine</title><desc>Courbes ouvertes originales sous licence SIL OFL 1.1. La couleur suit la longueur cumulée des traits.</desc><defs>${gradients.join('')}</defs><g transform="scale(1,-1)">${paths.join('')}</g></svg>`;
+  }finally{measure.remove();}
 }
 
 function maintainLetterProportions(){
