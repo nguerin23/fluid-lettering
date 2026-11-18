@@ -66,7 +66,7 @@
 <body>
 <header><div class="wrap head"><div class="brand"><span class="brand-mark">f</span>fluid<span style="color:#6c58f6">.</span></div><span class="head-note">Vector lettering studio</span></div></header>
 <main class="wrap">
-  <div class="heading"><div><div class="eyebrow">Atelier typographique</div><h1>Un mot, une forme.</h1></div><p class="subtitle">Écris ton mot, ajuste les deux curseurs et regarde ton lettering évoluer instantanément.</p></div>
+  <div class="heading"><div><div class="eyebrow">Atelier typographique</div><h1>Un mot, un trait.</h1></div><p class="subtitle">Écris ton mot, ajuste les deux curseurs et regarde un tracé continu évoluer en direct.</p></div>
   <section class="card" aria-label="Éditeur de lettering">
     <div class="canvas-top"><span class="label-title">Ton lettrage</span><span id="liveStatus" class="live" aria-live="polite">Aperçu en direct</span></div>
     <div class="stage" id="stage"><div id="preview" role="img" aria-label="Lettrage vectoriel"><span class="empty">Chargement du tracé…</span></div></div>
@@ -178,7 +178,7 @@ function getHandwrittenSVG(){
   if(!centers)throw new Error('Les lignes centrales ne sont pas chargées. Recharge la page.');
   const weight=state.thickness;
   let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
-  const contours=[];
+  const baseContours=[],accentContours=[];
   for(const item of chars){
     const b=data.bounds[String(item.gid)];
     if(b){
@@ -190,7 +190,8 @@ function getHandwrittenSVG(){
     const paths=centers[String(item.gid)]||[];
     for(const points of paths){
       if(points.length<2)continue;
-      contours.push(points.map(p=>[item.x+item.dx+p[0],item.dy+p[1]]));
+      const shifted=points.map(pt=>[item.x+item.dx+pt[0],item.dy+pt[1]]);
+      (item.mark?accentContours:baseContours).push(shifted);
     }
   }
   if(!Number.isFinite(minX)){minX=0;maxX=Math.max(500,advance);minY=-100;maxY=500;}
@@ -200,10 +201,94 @@ function getHandwrittenSVG(){
   const viewMinX=minX-padding,viewMinY=-(maxY+padding);
   const viewW=Math.max(300,maxX-minX+2*padding),viewH=Math.max(360,maxY-minY+2*padding);
   svgDimensions={width:Math.ceil(viewW),height:Math.ceil(viewH)};
-  // Draw short connected centerline strokes. Each segment receives a local
-  // SVG gradient based on its cumulative ARC LENGTH from the beginning of
-  // the word. Unlike a left-to-right gradient, it follows loops and returns.
-  function splitAtLength(points,maxLength=42){
+  const round=x=>Number(x).toFixed(2);
+  const distance=(a,b)=>Math.hypot(b[0]-a[0],b[1]-a[1]);
+  const normalize=(dx,dy)=>{const len=Math.hypot(dx,dy)||1;return [dx/len,dy/len];};
+  const tangent=(points,atEnd=false)=>{
+    if(points.length<2)return [1,0];
+    const a=atEnd?points[points.length-2]:points[0];
+    const b=atEnd?points[points.length-1]:points[1];
+    return normalize(b[0]-a[0],b[1]-a[1]);
+  };
+  function sampleCubic(p0,p1,p2,p3,steps){
+    const out=[];
+    for(let i=0;i<=steps;i++){
+      const t=i/steps,u=1-t;
+      out.push([
+        u*u*u*p0[0]+3*u*u*t*p1[0]+3*u*t*t*p2[0]+t*t*t*p3[0],
+        u*u*u*p0[1]+3*u*u*t*p1[1]+3*u*t*t*p2[1]+t*t*t*p3[1]
+      ]);
+    }
+    return out;
+  }
+  function orderContours(contours){
+    if(!contours.length)return [];
+    const remaining=contours.map(points=>points.map(p=>p.slice()));
+    const ordered=[remaining.shift()];
+    while(remaining.length){
+      const end=ordered[ordered.length-1][ordered[ordered.length-1].length-1];
+      let bestIdx=0,bestReverse=false,bestDistance=Infinity;
+      for(let i=0;i<remaining.length;i++){
+        const candidate=remaining[i];
+        const dStart=distance(end,candidate[0]);
+        if(dStart<bestDistance){bestDistance=dStart;bestIdx=i;bestReverse=false;}
+        const dEnd=distance(end,candidate[candidate.length-1]);
+        if(dEnd<bestDistance){bestDistance=dEnd;bestIdx=i;bestReverse=true;}
+      }
+      let next=remaining.splice(bestIdx,1)[0];
+      if(bestReverse)next=next.slice().reverse();
+      ordered.push(next);
+    }
+    return ordered;
+  }
+  function chaikin(points,iterations=2){
+    let current=points.map(p=>p.slice());
+    for(let iter=0;iter<iterations;iter++){
+      if(current.length<3)return current;
+      const next=[current[0]];
+      for(let i=0;i<current.length-1;i++){
+        const p0=current[i],p1=current[i+1];
+        next.push([0.75*p0[0]+0.25*p1[0],0.75*p0[1]+0.25*p1[1]]);
+        next.push([0.25*p0[0]+0.75*p1[0],0.25*p0[1]+0.75*p1[1]]);
+      }
+      next.push(current[current.length-1]);
+      current=next;
+    }
+    return current;
+  }
+  function makeContinuousStroke(contours){
+    const ordered=orderContours(contours);
+    if(!ordered.length)return [];
+    let merged=ordered[0].map(p=>p.slice());
+    for(let i=1;i<ordered.length;i++){
+      const next=ordered[i];
+      const end=merged[merged.length-1],start=next[0];
+      const dist=distance(end,start);
+      const t0=tangent(merged,true),t1=tangent(next,false);
+      const k=Math.max(18,Math.min(110,dist*0.45));
+      const cp1=[end[0]+t0[0]*k,end[1]+t0[1]*k];
+      const cp2=[start[0]-t1[0]*k,start[1]-t1[1]*k];
+      const bridge=sampleCubic(end,cp1,cp2,start,Math.max(6,Math.ceil(dist/14)));
+      merged=merged.concat(bridge.slice(1),next.slice(1));
+    }
+    return chaikin(merged,2);
+  }
+  function pathFromPoints(points){
+    if(points.length<2)return '';
+    let d=`M ${round(points[0][0])} ${round(points[0][1])}`;
+    if(points.length===2)return d+` L ${round(points[1][0])} ${round(points[1][1])}`;
+    for(let i=0;i<points.length-1;i++){
+      const p0=points[i-1]||points[i];
+      const p1=points[i];
+      const p2=points[i+1];
+      const p3=points[i+2]||p2;
+      const cp1=[p1[0]+(p2[0]-p0[0])/6,p1[1]+(p2[1]-p0[1])/6];
+      const cp2=[p2[0]-(p3[0]-p1[0])/6,p2[1]-(p3[1]-p1[1])/6];
+      d+=` C ${round(cp1[0])} ${round(cp1[1])} ${round(cp2[0])} ${round(cp2[1])} ${round(p2[0])} ${round(p2[1])}`;
+    }
+    return d;
+  }
+  function splitAtLength(points,maxLength=84){
     const pieces=[];let current=[points[0]],accumulated=0;
     for(let i=1;i<points.length;i++){
       const end=points[i],start=points[i-1];
@@ -225,7 +310,14 @@ function getHandwrittenSVG(){
     if(accumulated>.3 && current.length>=2)pieces.push({points:current,length:accumulated});
     return pieces;
   }
-  const pieces=contours.flatMap(p=>splitAtLength(p));
+  const strokeGroups=[];
+  const mainStroke=makeContinuousStroke(baseContours);
+  if(mainStroke.length>=2)strokeGroups.push(mainStroke);
+  for(const accent of accentContours){
+    const smoothed=chaikin(accent,2);
+    if(smoothed.length>=2)strokeGroups.push(smoothed);
+  }
+  const pieces=strokeGroups.flatMap(points=>splitAtLength(points));
   const totalLength=Math.max(1,pieces.reduce((n,p)=>n+p.length,0));
   const colors=palettes[state.palette];
   function colorAt(t){
@@ -237,7 +329,6 @@ function getHandwrittenSVG(){
   }
   let progress=0;
   const gradients=[],strokePaths=[];
-  const round=x=>Number(x).toFixed(2);
   for(let i=0;i<pieces.length;i++){
     const piece=pieces[i],p0=piece.points[0],p1=piece.points[piece.points.length-1];
     const c0=colorAt(progress/totalLength);
@@ -245,11 +336,10 @@ function getHandwrittenSVG(){
     const c1=colorAt(progress/totalLength);
     const id='ink-segment-'+i;
     gradients.push(`<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${round(p0[0])}" y1="${round(p0[1])}" x2="${round(p1[0])}" y2="${round(p1[1])}"><stop offset="0%" stop-color="${c0}"/><stop offset="100%" stop-color="${c1}"/></linearGradient>`);
-    const d='M '+round(p0[0])+' '+round(p0[1])+piece.points.slice(1).map(p=>' L '+round(p[0])+' '+round(p[1])).join('');
-    strokePaths.push(`<path d="${d}" fill="none" stroke="url(#${id})" stroke-width="${weight}" stroke-linecap="round" stroke-linejoin="round"/>`);
+    strokePaths.push(`<path d="${pathFromPoints(piece.points)}" fill="none" stroke="url(#${id})" stroke-width="${weight}" stroke-linecap="round" stroke-linejoin="round"/>`);
   }
   const bg=state.transparent?'':`<rect x="${viewMinX}" y="${viewMinY}" width="${viewW}" height="${viewH}" fill="#fff"/>`;
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${Math.ceil(viewW)}" height="${Math.ceil(viewH)}" viewBox="${round(viewMinX)} ${round(viewMinY)} ${round(viewW)} ${round(viewH)}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Lettrage monoligne ${escapeXML(word)}"><title>${escapeXML(word)} — lettering SVG monoligne</title><desc>Tracés centraux issus d'une squelettisation des glyphes de Pecita (SIL OFL 1.1). Le dégradé progresse selon la longueur cumulée du tracé.</desc><defs>${gradients.join('')}</defs>${bg}<g transform="scale(1,-1)">${strokePaths.join('')}</g></svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${Math.ceil(viewW)}" height="${Math.ceil(viewH)}" viewBox="${round(viewMinX)} ${round(viewMinY)} ${round(viewW)} ${round(viewH)}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Lettrage monoligne ${escapeXML(word)}"><title>${escapeXML(word)} — lettering SVG monoligne</title><desc>Tracé central continu pour le mot (hors accents), lissé et coloré selon la longueur cumulée du geste.</desc><defs>${gradients.join('')}</defs>${bg}<g transform="scale(1,-1)">${strokePaths.join('')}</g></svg>`;
 }
 
 function maintainLetterProportions(){
