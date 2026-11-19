@@ -194,7 +194,7 @@ function getHandwrittenSVG(font){
     defs.push(`<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${fmt(x1)}" y1="0" x2="${fmt(x1+span)}" y2="0">${stops}</linearGradient>`);
     parts.push(`<g transform="translate(${fmt(g.x)} 0)"><path d="${g.d}" fill="url(#${id})" fill-rule="nonzero" stroke="url(#${id})" stroke-width="${fmt(thickening)}" stroke-linecap="round" stroke-linejoin="round" paint-order="stroke fill"/></g>`);
   }
-  return `<svg xmlns="${NS}" width="${Math.ceil(width)}" height="${Math.ceil(height)}" viewBox="${fmt(left)} ${fmt(top)} ${fmt(width)} ${fmt(height)}" role="img" aria-label="${escapeXML(word)} en ${escapeXML(fontName)}"><title>${escapeXML(word)} — ${escapeXML(fontName)}</title><desc>${escapeXML(fontName)} : courbes quadratiques vectorielles fidèles à la police, épaisseur réglable et dégradé horizontal continu sur toute l'inscription.</desc><defs>${defs.join('')}</defs><g transform="scale(1,-1)">${parts.join('')}</g></svg>`;
+  return `<svg xmlns="${NS}" width="${Math.ceil(width)}" height="${Math.ceil(height)}" viewBox="${fmt(left)} ${fmt(top)} ${fmt(width)} ${fmt(height)}" role="img" aria-label="${escapeXML(word)} en ${escapeXML(fontName)}"><title>${escapeXML(word)} — ${escapeXML(fontName)}</title><desc>${escapeXML(fontName)} : contours vectoriels de la police, épaisseur réglable et dégradé horizontal continu sur toute l'inscription.</desc><defs>${defs.join('')}</defs><g transform="scale(1,-1)">${parts.join('')}</g></svg>`;
 }
 
 function maintainLetterProportions(){
