@@ -1,30 +1,28 @@
-# Fluid — Sacramento et Pecita
+# Fluid — Pecita à tracés reliés
 
-Générateur de lettering SVG avec **Sacramento originale** par défaut et **Pecita** en option. Le site utilise les **contours vectoriels authentiques** de Sacramento, reconstruits directement depuis le fichier source officiel `sources/Sacramento.glyphs`, publié par le projet Sacramento de Google Fonts.
+Générateur de lettering vectoriel SVG utilisant **Pecita** comme police principale, avec des tracés centraux reconstruits et lissés, puis des **raccords en courbes de Bézier** entre les traits principaux des lettres quand la géométrie le permet.
 
 **Site :** https://nguerin23.github.io/fluid-lettering/
 
-## Polices
-
-- **Sacramento (par défaut)** : véritable police Sacramento originale de Brian J. Bonislawsky (Astigmatic/AOETI), sous SIL OFL 1.1. Elle est une écriture manuscrite **semi-liée**, aux contours remplis, et non une police single-stroke. Les 372 caractères Unicode de sa source Glyphs sont disponibles en SVG sans installation externe. [Source officielle](https://github.com/googlefonts/SacramentoFont)
-- **Pecita (en option)** : police manuscrite par Philippe Cochy, dont Fluid emploie les lignes centrales reconstruites, le lissage et certaines substitutions de ligatures.
-
 ## Fonctionnalités
 
-- Texte de 22 caractères au maximum, initialement **bonjour**.
-- Sélecteur de police **Sacramento / Pecita**.
-- Curseur **Épaisseur** : Sacramento garde ses contours de base et les épaissit par un trait supplémentaire ; le curseur ne peut pas amincir la forme originale. En Pecita, il règle directement la largeur du trait central.
-- Curseur **Espacement** : de −200 à +180 pour ajuster la superposition des lettres.
-- Dégradé violet → bleu → turquoise → vert continu horizontalement sur l'ensemble du mot, même entre des glyphes distincts.
-- Bouton **Animer l'écriture** : pour Sacramento, animation de révélation lettre par lettre de gauche à droite (ses contours ne constituent pas un trajet de stylo) ; pour Pecita, animation des lignes centrales suivant les chemins.
-- Exports **SVG et PNG** statiques ; les glyphes Sacramento sont exportés comme de vrais chemins vectoriels, sans dépendance à une police installée.
+- **Pecita continu par défaut**, texte initial « bonjour », jusqu'à 22 caractères.
+- **Continuité renforcée** : sélection d'un chemin principal par glyphe, lissage des courbes et tentative de jonction entre chemins voisins. Une liaison est créée uniquement sous certains seuils de distance et de direction ; le résultat n'est donc pas garanti en un seul trait pour tous les mots.
+- **Levées de stylo préservées** là où elles sont nécessaires : espaces, accents, points, autres traits secondaires, ou raccords géométriquement trop éloignés.
+- **Animation d'écriture** : les chemins principaux dans l'ordre de lecture, puis les traits secondaires.
+- **Épaisseur** et **Espacement** (−200 à +180) réglables en direct.
+- **Dégradé global** violet → bleu → turquoise → vert, continu horizontalement sur le mot.
+- Exports **SVG** et **PNG** statiques, sans police installée sur l'ordinateur.
 
-## Fichiers utilisés
+## Fichiers actifs
 
-- `index.html` — interface, composition, animation et exports.
-- `sacramento-outlines.js` — contours de Sacramento issus de son source Glyphs, sous SIL OFL 1.1.
-- `SACRAMENTO-OFL.txt` — licence et attribution officielles Sacramento.
-- `pecita-outlines.js`, `pecita-centerlines.js` — données et lignes centrales Pecita, chargées à la demande.
-- `PECITA-OFL.txt` — licence Pecita.
+- `index.html` — interface et composition, raccords Bézier, animation et exports.
+- `pecita-outlines.js` — données de Pecita, métriques, substitutions et positionnement.
+- `pecita-centerlines.js` — tracés centraux monolignes reconstruits à partir des contours de Pecita.
+- `PECITA-OFL.txt` — licence et attribution de Pecita.
 
-Les anciens fichiers EMS Capitol, EMS Allure et Mistral sont conservés comme archives, mais ne sont plus utilisés par l'interface. La licence SIL OFL autorise l'utilisation et la redistribution sous les conditions qu'elle prévoit. Conserver les mentions et fichiers de licence lors de la redistribution.
+Les fichiers Sacramento, EMS Capitol et EMS Allure Smooth restent dans le dépôt, mais ne sont plus chargés par l'application.
+
+## Crédits et licence
+
+Pecita a été créée par Philippe Cochy. Les données typographiques sont sous **SIL Open Font License 1.1**. Les tracés centraux utilisés par Fluid sont des reconstructions et peuvent différer des chemins qu'emprunterait réellement un stylo. La licence autorise la modification et la redistribution sous conditions, notamment la conservation des mentions de licence.
