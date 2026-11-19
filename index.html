@@ -26,7 +26,8 @@
   h1 {font-size:clamp(30px,4.5vw,52px);line-height:1.06;letter-spacing:-2.3px;margin:9px 0 0;font-weight:850}
   .subtitle {max-width:270px;font-size:13px;line-height:1.6;color:var(--muted);margin:0 0 4px}
   .card {border-radius:19px;background:#fff;border:1px solid var(--line);overflow:hidden}
-  .canvas-top {height:54px;padding:0 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:15px;align-items:center}
+  .canvas-top {min-height:64px;padding:10px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:14px;align-items:center}
+  .canvas-tools {display:flex;align-items:center;justify-content:flex-end;gap:22px}
   .label-title {font-size:12px;font-weight:850}
   .live {font-size:11px;font-weight:780;color:#34875f;letter-spacing:.5px;display:flex;align-items:center;gap:8px}
   .live::before {content:'';background:#46db8c;width:7px;height:7px;border-radius:50%}
@@ -39,8 +40,9 @@
   .actions {display:flex;gap:9px;flex-wrap:wrap}
   .btn {border:1px solid #dae3dc;background:#fff;color:#203128;border-radius:9px;font-size:12px;font-weight:850;padding:11px 17px;display:inline-flex;align-items:center;gap:9px;min-height:41px}
   .btn.primary {border-color:#202823;background:#202823;color:#fff}
-  .btn.animate {border-color:#d7d0ff;background:#f8f7ff;color:#5948ce}
-  .btn.animate:hover {background:#edeaff}
+  .btn.animate {border-color:#6552eb;background:#6552eb;color:#fff;box-shadow:0 2px 0 #4d39bf;white-space:nowrap;font-size:13px;min-height:43px;padding:10px 16px}
+  .btn.animate:hover {background:#5843df}
+  .btn.animate svg path {fill:currentColor;stroke:none}
   .btn:hover {background:#f6f8f5}
   .btn.primary:hover {background:#3e4942}
   .btn:disabled {opacity:.45;cursor:not-allowed}
@@ -63,6 +65,12 @@
   .toast.show {transform:translate(-50%,0);opacity:1}
   @media(max-width:820px){.editor{grid-template-columns:1fr 1fr}.control.word{grid-column:1/-1}.heading{align-items:start;flex-direction:column;gap:10px}.subtitle{max-width:570px}.stage{height:320px}}
   @media(max-width:520px){.wrap{padding:0 16px}.head{min-height:64px}.brand{font-size:25px}.head-note{font-size:9px;letter-spacing:1px}main{padding-top:29px;padding-bottom:26px}h1{letter-spacing:-1.4px}.stage{height:235px;padding:14px 16px 20px}.editor{grid-template-columns:1fr;gap:21px;padding:21px 18px}.control.word{grid-column:auto}.canvas-top{padding:0 16px}.stage-bottom{padding:15px;gap:15px}.actions{width:100%}.btn{flex:1;justify-content:center}.btn.animate{flex:1 1 100%}.hint{font-size:10px}.bottom-note{margin-top:17px}}
+  @media(max-width:520px){
+    .canvas-top {padding:10px 14px;min-height:62px;gap:8px}
+    .canvas-tools .live {display:none}
+    .canvas-top .btn.animate {padding:10px 12px;min-height:42px;font-size:12px}
+    .canvas-tools {gap:8px}
+  }
 </style>
 </head>
 <body>
@@ -70,15 +78,20 @@
 <main class="wrap">
   <div class="heading"><div><div class="eyebrow">Atelier typographique</div><h1>Un mot, des courbes.</h1></div><p class="subtitle">EMS Allure Smooth : une écriture plus souple, composée de courbes vectorielles ouvertes.</p></div>
   <section class="card" aria-label="Éditeur de lettering">
-    <div class="canvas-top"><span class="label-title">Ton lettrage</span><span id="liveStatus" class="live" aria-live="polite">Aperçu en direct</span></div>
+    <div class="canvas-top">
+      <span class="label-title">Ton lettrage</span>
+      <div class="canvas-tools">
+        <span id="liveStatus" class="live" aria-live="polite">Aperçu en direct</span>
+        <button id="animateWriting" class="btn animate" type="button" aria-label="Lancer l’animation de l’écriture" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z"/></svg><span id="animationLabel">Animer l’écriture</span></button>
+      </div>
+    </div>
     <div class="stage" id="stage"><div id="preview" role="img" aria-label="Lettrage vectoriel"><span class="empty">Chargement du tracé…</span></div></div>
     <div class="stage-bottom"><span class="hint">EMS Allure Smooth · couleur suivant le tracé · SVG ouvert</span><div class="actions">
-      <button id="animateWriting" class="btn animate" type="button" aria-label="Faire apparaître le mot comme une écriture" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z"/></svg><span id="animationLabel">Animer l’écriture</span></button>
       <button id="downloadPNG" class="btn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>PNG</button>
       <button id="downloadSVG" class="btn primary" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>SVG</button>
     </div></div>
     <div class="editor">
-      <div class="control word"><label for="word">Ton mot</label><input id="word" type="text" maxlength="22" autocomplete="off" spellcheck="false" value="Nicolas" placeholder="Écris ici…"><p class="note">EMS Allure Smooth, 22 caractères maximum, accents compris.</p></div>
+      <div class="control word"><label for="word">Ton mot</label><input id="word" type="text" maxlength="22" autocomplete="off" spellcheck="false" value="bonjour" placeholder="Écris ici…"><p class="note">EMS Allure Smooth, 22 caractères maximum, accents compris.</p></div>
       <div class="control"><div class="control-head"><label for="thickness">Épaisseur</label><output id="thicknessValue" for="thickness">42</output></div><input id="thickness" type="range" min="12" max="160" step="1" value="42"><div class="range-ends"><span>Fin</span><span>Très gras</span></div></div>
       <div class="control"><div class="control-head"><label for="spacing">Espacement</label><output id="spacingValue" for="spacing">0</output></div><input id="spacing" type="range" min="-200" max="180" step="1" value="0"><div class="range-ends"><span>−200 · superposition</span><span>+180 · espacé</span></div><p class="note">Passe en négatif pour superposer les formes liées.</p></div>
     </div>
@@ -91,8 +104,8 @@
 'use strict';
 const $=id=>document.getElementById(id);
 const palettes={jello:['#6150f7','#5e7bed','#53b4cf','#56dba2','#55fa78']};
-const state={word:'Nicolas',thickness:42,fusion:0,palette:'jello'};
-let currentSvg='',svgDimensions={width:1000,height:600},lastGeneratedWord='Nicolas',pendingFrame=0,toastTimer=0;
+const state={word:'bonjour',thickness:42,fusion:0,palette:'jello'};
+let currentSvg='',svgDimensions={width:1000,height:600},lastGeneratedWord='bonjour',pendingFrame=0,toastTimer=0;
 let writingAnimations=[],writingMasks=[],writingTargets=[],writingSession=0;
 function escapeXML(s){return String(s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]));}
 /* EMS Allure Smooth: original single-line SVG curves by Cutlings (Ellen Wasbø),
