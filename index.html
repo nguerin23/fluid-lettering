@@ -36,9 +36,11 @@
   .empty {color:#9ca9a0;font-size:16px;line-height:1.4}
   .stage-bottom {border-top:1px solid var(--line);padding:17px 21px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
   .hint {font-size:11px;color:var(--muted);font-weight:650}
-  .actions {display:flex;gap:9px}
+  .actions {display:flex;gap:9px;flex-wrap:wrap}
   .btn {border:1px solid #dae3dc;background:#fff;color:#203128;border-radius:9px;font-size:12px;font-weight:850;padding:11px 17px;display:inline-flex;align-items:center;gap:9px;min-height:41px}
   .btn.primary {border-color:#202823;background:#202823;color:#fff}
+  .btn.animate {border-color:#d7d0ff;background:#f8f7ff;color:#5948ce}
+  .btn.animate:hover {background:#edeaff}
   .btn:hover {background:#f6f8f5}
   .btn.primary:hover {background:#3e4942}
   .btn:disabled {opacity:.45;cursor:not-allowed}
@@ -60,7 +62,7 @@
   .toast {position:fixed;left:50%;bottom:24px;transform:translate(-50%,12px);opacity:0;pointer-events:none;background:#213029;color:#fff;padding:12px 17px;border-radius:10px;font-size:12px;font-weight:750;transition:.17s;z-index:3;white-space:nowrap}
   .toast.show {transform:translate(-50%,0);opacity:1}
   @media(max-width:820px){.editor{grid-template-columns:1fr 1fr}.control.word{grid-column:1/-1}.heading{align-items:start;flex-direction:column;gap:10px}.subtitle{max-width:570px}.stage{height:320px}}
-  @media(max-width:520px){.wrap{padding:0 16px}.head{min-height:64px}.brand{font-size:25px}.head-note{font-size:9px;letter-spacing:1px}main{padding-top:29px;padding-bottom:26px}h1{letter-spacing:-1.4px}.stage{height:235px;padding:14px 16px 20px}.editor{grid-template-columns:1fr;gap:21px;padding:21px 18px}.control.word{grid-column:auto}.canvas-top{padding:0 16px}.stage-bottom{padding:15px;gap:15px}.actions{width:100%}.btn{flex:1;justify-content:center}.hint{font-size:10px}.bottom-note{margin-top:17px}}
+  @media(max-width:520px){.wrap{padding:0 16px}.head{min-height:64px}.brand{font-size:25px}.head-note{font-size:9px;letter-spacing:1px}main{padding-top:29px;padding-bottom:26px}h1{letter-spacing:-1.4px}.stage{height:235px;padding:14px 16px 20px}.editor{grid-template-columns:1fr;gap:21px;padding:21px 18px}.control.word{grid-column:auto}.canvas-top{padding:0 16px}.stage-bottom{padding:15px;gap:15px}.actions{width:100%}.btn{flex:1;justify-content:center}.btn.animate{flex:1 1 100%}.hint{font-size:10px}.bottom-note{margin-top:17px}}
 </style>
 </head>
 <body>
@@ -71,6 +73,7 @@
     <div class="canvas-top"><span class="label-title">Ton lettrage</span><span id="liveStatus" class="live" aria-live="polite">Aperçu en direct</span></div>
     <div class="stage" id="stage"><div id="preview" role="img" aria-label="Lettrage vectoriel"><span class="empty">Chargement du tracé…</span></div></div>
     <div class="stage-bottom"><span class="hint">EMS Allure Smooth · couleur suivant le tracé · SVG ouvert</span><div class="actions">
+      <button id="animateWriting" class="btn animate" type="button" aria-label="Faire apparaître le mot comme une écriture" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z"/></svg><span id="animationLabel">Animer l’écriture</span></button>
       <button id="downloadPNG" class="btn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>PNG</button>
       <button id="downloadSVG" class="btn primary" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>SVG</button>
     </div></div>
@@ -90,6 +93,7 @@ const $=id=>document.getElementById(id);
 const palettes={jello:['#6150f7','#5e7bed','#53b4cf','#56dba2','#55fa78']};
 const state={word:'Nicolas',thickness:42,fusion:0,palette:'jello'};
 let currentSvg='',svgDimensions={width:1000,height:600},lastGeneratedWord='Nicolas',pendingFrame=0,toastTimer=0;
+let writingAnimations=[],writingMasks=[],writingTargets=[],writingSession=0;
 function escapeXML(s){return String(s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]));}
 /* EMS Allure Smooth: original single-line SVG curves by Cutlings (Ellen Wasbø),
    based on EMS Allure by Sheldon B. Michaels / Windell H. Oskay,
@@ -177,7 +181,7 @@ function getHandwrittenSVG(){
       const first=p.getPointAtLength(0),last=p.getPointAtLength(len);
       pieces.push(`<circle cx="${fmt(first.x)}" cy="${fmt(first.y)}" r="${fmt(weight/2)}" fill="${colorAt(progress/total)}"/>`);
       pieces.push(`<circle cx="${fmt(last.x)}" cy="${fmt(last.y)}" r="${fmt(weight/2)}" fill="${colorAt((progress+len)/total)}"/>`);
-      parts.push(`<g transform="translate(${fmt(shape.tx)} 0)">${pieces.join('')}</g>`);
+      parts.push(`<g data-writing-stroke="1" transform="translate(${fmt(shape.tx)} 0)">${pieces.join('')}</g>`);
       progress+=len;
     }
     const padding=weight/2+45;
@@ -196,7 +200,81 @@ function maintainLetterProportions(){
  svg.style.height=targetHeight+'px';svg.style.width=displayWidth+'px';
  $('preview').style.width=displayWidth+'px';
 }
+// Reveal each native pen path with an animated white mask along its arc length.
+// This only affects the preview DOM: SVG and PNG downloads remain static.
+function clearWritingAnimation(){
+  writingSession++;
+  for(const animation of writingAnimations)animation.cancel();
+  for(const group of writingTargets)group.removeAttribute('mask');
+  for(const mask of writingMasks)mask.remove();
+  writingAnimations=[];writingMasks=[];writingTargets=[];
+  $('animationLabel').textContent='Animer l’écriture';
+}
+function animateWriting(){
+  clearWritingAnimation();
+  const svg=$('preview').querySelector('svg');
+  if(!svg)return;
+  const NS='http://www.w3.org/2000/svg',defs=svg.querySelector('defs');
+  const groups=Array.from(svg.querySelectorAll('[data-writing-stroke]'));
+  const strokes=[];
+  for(const group of groups){
+    const base=group.querySelector('path');
+    if(!base)continue;
+    const length=base.getTotalLength();
+    if(!Number.isFinite(length)||length<.01)continue;
+    strokes.push({group,base,length});
+  }
+  if(!strokes.length)return;
+  const session=writingSession;
+  const total=strokes.reduce((sum,p)=>sum+p.length,0);
+  const duration=Math.max(2600,Math.min(6800,total*.42));
+  let elapsed=0;
+  for(let index=0;index<strokes.length;index++){
+    const {group,base,length}=strokes[index];
+    const box=base.getBBox();
+    const thickness=Number(base.getAttribute('stroke-width'))||42;
+    const margin=thickness+12;
+    const mask=document.createElementNS(NS,'mask');
+    const id='fluid-writing-mask-'+index;
+    mask.setAttribute('id',id);
+    mask.setAttribute('maskUnits','userSpaceOnUse');
+    mask.setAttribute('maskContentUnits','userSpaceOnUse');
+    mask.setAttribute('x',box.x-margin);
+    mask.setAttribute('y',box.y-margin);
+    mask.setAttribute('width',Math.max(1,box.width+2*margin));
+    mask.setAttribute('height',Math.max(1,box.height+2*margin));
+    const brush=document.createElementNS(NS,'path');
+    brush.setAttribute('d',base.getAttribute('d'));
+    brush.setAttribute('fill','none');
+    brush.setAttribute('stroke','white');
+    brush.setAttribute('stroke-width',thickness+3);
+    brush.setAttribute('stroke-linecap','round');
+    brush.setAttribute('stroke-linejoin','round');
+    brush.style.strokeDasharray=`${length} ${length}`;
+    brush.style.strokeDashoffset=String(length);
+    mask.appendChild(brush);defs.appendChild(mask);
+    group.setAttribute('mask',`url(#${id})`);
+    writingMasks.push(mask);writingTargets.push(group);
+    const brushDuration=duration*length/total;
+    const animation=brush.animate(
+      [{strokeDashoffset:String(length)},{strokeDashoffset:'0'}],
+      {duration:brushDuration,delay:elapsed,fill:'both',easing:'linear'}
+    );
+    writingAnimations.push(animation);
+    elapsed+=brushDuration;
+  }
+  $('animationLabel').textContent='Rejouer l’écriture';
+  $('liveStatus').textContent='Écriture en cours…';
+  const last=writingAnimations[writingAnimations.length-1];
+  if(last)last.finished.then(()=>{
+    if(session!==writingSession)return;
+    clearWritingAnimation();
+    $('animationLabel').textContent='Rejouer l’écriture';
+    $('liveStatus').textContent='Aperçu en direct';
+  }).catch(()=>{});
+}
 function render(){
+ clearWritingAnimation();
  const word=state.word.trim();lastGeneratedWord=word;
  if(!word){currentSvg='';$('preview').style.width='auto';$('preview').innerHTML='<span class="empty">Écris un mot pour commencer</span>';}
  else {
@@ -205,7 +283,7 @@ function render(){
    maintainLetterProportions();
  }
  $('preview').setAttribute('aria-label',word?'Lettrage du mot '+word:'Aucun mot');
- $('downloadSVG').disabled=!word;$('downloadPNG').disabled=!word;
+ $('downloadSVG').disabled=!word;$('downloadPNG').disabled=!word;$('animateWriting').disabled=!word;
  $('liveStatus').textContent='Aperçu en direct';$('liveStatus').style.color='#34875f';
  try {const url=new URL(location.href);if(word)url.searchParams.set('mot',word);else url.searchParams.delete('mot');history.replaceState(null,'',url.toString());}catch(e){}
 }
@@ -216,6 +294,7 @@ function exportName(){return (lastGeneratedWord||'lettering').normalize('NFD').r
 $('word').addEventListener('input',e=>{state.word=e.target.value.slice(0,22);requestRender();});
 $('thickness').addEventListener('input',e=>{state.thickness=Number(e.target.value);$('thicknessValue').textContent=state.thickness;requestRender();});
 $('spacing').addEventListener('input',e=>{state.fusion=Number(e.target.value);$('spacingValue').textContent=(state.fusion>0?'+':'')+state.fusion;requestRender();});
+$('animateWriting').addEventListener('click',animateWriting);
 $('downloadSVG').addEventListener('click',()=>{if(!currentSvg)return;download(new Blob([currentSvg],{type:'image/svg+xml;charset=utf-8'}),exportName()+'-fluid.svg');toast('SVG vectoriel exporté');});
 $('downloadPNG').addEventListener('click',()=>{if(!currentSvg)return;const img=new Image(),src=URL.createObjectURL(new Blob([currentSvg],{type:'image/svg+xml;charset=utf-8'}));img.onload=()=>{const factor=Math.min(3,Math.max(1,4096/svgDimensions.width));const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(svgDimensions.width*factor));canvas.height=Math.max(1,Math.round(svgDimensions.height*factor));canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);canvas.toBlob(blob=>{if(blob)download(blob,exportName()+'-fluid.png');URL.revokeObjectURL(src);toast(blob?'PNG exporté':'Impossible de créer le PNG')},'image/png');};img.onerror=()=>{URL.revokeObjectURL(src);toast('Impossible de créer le PNG');};img.src=src;});
 const wordFromUrl=new URLSearchParams(location.search).get('mot')||new URLSearchParams(location.search).get('word');
