@@ -66,30 +66,30 @@
 <body>
 <header><div class="wrap head"><div class="brand"><span class="brand-mark">f</span>fluid<span style="color:#6c58f6">.</span></div><span class="head-note">Vector lettering studio</span></div></header>
 <main class="wrap">
-  <div class="heading"><div><div class="eyebrow">Atelier typographique</div><h1>Un mot, des courbes.</h1></div><p class="subtitle">Parisienne : écriture cursive élégante, avec de véritables contours vectoriels et un dégradé continu.</p></div>
+  <div class="heading"><div><div class="eyebrow">Atelier typographique</div><h1>Un mot, des courbes.</h1></div><p class="subtitle">La Parisienne : écriture cursive élégante, avec ses courbes vectorielles fidèles et un dégradé continu.</p></div>
   <section class="card" aria-label="Éditeur de lettering">
     <div class="canvas-top"><span class="label-title">Ton lettrage</span><span id="liveStatus" class="live" aria-live="polite">Aperçu en direct</span></div>
     <div class="stage" id="stage"><div id="preview" role="img" aria-label="Lettrage vectoriel"><span class="empty">Chargement du tracé…</span></div></div>
-    <div class="stage-bottom"><span class="hint">Police Parisienne · dégradé continu · SVG vectoriel</span><div class="actions">
+    <div class="stage-bottom"><span class="hint">Police La Parisienne · dégradé continu · SVG vectoriel</span><div class="actions">
       <button id="downloadPNG" class="btn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>PNG</button>
       <button id="downloadSVG" class="btn primary" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>SVG</button>
     </div></div>
     <div class="editor">
-      <div class="control word"><label for="word">Ton mot</label><input id="word" type="text" maxlength="22" autocomplete="off" spellcheck="false" value="Nicolas" placeholder="Écris ici…"><p class="note">22 caractères maximum, accents inclus.</p></div>
+      <div class="control word"><label for="word">Ton mot</label><input id="word" type="text" maxlength="22" autocomplete="off" spellcheck="false" value="bonjour" placeholder="Écris ici…"><p class="note">22 caractères maximum, accents inclus.</p></div>
       <div class="control"><div class="control-head"><label for="thickness">Épaisseur</label><output id="thicknessValue" for="thickness">64</output></div><input id="thickness" type="range" min="12" max="160" step="1" value="64"><div class="range-ends"><span>Fin</span><span>Très gras</span></div></div>
       <div class="control"><div class="control-head"><label for="spacing">Espacement</label><output id="spacingValue" for="spacing">0</output></div><input id="spacing" type="range" min="-200" max="180" step="1" value="0"><div class="range-ends"><span>−200 · superposition</span><span>+180 · espacé</span></div><p class="note">Passe en négatif pour rapprocher les lettres. L’épaisseur renforce le contour original.</p></div>
     </div>
   </section>
-  <footer class="bottom-note"><span>FLUID · Parisienne · tracés vectoriels éditables</span><span>Parisienne · Brian J. Bonislawsky (Astigmatic) · <a href="PARISIENNE-OFL.txt" target="_blank" rel="noopener">Licence SIL OFL 1.1</a></span></footer>
+  <footer class="bottom-note"><span>FLUID · La Parisienne · tracés vectoriels éditables</span><span>Parisienne · Brian J. Bonislawsky (Astigmatic) · <a href="PARISIENNE-OFL.txt" target="_blank" rel="noopener">Licence SIL OFL 1.1</a></span></footer>
 </main>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
-<script src="parisienne-outlines.js?v=1"></script>
+<script src="parisienne-outlines.js?v=2"></script>
 <script>
 'use strict';
 const $=id=>document.getElementById(id);
 const palettes={jello:['#6150f7','#5e7bed','#53b4cf','#56dba2','#55fa78']};
-const state={word:'Nicolas',thickness:64,fusion:0,slant:0,palette:'jello',transparent:true,seed:11};
-let currentSvg='',svgDimensions={width:1000,height:600},lastGeneratedWord='Nicolas',pendingFrame=0,toastTimer=0;
+const state={word:'bonjour',thickness:64,fusion:0,slant:0,palette:'jello',transparent:true,seed:11};
+let currentSvg='',svgDimensions={width:1000,height:600},lastGeneratedWord='bonjour',pendingFrame=0,toastTimer=0;
 function escapeXML(s){return String(s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]));}
 /* Fluid uses authentic outline paths from the original Parisienne design,
    Brian J. Bonislawsky / Astigmatic, SIL OFL 1.1. These are filled contours. */
@@ -142,7 +142,7 @@ function getHandwrittenSVG(){
     defs.push(`<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${fmt(x1)}" y1="0" x2="${fmt(x1+span)}" y2="0">${stops}</linearGradient>`);
     parts.push(`<g transform="translate(${fmt(g.x)} 0)"><path d="${g.d}" fill="url(#${id})" fill-rule="nonzero" stroke="url(#${id})" stroke-width="${fmt(thickening)}" stroke-linecap="round" stroke-linejoin="round" paint-order="stroke fill"/></g>`);
   }
-  return `<svg xmlns="${NS}" width="${Math.ceil(width)}" height="${Math.ceil(height)}" viewBox="${fmt(left)} ${fmt(top)} ${fmt(width)} ${fmt(height)}" role="img" aria-label="${escapeXML(word)} en Parisienne"><title>${escapeXML(word)} — Parisienne</title><desc>Parisienne : contours vectoriels authentiques, épaisseur réglable et dégradé horizontal continu sur toute l'inscription.</desc><defs>${defs.join('')}</defs><g transform="scale(1,-1)">${parts.join('')}</g></svg>`;
+  return `<svg xmlns="${NS}" width="${Math.ceil(width)}" height="${Math.ceil(height)}" viewBox="${fmt(left)} ${fmt(top)} ${fmt(width)} ${fmt(height)}" role="img" aria-label="${escapeXML(word)} en Parisienne"><title>${escapeXML(word)} — Parisienne</title><desc>La Parisienne : courbes quadratiques vectorielles fidèles à la police, épaisseur réglable et dégradé horizontal continu sur toute l'inscription.</desc><defs>${defs.join('')}</defs><g transform="scale(1,-1)">${parts.join('')}</g></svg>`;
 }
 
 function maintainLetterProportions(){
