@@ -14,7 +14,7 @@ Générateur de lettering SVG fondé sur les véritables courbes monolinéaires 
 - Courbes SVG à lignes centrales ouvertes issues du SVG de la police, **sans squelettisation** et **sans raccords ajoutés artificiellement**.
 - **Épaisseur** : règle `stroke-width`.
 - **Espacement** : −200 à +180 ; valeurs négatives pour superposer les lettres.
-- Dégradé violet → bleu → turquoise → vert suivant la longueur cumulée des traits, y compris les boucles.
+- Dégradé violet → bleu → turquoise → vert **continu à l’échelle de tout le mot**. Les coordonnées des dégradés compensent le décalage de chaque glyphe pour éviter toute rupture de couleur aux changements de lettre.
 - Exports **SVG et PNG** sans police installée ni serveur.
 - Accents pris en charge quand les glyphes sont présents dans la police (notamment `é`, `è`, `à`, `ç`). Les autres caractères utilisent un repli approximatif.
 
@@ -23,6 +23,8 @@ Générateur de lettering SVG fondé sur les véritables courbes monolinéaires 
 - `index.html` : application et rendu SVG.
 - `ems-allure-smooth.js` : 205 glyphes de la vraie police single-line lissée.
 - `EMS-ALLURE-OFL.txt` : crédit des créateurs et texte de la licence.
+
+Le bouton **Animer l’écriture** révèle les chemins dans l’ordre de tracé ; les exports SVG et PNG restent statiques. Le mot par défaut est **bonjour**.
 
 Le site est statique, hébergé sur GitHub Pages. Pour une installation hors ligne, placer ces trois fichiers dans le même dossier.
 
