@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#f7f8f5">
-<meta name="description" content="Fluid : lettering vectoriel EMS Capitol ou Pecita, épaisseur, espacement, animation d’écriture et dégradé continu.">
+<meta name="description" content="Fluid : lettering vectoriel Sacramento ou Pecita, épaisseur, espacement, animation d’écriture et dégradé continu.">
 <title>Fluid — Atelier de lettering</title>
 <style>
   :root { color-scheme:light; --ink:#1c2923;--muted:#73817a;--line:#e4e9e5;--paper:#f7f8f5;--purple:#6150f7; }
@@ -78,7 +78,7 @@
 <body>
 <header><div class="wrap head"><div class="brand"><span class="brand-mark">f</span>fluid<span style="color:#6c58f6">.</span></div><span class="head-note">Vector lettering studio</span></div></header>
 <main class="wrap">
-  <div class="heading"><div><div class="eyebrow">Atelier typographique</div><h1>Un mot, des courbes.</h1></div><p class="subtitle"><span id="fontSubtitle">EMS Capitol : un lettrage cursif proche de Sacramento, en tracés monolignes.</span></p></div>
+  <div class="heading"><div><div class="eyebrow">Atelier typographique</div><h1>Un mot, des courbes.</h1></div><p class="subtitle"><span id="fontSubtitle">Sacramento : l’écriture originale, élégante et semi-liée, aux contours vectoriels.</span></p></div>
   <section class="card" aria-label="Éditeur de lettering">
     <div class="canvas-top">
       <span class="label-title">Ton lettrage</span>
@@ -88,32 +88,32 @@
       </div>
     </div>
     <div class="stage" id="stage"><div id="preview" role="img" aria-label="Lettrage vectoriel"><span class="empty">Chargement du tracé…</span></div></div>
-    <div class="stage-bottom"><span class="hint" id="fontHint">EMS Capitol · dégradé continu sur tout le mot · SVG ouvert</span><div class="actions">
+    <div class="stage-bottom"><span class="hint" id="fontHint">Sacramento · dégradé continu sur tout le mot · SVG ouvert</span><div class="actions">
       <button id="downloadPNG" class="btn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>PNG</button>
       <button id="downloadSVG" class="btn primary" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>SVG</button>
     </div></div>
     <div class="editor">
       <div class="control word"><label for="word">Ton mot</label><input id="word" type="text" maxlength="22" autocomplete="off" spellcheck="false" value="bonjour" placeholder="Écris ici…"><p class="note">22 caractères maximum, accents compris.</p></div>
-      <div class="control"><label for="fontChoice">Police</label><select class="font-select" id="fontChoice" aria-label="Choisir la police"><option value="capitol" selected>EMS Capitol (Sacramento)</option><option value="pecita">Pecita</option></select><p class="note" id="fontNote">Style Sacramento · tracés monolignes lissés.</p></div>
+      <div class="control"><label for="fontChoice">Police</label><select class="font-select" id="fontChoice" aria-label="Choisir la police"><option value="sacramento" selected>Sacramento</option><option value="pecita">Pecita</option></select><p class="note" id="fontNote">Contours vectoriels originaux de Sacramento.</p></div>
       <div class="control"><div class="control-head"><label for="thickness">Épaisseur</label><output id="thicknessValue" for="thickness">42</output></div><input id="thickness" type="range" min="12" max="160" step="1" value="42"><div class="range-ends"><span>Fin</span><span>Très gras</span></div></div>
       <div class="control"><div class="control-head"><label for="spacing">Espacement</label><output id="spacingValue" for="spacing">0</output></div><input id="spacing" type="range" min="-200" max="180" step="1" value="0"><div class="range-ends"><span>−200 · superposition</span><span>+180 · espacé</span></div><p class="note">Passe en négatif pour superposer les formes liées.</p></div>
     </div>
   </section>
-  <footer class="bottom-note"><span id="footerFont">FLUID · EMS Capitol</span><span><span id="footerLicense">EMS Capitol</span> · <a id="licenseLink" href="EMS-CAPITOL-OFL.txt" target="_blank" rel="noopener">Licence SIL OFL 1.1</a></span></footer>
+  <footer class="bottom-note"><span id="footerFont">FLUID · Sacramento</span><span><span id="footerLicense">Sacramento</span> · <a id="licenseLink" href="SACRAMENTO-OFL.txt" target="_blank" rel="noopener">Licence SIL OFL 1.1</a></span></footer>
 </main>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
-<script src="ems-capitol.js?v=1"></script>
+<script src="sacramento-outlines.js?v=2"></script>
 <script>
 'use strict';
 const $=id=>document.getElementById(id);
 const palettes={jello:['#6150f7','#5e7bed','#53b4cf','#56dba2','#55fa78']};
-const state={word:'bonjour',thickness:42,fusion:0,palette:'jello',font:'capitol'};
+const state={word:'bonjour',thickness:42,fusion:0,palette:'jello',font:'sacramento'};
 let currentSvg='',svgDimensions={width:1000,height:600},lastGeneratedWord='bonjour',pendingFrame=0,toastTimer=0;
 let writingAnimations=[],writingMasks=[],writingTargets=[],writingSession=0;
 function escapeXML(s){return String(s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]));}
-/* EMS Capitol: open single-stroke SVG paths by Sheldon B. Michaels,
-   converted by Windell H. Oskay from Sacramento by Brian J. Bonislawsky
-   (SIL Open Font License 1.1). */
+/* Sacramento original font outlines (Brian J. Bonislawsky / Astigmatic),
+   built from officially published Sacramento.glyphs source (SIL OFL 1.1).
+   Unlike EMS Capitol these are filled contours, not single strokes. */
 // Pecita is loaded only when chosen, so the default Capitol page remains fast.
 let pecitaLoadPromise=null,loadingPecita=false;
 function loadPecita(){
@@ -248,76 +248,31 @@ function getPecitaShapes(word){
   }
   return shapes;
 }
-// Replace dense line segments with smooth cubic curves, retaining every
-// original pen-up move (M), the exact stroke endpoints and existing cubics.
-function smoothCapitolPath(d){
-  const commands=d.match(/[MLC][^MLC]*/g)||[];
-  const fmt=n=>Number(n).toFixed(2);
-  const out=[];let current=null,lines=[];
-  function flushLines(){
-    if(!lines.length||!current)return;
-    const pts=[current,...lines];
-    if(lines.length===1){
-      out.push('L '+fmt(lines[0][0])+' '+fmt(lines[0][1]));
-    }else{
-      for(let i=0;i<pts.length-1;i++){
-        const a=pts[i],b=pts[i+1],prev=pts[Math.max(0,i-1)],next=pts[Math.min(pts.length-1,i+2)];
-        const t=0.13;
-        out.push('C '+fmt(a[0]+(b[0]-prev[0])*t)+' '+fmt(a[1]+(b[1]-prev[1])*t)+' '+fmt(b[0]-(next[0]-a[0])*t)+' '+fmt(b[1]-(next[1]-a[1])*t)+' '+fmt(b[0])+' '+fmt(b[1]));
-      }
-    }
-    current=lines[lines.length-1];lines=[];
-  }
-  for(const command of commands){
-    const op=command[0];
-    const values=(command.slice(1).match(/-?(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?/gi)||[]).map(Number);
-    if(op==='M'){
-      flushLines();
-      if(values.length<2)continue;
-      current=[values[0],values[1]];
-      out.push('M '+fmt(current[0])+' '+fmt(current[1]));
-      for(let i=2;i+1<values.length;i+=2)lines.push([values[i],values[i+1]]);
-    }else if(op==='L'){
-      for(let i=0;i+1<values.length;i+=2)lines.push([values[i],values[i+1]]);
-    }else if(op==='C'){
-      flushLines();
-      for(let i=0;i+5<values.length;i+=6){
-        const v=values.slice(i,i+6);
-        out.push('C '+v.map(fmt).join(' '));
-        current=[v[4],v[5]];
-      }
-    }
-  }
-  flushLines();
-  return out.join(' ');
-}
-function getCapitolShapes(word){
-  const font=window.FLUID_CAPITOL_DATA;
-  if(!font)throw new Error('Le fichier EMS Capitol est introuvable.');
+// Use genuine original Sacramento glyph outlines (not derived monolines).
+function getSacramentoShapes(word){
+  const font=window.FLUID_SACRAMENTO_DATA;
+  if(!font)throw new Error('Le fichier Sacramento est introuvable.');
   const glyphs=font.glyphs,chars=Array.from(word.replace(/œ/g,'oe').replace(/Œ/g,'OE'));
   const shapes=[];let advance=0;
   for(const ch of chars){
     const item=glyphs[ch]||glyphs[ch.normalize('NFD').replace(/[\u0300-\u036f]/g,'')]||glyphs['?'];
     if(!item)continue;
-    if(item.d){
-      const subPaths=item.d.match(/[Mm][^Mm]*/g)||[item.d];
-      for(const d of subPaths)if(d.trim())shapes.push({d:smoothCapitolPath(d.trim()),tx:advance,ty:0});
-    }
+    if(item.d)shapes.push({d:item.d,tx:advance,ty:0,outline:true});
     advance+=item.w+state.fusion;
   }
   return shapes;
 }
 function getFontDescription(){
-  return state.font==='pecita'?'Pecita (tracés centraux lissés, SIL OFL 1.1)':'EMS Capitol (tracés monolignes lissés, SIL OFL 1.1)';
+  return state.font==='pecita'?'Pecita (tracés centraux lissés, SIL OFL 1.1)':'Sacramento (contours originaux vectoriels, SIL OFL 1.1)';
 }
 function updateFontUI(){
   const pecita=state.font==='pecita';
-  $('fontSubtitle').textContent=pecita?'Pecita : une écriture manuscrite expressive aux tracés centraux lissés.':'EMS Capitol : un lettrage cursif proche de Sacramento, en tracés monolignes.';
-  $('fontHint').textContent=(pecita?'Pecita':'EMS Capitol')+' · dégradé continu sur tout le mot · SVG ouvert';
-  $('fontNote').textContent=pecita?'Tracés monolignes extraits de Pecita.':'Style Sacramento · tracés monolignes lissés.';
-  $('footerFont').textContent='FLUID · '+(pecita?'Pecita':'EMS Capitol');
-  $('footerLicense').textContent=pecita?'Pecita':'EMS Capitol';
-  $('licenseLink').href=pecita?'PECITA-OFL.txt':'EMS-CAPITOL-OFL.txt';
+  $('fontSubtitle').textContent=pecita?'Pecita : une écriture manuscrite expressive aux tracés centraux lissés.':'Sacramento : l’écriture originale, élégante et semi-liée, aux contours vectoriels.';
+  $('fontHint').textContent=(pecita?'Pecita':'Sacramento')+' · dégradé continu sur tout le mot · SVG ouvert';
+  $('fontNote').textContent=pecita?'Tracés monolignes extraits de Pecita.':'Contours vectoriels originaux de Sacramento.';
+  $('footerFont').textContent='FLUID · '+(pecita?'Pecita':'Sacramento');
+  $('footerLicense').textContent=pecita?'Pecita':'Sacramento';
+  $('licenseLink').href=pecita?'PECITA-OFL.txt':'SACRAMENTO-OFL.txt';
 }
 $('fontChoice').addEventListener('change',async event=>{
   const chosen=event.target.value;
@@ -332,7 +287,7 @@ $('fontChoice').addEventListener('change',async event=>{
     try{await loadPecita();}
     catch(error){
       if(state.font===chosen){
-        console.error(error);state.font='capitol';$('fontChoice').value='capitol';updateFontUI();toast('Pecita indisponible, retour à EMS Capitol');
+        console.error(error);state.font='sacramento';$('fontChoice').value='sacramento';updateFontUI();toast('Pecita indisponible, retour à Sacramento');
       }
     }finally{loadingPecita=false;requestRender();}
   }else requestRender();
@@ -343,7 +298,7 @@ function getHandwrittenSVG(){
   if(!word.trim())return '';
   const NS='http://www.w3.org/2000/svg';
   const fmt=n=>Number(n).toFixed(2);
-  const shapes=state.font==='pecita'?getPecitaShapes(word):getCapitolShapes(word);
+  const shapes=state.font==='pecita'?getPecitaShapes(word):getSacramentoShapes(word);
   if(!shapes.length)return '';
   const measure=document.createElementNS(NS,'svg');
   measure.style.cssText='position:absolute;width:0;height:0;left:-99999px;top:-99999px;opacity:0;pointer-events:none';
@@ -356,12 +311,11 @@ function getHandwrittenSVG(){
       const p=document.createElementNS(NS,'path');p.setAttribute('d',shape.d);measure.appendChild(p);
       const length=p.getTotalLength();
       if(length<.01){p.remove();continue;}
-      const samples=Math.max(20,Math.ceil(length/15));
-      for(let j=0;j<=samples;j++){
-        const pt=p.getPointAtLength(length*j/samples);
-        minX=Math.min(minX,pt.x+shape.tx);maxX=Math.max(maxX,pt.x+shape.tx);
-        minY=Math.min(minY,pt.y+shape.ty);maxY=Math.max(maxY,pt.y+shape.ty);
-      }
+      const bounds=p.getBBox();
+      minX=Math.min(minX,bounds.x+shape.tx);
+      maxX=Math.max(maxX,bounds.x+bounds.width+shape.tx);
+      minY=Math.min(minY,bounds.y+shape.ty);
+      maxY=Math.max(maxY,bounds.y+bounds.height+shape.ty);
       geometries.push({p,length,tx:shape.tx,ty:shape.ty,d:shape.d});
     }
     if(!geometries.length)return '';
@@ -380,14 +334,18 @@ function getHandwrittenSVG(){
       const x2=x1+span;
       const stops=colors.map((color,j)=>`<stop offset="${fmt(j*100/(colors.length-1))}%" stop-color="${color}"/>`).join('');
       defs.push(`<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${fmt(x1)}" y1="0" x2="${fmt(x2)}" y2="0">${stops}</linearGradient>`);
-      parts.push(`<g data-writing-stroke="1" transform="translate(${fmt(shape.tx)} ${fmt(shape.ty)})"><path d="${shape.d}" fill="none" stroke="url(#${id})" stroke-width="${weight}" stroke-linecap="round" stroke-linejoin="round"/></g>`);
+      const outline=state.font==='sacramento';
+      const strokeWidth=outline?Math.max(0,(weight-12)*.40):weight;
+      const fill=outline?'url(#'+id+')':'none';
+      const attributes=outline?' data-outline-writing="1"':'';
+      parts.push(`<g data-writing-stroke="1"${attributes} transform="translate(${fmt(shape.tx)} ${fmt(shape.ty)})"><path d="${shape.d}" fill="${fill}" fill-rule="nonzero" stroke="url(#${id})" stroke-width="${fmt(strokeWidth)}" stroke-linecap="round" stroke-linejoin="round" paint-order="stroke fill"/></g>`);
     }
     const padding=weight/2+45;
     const left=minX-padding,top=-(maxY+padding);
     const width=Math.max(180,maxX-minX+2*padding),height=Math.max(200,maxY-minY+2*padding);
     svgDimensions={width:Math.ceil(width),height:Math.ceil(height)};
     const description=getFontDescription()+' ; dégradé visuellement continu sur tout le mot.';
-    return `<svg xmlns="${NS}" width="${Math.ceil(width)}" height="${Math.ceil(height)}" viewBox="${fmt(left)} ${fmt(top)} ${fmt(width)} ${fmt(height)}" role="img" aria-label="${escapeXML(word)} en ${state.font==='pecita'?'Pecita':'EMS Capitol'}"><title>${escapeXML(word)} — ${state.font==='pecita'?'Pecita':'EMS Capitol'}</title><desc>${description}</desc><defs>${defs.join('')}</defs><g transform="scale(1,-1)">${parts.join('')}</g></svg>`;
+    return `<svg xmlns="${NS}" width="${Math.ceil(width)}" height="${Math.ceil(height)}" viewBox="${fmt(left)} ${fmt(top)} ${fmt(width)} ${fmt(height)}" role="img" aria-label="${escapeXML(word)} en ${state.font==='pecita'?'Pecita':'Sacramento'}"><title>${escapeXML(word)} — ${state.font==='pecita'?'Pecita':'Sacramento'}</title><desc>${description}</desc><defs>${defs.join('')}</defs><g transform="scale(1,-1)">${parts.join('')}</g></svg>`;
   }finally{measure.remove();}
 }
 function maintainLetterProportions(){
@@ -441,23 +399,32 @@ function animateWriting(){
     mask.setAttribute('y',box.y-margin);
     mask.setAttribute('width',Math.max(1,box.width+2*margin));
     mask.setAttribute('height',Math.max(1,box.height+2*margin));
-    const brush=document.createElementNS(NS,'path');
-    brush.setAttribute('d',base.getAttribute('d'));
-    brush.setAttribute('fill','none');
-    brush.setAttribute('stroke','white');
-    brush.setAttribute('stroke-width',thickness+3);
-    brush.setAttribute('stroke-linecap','round');
-    brush.setAttribute('stroke-linejoin','round');
-    brush.style.strokeDasharray=`${length} ${length}`;
-    brush.style.strokeDashoffset=String(length);
+    const outline=group.hasAttribute('data-outline-writing');
+    const brush=document.createElementNS(NS,outline?'rect':'path');
+    if(outline){
+      // Original Sacramento has filled outlines; reveal each glyph smoothly.
+      brush.setAttribute('x',box.x-margin);
+      brush.setAttribute('y',box.y-margin);
+      brush.setAttribute('width','0');
+      brush.setAttribute('height',Math.max(1,box.height+margin*2));
+      brush.setAttribute('fill','white');
+    }else{
+      brush.setAttribute('d',base.getAttribute('d'));
+      brush.setAttribute('fill','none');
+      brush.setAttribute('stroke','white');
+      brush.setAttribute('stroke-width',thickness+3);
+      brush.setAttribute('stroke-linecap','round');
+      brush.setAttribute('stroke-linejoin','round');
+      brush.style.strokeDasharray=`${length} ${length}`;
+      brush.style.strokeDashoffset=String(length);
+    }
     mask.appendChild(brush);defs.appendChild(mask);
     group.setAttribute('mask',`url(#${id})`);
     writingMasks.push(mask);writingTargets.push(group);
     const brushDuration=duration*length/total;
-    const animation=brush.animate(
-      [{strokeDashoffset:String(length)},{strokeDashoffset:'0'}],
-      {duration:brushDuration,delay:elapsed,fill:'both',easing:'linear'}
-    );
+    const animation=outline
+      ?brush.animate([{width:'0'},{width:String(Math.max(1,box.width+margin*2))}],{duration:brushDuration,delay:elapsed,fill:'both',easing:'linear'})
+      :brush.animate([{strokeDashoffset:String(length)},{strokeDashoffset:'0'}],{duration:brushDuration,delay:elapsed,fill:'both',easing:'linear'});
     writingAnimations.push(animation);
     elapsed+=brushDuration;
   }
