@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#f7f8f5">
-<meta name="description" content="Fluid : lettering vectoriel Sacramento ou Pecita, épaisseur, espacement, animation d’écriture et dégradé continu.">
+<meta name="description" content="Fluid : lettering vectoriel Pecita à tracés continus, épaisseur, espacement, animation d’écriture et dégradé continu.">
 <title>Fluid — Atelier de lettering</title>
 <style>
   :root { color-scheme:light; --ink:#1c2923;--muted:#73817a;--line:#e4e9e5;--paper:#f7f8f5;--purple:#6150f7; }
@@ -78,7 +78,7 @@
 <body>
 <header><div class="wrap head"><div class="brand"><span class="brand-mark">f</span>fluid<span style="color:#6c58f6">.</span></div><span class="head-note">Vector lettering studio</span></div></header>
 <main class="wrap">
-  <div class="heading"><div><div class="eyebrow">Atelier typographique</div><h1>Un mot, des courbes.</h1></div><p class="subtitle"><span id="fontSubtitle">Sacramento : l’écriture originale, élégante et semi-liée, aux contours vectoriels.</span></p></div>
+  <div class="heading"><div><div class="eyebrow">Atelier typographique</div><h1>Un mot, des courbes.</h1></div><p class="subtitle"><span id="fontSubtitle">Pecita : une écriture manuscrite expressive dont les tracés principaux sont reliés pour devenir continus.</span></p></div>
   <section class="card" aria-label="Éditeur de lettering">
     <div class="canvas-top">
       <span class="label-title">Ton lettrage</span>
@@ -88,33 +88,32 @@
       </div>
     </div>
     <div class="stage" id="stage"><div id="preview" role="img" aria-label="Lettrage vectoriel"><span class="empty">Chargement du tracé…</span></div></div>
-    <div class="stage-bottom"><span class="hint" id="fontHint">Sacramento · dégradé continu sur tout le mot · SVG ouvert</span><div class="actions">
+    <div class="stage-bottom"><span class="hint" id="fontHint">Pecita · tracé principal continu · dégradé continu sur tout le mot · SVG ouvert</span><div class="actions">
       <button id="downloadPNG" class="btn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>PNG</button>
       <button id="downloadSVG" class="btn primary" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>SVG</button>
     </div></div>
     <div class="editor">
       <div class="control word"><label for="word">Ton mot</label><input id="word" type="text" maxlength="22" autocomplete="off" spellcheck="false" value="bonjour" placeholder="Écris ici…"><p class="note">22 caractères maximum, accents compris.</p></div>
-      <div class="control"><label for="fontChoice">Police</label><select class="font-select" id="fontChoice" aria-label="Choisir la police"><option value="sacramento" selected>Sacramento</option><option value="pecita">Pecita</option></select><p class="note" id="fontNote">Contours vectoriels originaux de Sacramento.</p></div>
+      <div class="control"><label for="fontChoice">Police</label><select class="font-select" id="fontChoice" aria-label="Choisir la police"><option value="pecita" selected>Pecita continu</option></select><p class="note" id="fontNote">Lettres Pecita reliées automatiquement avec un lissage renforcé et moins de levées de crayon.</p></div>
       <div class="control"><div class="control-head"><label for="thickness">Épaisseur</label><output id="thicknessValue" for="thickness">42</output></div><input id="thickness" type="range" min="12" max="160" step="1" value="42"><div class="range-ends"><span>Fin</span><span>Très gras</span></div></div>
       <div class="control"><div class="control-head"><label for="spacing">Espacement</label><output id="spacingValue" for="spacing">0</output></div><input id="spacing" type="range" min="-200" max="180" step="1" value="0"><div class="range-ends"><span>−200 · superposition</span><span>+180 · espacé</span></div><p class="note">Passe en négatif pour superposer les formes liées.</p></div>
     </div>
   </section>
-  <footer class="bottom-note"><span id="footerFont">FLUID · Sacramento</span><span><span id="footerLicense">Sacramento</span> · <a id="licenseLink" href="SACRAMENTO-OFL.txt" target="_blank" rel="noopener">Licence SIL OFL 1.1</a></span></footer>
+  <footer class="bottom-note"><span id="footerFont">FLUID · Pecita continu</span><span><span id="footerLicense">Pecita</span> · <a id="licenseLink" href="EMS-ALLURE-OFL.txt" target="_blank" rel="noopener">Licence SIL OFL 1.1</a></span></footer>
 </main>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
-<script src="sacramento-outlines.js?v=2"></script>
 <script>
 'use strict';
 const $=id=>document.getElementById(id);
 const palettes={jello:['#6150f7','#5e7bed','#53b4cf','#56dba2','#55fa78']};
-const state={word:'bonjour',thickness:42,fusion:0,palette:'jello',font:'sacramento'};
+const state={word:'bonjour',thickness:42,fusion:0,palette:'jello',font:'pecita'};
 let currentSvg='',svgDimensions={width:1000,height:600},lastGeneratedWord='bonjour',pendingFrame=0,toastTimer=0;
 let writingAnimations=[],writingMasks=[],writingTargets=[],writingSession=0;
 function escapeXML(s){return String(s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]));}
-/* Sacramento original font outlines (Brian J. Bonislawsky / Astigmatic),
-   built from officially published Sacramento.glyphs source (SIL OFL 1.1).
-   Unlike EMS Capitol these are filled contours, not single strokes. */
-// Pecita is loaded only when chosen, so the default Capitol page remains fast.
+/* EMS Allure Smooth: original single-line SVG curves by Cutlings (Ellen Wasbø),
+   based on EMS Allure by Sheldon B. Michaels / Windell H. Oskay,
+   derived from Allura by Rob Leuschke (SIL Open Font License 1.1). */
+// Pecita is loaded only when chosen, so the default Allure page remains fast.
 let pecitaLoadPromise=null,loadingPecita=false;
 function loadPecita(){
   if(window.FLUID_HANDWRITTEN_DATA&&window.FLUID_CENTERLINES)return Promise.resolve();
@@ -136,12 +135,12 @@ function smoothPecitaStroke(points){
   let curve=points.map(p=>[p[0],p[1]]);
   if(curve.length<=3)return curve;
   // Gaussian averaging with fixed endpoints to avoid sharp pixel-skeleton bends.
-  for(let pass=0;pass<3;pass++){
+  for(let pass=0;pass<5;pass++){
     const next=[curve[0]];
     for(let i=1;i<curve.length-1;i++){
       const prev=curve[i-1],now=curve[i],after=curve[i+1];
-      next.push([prev[0]*.2+now[0]*.6+after[0]*.2,
-                 prev[1]*.2+now[1]*.6+after[1]*.2]);
+      next.push([prev[0]*.15+now[0]*.70+after[0]*.15,
+                 prev[1]*.15+now[1]*.70+after[1]*.15]);
     }
     next.push(curve[curve.length-1]);curve=next;
   }
@@ -160,13 +159,56 @@ function pecitaCenterlinePath(points){
   }
   return d;
 }
+function polylineLength(points){
+  let total=0;
+  for(let i=1;i<points.length;i++)total+=Math.hypot(points[i][0]-points[i-1][0],points[i][1]-points[i-1][1]);
+  return total;
+}
+function translatePoints(points,tx,ty){return points.map(p=>[p[0]+tx,p[1]+ty]);}
+function vecNormalize(dx,dy){
+  const len=Math.hypot(dx,dy)||1;return [dx/len,dy/len];
+}
+function pathSegmentsFromPoints(points){
+  const pts=smoothPecitaStroke(points);
+  if(pts.length<2)return null;
+  const fmt=n=>Number(n).toFixed(2);
+  const segments=[];
+  for(let i=0;i<pts.length-1;i++){
+    const a=pts[Math.max(0,i-1)],b=pts[i],c=pts[i+1],e=pts[Math.min(pts.length-1,i+2)];
+    const cp1=[b[0]+(c[0]-a[0])/6,b[1]+(c[1]-a[1])/6];
+    const cp2=[c[0]-(e[0]-b[0])/6,c[1]-(e[1]-b[1])/6];
+    segments.push({cp1,cp2,end:c});
+  }
+  return {start:pts[0],end:pts[pts.length-1],points:pts,segments};
+}
+function pathDataFromSegments(info){
+  const fmt=n=>Number(n).toFixed(2);
+  let d=`M ${fmt(info.start[0])} ${fmt(info.start[1])}`;
+  for(const seg of info.segments)d+=` C ${fmt(seg.cp1[0])} ${fmt(seg.cp1[1])} ${fmt(seg.cp2[0])} ${fmt(seg.cp2[1])} ${fmt(seg.end[0])} ${fmt(seg.end[1])}`;
+  return d;
+}
+function connectorSegment(a,b){
+  const fmt=n=>Number(n).toFixed(2);
+  const dx=b.start[0]-a.end[0],dy=b.start[1]-a.end[1];
+  const dist=Math.hypot(dx,dy);
+  if(dist<1)return '';
+  const prevPoint=a.points[Math.max(0,a.points.length-2)],nextPoint=b.points[Math.min(1,b.points.length-1)];
+  const [v1x,v1y]=vecNormalize(a.end[0]-prevPoint[0],a.end[1]-prevPoint[1]);
+  const [v2x,v2y]=vecNormalize(nextPoint[0]-b.start[0],nextPoint[1]-b.start[1]);
+  const handle=Math.max(18,Math.min(92,dist*0.48));
+  const cp1=[a.end[0]+v1x*handle,a.end[1]+v1y*handle];
+  const cp2=[b.start[0]-v2x*handle,b.start[1]-v2y*handle];
+  return ` C ${fmt(cp1[0])} ${fmt(cp1[1])} ${fmt(cp2[0])} ${fmt(cp2[1])} ${fmt(b.start[0])} ${fmt(b.start[1])}`;
+}
+function canJoinRuns(a,b){
+  const dx=b.start[0]-a.end[0],dy=b.start[1]-a.end[1],dist=Math.hypot(dx,dy);
+  return dx>-150 && dx<240 && Math.abs(dy)<145 && dist<270;
+}
 function getPecitaShapes(word){
   const data=window.FLUID_HANDWRITTEN_DATA,centers=window.FLUID_CENTERLINES;
   if(!data||!centers)throw new Error('Pecita n’est pas encore chargée.');
   const markSet=new Set(data.isMark.map(Number));
   const seq=Array.from(word).map(ch => data.cmap[String(ch.codePointAt(0))] ?? data.cmap['63']);
-  // A minimal contextual OpenType substitution engine. It preserves initial,
-  // medial and final letter forms and mandatory joining ligatures.
   function substitute(list, lookupId, pos, depth=0){
     if(depth>9 || pos>=list.length)return false;
     const lookup=data.lookups[String(lookupId)]||[];
@@ -210,22 +252,20 @@ function getPecitaShapes(word){
     }
     return false;
   }
-  // OpenType lookup order, with ligatures and contextual alternates.
   for(const lookupId of data.lookupOrder.slice().sort((a,b)=>a-b)){
     for(let position=0;position<seq.length;position++)substitute(seq,lookupId,position);
   }
-  const chars=[];
+  const glyphs=[];
   let advance=0;
   for(const gid of seq){
     const outline=data.paths[String(gid)];
     if(!outline)continue;
     const isMark=markSet.has(gid);
-    chars.push({gid,outline,x:advance,dx:0,dy:0,mark:isMark});
+    glyphs.push({gid,outline,x:advance,dx:0,dy:0,mark:isMark});
     advance+=outline[0]+(isMark?0:state.fusion);
   }
-  // Position diacritics using mark-to-base GPOS anchors in original font units.
   let lastBase=null;
-  for(const glyph of chars){
+  for(const glyph of glyphs){
     if(!glyph.mark){lastBase=glyph;continue;}
     if(!lastBase)continue;
     for(const table of data.gpos){
@@ -238,67 +278,94 @@ function getPecitaShapes(word){
     }
   }
   const shapes=[];
-  for(const glyph of chars){
-    const contours=centers[String(glyph.gid)]||[];
-    for(const points of contours){
-      if(points.length<2)continue;
-      const d=pecitaCenterlinePath(points);
-      if(d)shapes.push({d,tx:glyph.x+glyph.dx,ty:glyph.dy});
+  const baseRuns=[];
+  for(const glyph of glyphs){
+    const contours=(centers[String(glyph.gid)]||[]).filter(points=>points.length>1).map(points=>translatePoints(points,glyph.x+glyph.dx,glyph.dy));
+    if(!contours.length){
+      // A space is a deliberate pen lift: never connect adjacent words.
+      if(Number(glyph.gid)===Number(data.cmap['32']))baseRuns.push(null);
+      continue;
     }
+    if(glyph.mark){
+      for(const points of contours){
+        const info=pathSegmentsFromPoints(points);
+        if(info)shapes.push({d:pathDataFromSegments(info),tx:0,ty:0});
+      }
+      continue;
+    }
+    let mainIndex=0,best=-Infinity;
+    contours.forEach((points,i)=>{
+      const xs=points.map(p=>p[0]),ys=points.map(p=>p[1]);
+      const span=(Math.max(...xs)-Math.min(...xs))*0.8+(Math.max(...ys)-Math.min(...ys))*0.2+polylineLength(points);
+      if(span>best){best=span;mainIndex=i;}
+    });
+    const main=pathSegmentsFromPoints(contours[mainIndex]);
+    if(main)baseRuns.push(main);
+    contours.forEach((points,i)=>{if(i!==mainIndex){
+      const info=pathSegmentsFromPoints(points);if(info)shapes.push({d:pathDataFromSegments(info),tx:0,ty:0});
+    }});
+  }
+  if(baseRuns.length){
+    const fmt=n=>Number(n).toFixed(2);
+    const joined=[];
+    let current='',prev=null;
+    function commitRun(){
+      if(current)joined.push({d:current,tx:0,ty:0});
+      current='';prev=null;
+    }
+    for(const next of baseRuns){
+      if(!next){commitRun();continue;}
+      if(!prev){current=pathDataFromSegments(next);prev=next;continue;}
+      if(canJoinRuns(prev,next)){
+        current+=connectorSegment(prev,next);
+        for(const seg of next.segments)current+=` C ${fmt(seg.cp1[0])} ${fmt(seg.cp1[1])} ${fmt(seg.cp2[0])} ${fmt(seg.cp2[1])} ${fmt(seg.end[0])} ${fmt(seg.end[1])}`;
+      }else{
+        commitRun();current=pathDataFromSegments(next);
+      }
+      prev=next;
+    }
+    commitRun();
+    // Animate the main pen trajectory first, in writing order; accents
+    // and secondary strokes are revealed after the connected body.
+    return [...joined,...shapes];
   }
   return shapes;
 }
-// Use genuine original Sacramento glyph outlines (not derived monolines).
-function getSacramentoShapes(word){
-  const font=window.FLUID_SACRAMENTO_DATA;
-  if(!font)throw new Error('Le fichier Sacramento est introuvable.');
+function getAllureShapes(word){
+  const font=window.FLUID_ALLURE_DATA;
+  if(!font)throw new Error('Le fichier EMS Allure Smooth est introuvable.');
   const glyphs=font.glyphs,chars=Array.from(word.replace(/œ/g,'oe').replace(/Œ/g,'OE'));
   const shapes=[];let advance=0;
   for(const ch of chars){
     const item=glyphs[ch]||glyphs[ch.normalize('NFD').replace(/[\u0300-\u036f]/g,'')]||glyphs['?'];
     if(!item)continue;
-    if(item.d)shapes.push({d:item.d,tx:advance,ty:0,outline:true});
+    if(item.d){
+      const subPaths=item.d.match(/[Mm][^Mm]*/g)||[item.d];
+      for(const d of subPaths)if(d.trim())shapes.push({d:d.trim(),tx:advance,ty:0});
+    }
     advance+=item.w+state.fusion;
   }
   return shapes;
 }
 function getFontDescription(){
-  return state.font==='pecita'?'Pecita (tracés centraux lissés, SIL OFL 1.1)':'Sacramento (contours originaux vectoriels, SIL OFL 1.1)';
+  return 'Pecita (tracés continus lissés, SIL OFL 1.1)';
 }
 function updateFontUI(){
-  const pecita=state.font==='pecita';
-  $('fontSubtitle').textContent=pecita?'Pecita : une écriture manuscrite expressive aux tracés centraux lissés.':'Sacramento : l’écriture originale, élégante et semi-liée, aux contours vectoriels.';
-  $('fontHint').textContent=(pecita?'Pecita':'Sacramento')+' · dégradé continu sur tout le mot · SVG ouvert';
-  $('fontNote').textContent=pecita?'Tracés monolignes extraits de Pecita.':'Contours vectoriels originaux de Sacramento.';
-  $('footerFont').textContent='FLUID · '+(pecita?'Pecita':'Sacramento');
-  $('footerLicense').textContent=pecita?'Pecita':'Sacramento';
-  $('licenseLink').href=pecita?'PECITA-OFL.txt':'SACRAMENTO-OFL.txt';
+  $('fontSubtitle').textContent='Pecita : les tracés principaux des lettres sont reliés avec un lissage renforcé pour une écriture encore plus continue.';
+  $('fontHint').textContent='Pecita continu · lissage renforcé · dégradé continu sur tout le mot · SVG ouvert';
+  $('fontNote').textContent='Jonctions automatiques renforcées, avec réduction maximale des levées de crayon hors accents.';
+  $('footerFont').textContent='FLUID · Pecita continu';
+  $('footerLicense').textContent='Pecita';
+  $('licenseLink').href='PECITA-OFL.txt';
 }
-$('fontChoice').addEventListener('change',async event=>{
-  const chosen=event.target.value;
-  state.font=chosen;
-  updateFontUI();
-  clearWritingAnimation();
-  if(chosen==='pecita'&&!window.FLUID_CENTERLINES){
-    loadingPecita=true;
-    $('animateWriting').disabled=true;
-    $('liveStatus').textContent='Chargement Pecita…';
-    $('preview').innerHTML='<span class="empty">Chargement des tracés Pecita…</span>';
-    try{await loadPecita();}
-    catch(error){
-      if(state.font===chosen){
-        console.error(error);state.font='sacramento';$('fontChoice').value='sacramento';updateFontUI();toast('Pecita indisponible, retour à Sacramento');
-      }
-    }finally{loadingPecita=false;requestRender();}
-  }else requestRender();
-});
+$('fontChoice').addEventListener('change',()=>{state.font='pecita';updateFontUI();requestRender();});
 
 function getHandwrittenSVG(){
   const word=state.word.slice(0,22);
   if(!word.trim())return '';
   const NS='http://www.w3.org/2000/svg';
   const fmt=n=>Number(n).toFixed(2);
-  const shapes=state.font==='pecita'?getPecitaShapes(word):getSacramentoShapes(word);
+  const shapes=getPecitaShapes(word);
   if(!shapes.length)return '';
   const measure=document.createElementNS(NS,'svg');
   measure.style.cssText='position:absolute;width:0;height:0;left:-99999px;top:-99999px;opacity:0;pointer-events:none';
@@ -311,11 +378,12 @@ function getHandwrittenSVG(){
       const p=document.createElementNS(NS,'path');p.setAttribute('d',shape.d);measure.appendChild(p);
       const length=p.getTotalLength();
       if(length<.01){p.remove();continue;}
-      const bounds=p.getBBox();
-      minX=Math.min(minX,bounds.x+shape.tx);
-      maxX=Math.max(maxX,bounds.x+bounds.width+shape.tx);
-      minY=Math.min(minY,bounds.y+shape.ty);
-      maxY=Math.max(maxY,bounds.y+bounds.height+shape.ty);
+      const samples=Math.max(20,Math.ceil(length/15));
+      for(let j=0;j<=samples;j++){
+        const pt=p.getPointAtLength(length*j/samples);
+        minX=Math.min(minX,pt.x+shape.tx);maxX=Math.max(maxX,pt.x+shape.tx);
+        minY=Math.min(minY,pt.y+shape.ty);maxY=Math.max(maxY,pt.y+shape.ty);
+      }
       geometries.push({p,length,tx:shape.tx,ty:shape.ty,d:shape.d});
     }
     if(!geometries.length)return '';
@@ -334,18 +402,14 @@ function getHandwrittenSVG(){
       const x2=x1+span;
       const stops=colors.map((color,j)=>`<stop offset="${fmt(j*100/(colors.length-1))}%" stop-color="${color}"/>`).join('');
       defs.push(`<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${fmt(x1)}" y1="0" x2="${fmt(x2)}" y2="0">${stops}</linearGradient>`);
-      const outline=state.font==='sacramento';
-      const strokeWidth=outline?Math.max(0,(weight-12)*.40):weight;
-      const fill=outline?'url(#'+id+')':'none';
-      const attributes=outline?' data-outline-writing="1"':'';
-      parts.push(`<g data-writing-stroke="1"${attributes} transform="translate(${fmt(shape.tx)} ${fmt(shape.ty)})"><path d="${shape.d}" fill="${fill}" fill-rule="nonzero" stroke="url(#${id})" stroke-width="${fmt(strokeWidth)}" stroke-linecap="round" stroke-linejoin="round" paint-order="stroke fill"/></g>`);
+      parts.push(`<g data-writing-stroke="1" transform="translate(${fmt(shape.tx)} ${fmt(shape.ty)})"><path d="${shape.d}" fill="none" stroke="url(#${id})" stroke-width="${weight}" stroke-linecap="round" stroke-linejoin="round"/></g>`);
     }
     const padding=weight/2+45;
     const left=minX-padding,top=-(maxY+padding);
     const width=Math.max(180,maxX-minX+2*padding),height=Math.max(200,maxY-minY+2*padding);
     svgDimensions={width:Math.ceil(width),height:Math.ceil(height)};
     const description=getFontDescription()+' ; dégradé visuellement continu sur tout le mot.';
-    return `<svg xmlns="${NS}" width="${Math.ceil(width)}" height="${Math.ceil(height)}" viewBox="${fmt(left)} ${fmt(top)} ${fmt(width)} ${fmt(height)}" role="img" aria-label="${escapeXML(word)} en ${state.font==='pecita'?'Pecita':'Sacramento'}"><title>${escapeXML(word)} — ${state.font==='pecita'?'Pecita':'Sacramento'}</title><desc>${description}</desc><defs>${defs.join('')}</defs><g transform="scale(1,-1)">${parts.join('')}</g></svg>`;
+    return `<svg xmlns="${NS}" width="${Math.ceil(width)}" height="${Math.ceil(height)}" viewBox="${fmt(left)} ${fmt(top)} ${fmt(width)} ${fmt(height)}" role="img" aria-label="${escapeXML(word)} en Pecita"><title>${escapeXML(word)} — Pecita</title><desc>${description}</desc><defs>${defs.join('')}</defs><g transform="scale(1,-1)">${parts.join('')}</g></svg>`;
   }finally{measure.remove();}
 }
 function maintainLetterProportions(){
@@ -399,32 +463,23 @@ function animateWriting(){
     mask.setAttribute('y',box.y-margin);
     mask.setAttribute('width',Math.max(1,box.width+2*margin));
     mask.setAttribute('height',Math.max(1,box.height+2*margin));
-    const outline=group.hasAttribute('data-outline-writing');
-    const brush=document.createElementNS(NS,outline?'rect':'path');
-    if(outline){
-      // Original Sacramento has filled outlines; reveal each glyph smoothly.
-      brush.setAttribute('x',box.x-margin);
-      brush.setAttribute('y',box.y-margin);
-      brush.setAttribute('width','0');
-      brush.setAttribute('height',Math.max(1,box.height+margin*2));
-      brush.setAttribute('fill','white');
-    }else{
-      brush.setAttribute('d',base.getAttribute('d'));
-      brush.setAttribute('fill','none');
-      brush.setAttribute('stroke','white');
-      brush.setAttribute('stroke-width',thickness+3);
-      brush.setAttribute('stroke-linecap','round');
-      brush.setAttribute('stroke-linejoin','round');
-      brush.style.strokeDasharray=`${length} ${length}`;
-      brush.style.strokeDashoffset=String(length);
-    }
+    const brush=document.createElementNS(NS,'path');
+    brush.setAttribute('d',base.getAttribute('d'));
+    brush.setAttribute('fill','none');
+    brush.setAttribute('stroke','white');
+    brush.setAttribute('stroke-width',thickness+3);
+    brush.setAttribute('stroke-linecap','round');
+    brush.setAttribute('stroke-linejoin','round');
+    brush.style.strokeDasharray=`${length} ${length}`;
+    brush.style.strokeDashoffset=String(length);
     mask.appendChild(brush);defs.appendChild(mask);
     group.setAttribute('mask',`url(#${id})`);
     writingMasks.push(mask);writingTargets.push(group);
     const brushDuration=duration*length/total;
-    const animation=outline
-      ?brush.animate([{width:'0'},{width:String(Math.max(1,box.width+margin*2))}],{duration:brushDuration,delay:elapsed,fill:'both',easing:'linear'})
-      :brush.animate([{strokeDashoffset:String(length)},{strokeDashoffset:'0'}],{duration:brushDuration,delay:elapsed,fill:'both',easing:'linear'});
+    const animation=brush.animate(
+      [{strokeDashoffset:String(length)},{strokeDashoffset:'0'}],
+      {duration:brushDuration,delay:elapsed,fill:'both',easing:'linear'}
+    );
     writingAnimations.push(animation);
     elapsed+=brushDuration;
   }
@@ -464,7 +519,12 @@ $('downloadSVG').addEventListener('click',()=>{if(!currentSvg)return;download(ne
 $('downloadPNG').addEventListener('click',()=>{if(!currentSvg)return;const img=new Image(),src=URL.createObjectURL(new Blob([currentSvg],{type:'image/svg+xml;charset=utf-8'}));img.onload=()=>{const factor=Math.min(3,Math.max(1,4096/svgDimensions.width));const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(svgDimensions.width*factor));canvas.height=Math.max(1,Math.round(svgDimensions.height*factor));canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);canvas.toBlob(blob=>{if(blob)download(blob,exportName()+'-fluid.png');URL.revokeObjectURL(src);toast(blob?'PNG exporté':'Impossible de créer le PNG')},'image/png');};img.onerror=()=>{URL.revokeObjectURL(src);toast('Impossible de créer le PNG');};img.src=src;});
 const wordFromUrl=new URLSearchParams(location.search).get('mot')||new URLSearchParams(location.search).get('word');
 if(wordFromUrl){state.word=wordFromUrl.slice(0,22);$('word').value=state.word;}
-updateFontUI();requestRender();window.addEventListener('resize',maintainLetterProportions);
+updateFontUI();
+if(state.font==='pecita'&&!window.FLUID_CENTERLINES){
+  loadingPecita=true;$('liveStatus').textContent='Chargement Pecita…';$('preview').innerHTML='<span class="empty">Chargement des tracés Pecita…</span>';
+  loadPecita().catch(error=>{console.error(error);$('preview').innerHTML='<span class="empty">Impossible de charger Pecita.</span>';$('liveStatus').textContent='Erreur de chargement';$('liveStatus').style.color='#c03838';toast('Pecita indisponible');}).finally(()=>{loadingPecita=false;requestRender();});
+}else requestRender();
+window.addEventListener('resize',maintainLetterProportions);
 </script>
 </body>
 </html>
