@@ -6,13 +6,13 @@ Générateur de lettering SVG basé sur **les contours vectoriels de Parisienne*
 
 ## Fonctionnement
 
-- La police **Parisienne** est utilisée par défaut ; le texte initial reste **Nicolas** (22 caractères maximum).
+- La police **Parisienne** est utilisée par défaut ; le texte initial est **bonjour** (22 caractères maximum).
 - Le moteur utilise **372 entrées Unicode** issues des courbes du fichier source FontForge SFD, pas une police chargée par Internet. Les accents français sont pris en charge.
 - **Épaisseur** : les contours originaux sont conservés ; le curseur permet de les épaissir en ajoutant un contour de la même couleur. Au minimum, la forme correspond à l'épaisseur native de Parisienne ; elle ne peut pas être amincie au-delà.
 - **Espacement** : réglage de −200 à +180 unités ; les valeurs négatives rapprochent ou superposent les lettres.
 - **Dégradé horizontal continu** violet → bleu → turquoise → vert sur l'ensemble du texte.
 - Exports **SVG et PNG** statiques, sans dépendance à une police installée.
-- Les courbes SVG correspondent aux contours remplis de la police ; ce ne sont **pas des lignes centrales monolignes** et l'éditeur n'annonce pas d'animation authentique de stylo.
+- Les courbes SVG `Q` sont de véritables courbes de Bézier quadratiques fidèles au fichier `Parisienne-Regular.ttf` fourni (largeurs de glyphes vérifiées). Elles correspondent aux contours remplis de la police ; ce ne sont **pas des lignes centrales monolignes** et l'éditeur n'annonce pas d'animation authentique de stylo.
 
 ## Fichiers actifs
 
