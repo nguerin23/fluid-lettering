@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#f7f8f5">
-<meta name="description" content="Fluid : tracez des lettrages manuscrits en SVG à partir de lignes centrales, avec un dégradé qui suit la longueur du geste.">
+<meta name="description" content="Fluid : lettering cursif avec les courbes vectorielles originales de Parisienne, dégradé continu, épaisseur et espacement réglables.">
 <title>Fluid — Atelier de lettering</title>
 <style>
   :root { color-scheme:light; --ink:#1c2923;--muted:#73817a;--line:#e4e9e5;--paper:#f7f8f5;--purple:#6150f7; }
@@ -66,25 +66,24 @@
 <body>
 <header><div class="wrap head"><div class="brand"><span class="brand-mark">f</span>fluid<span style="color:#6c58f6">.</span></div><span class="head-note">Vector lettering studio</span></div></header>
 <main class="wrap">
-  <div class="heading"><div><div class="eyebrow">Atelier typographique</div><h1>Un mot, des courbes.</h1></div><p class="subtitle">Écris ton mot, ajuste les deux curseurs et regarde les tracés lissés évoluer en direct.</p></div>
+  <div class="heading"><div><div class="eyebrow">Atelier typographique</div><h1>Un mot, des courbes.</h1></div><p class="subtitle">Parisienne : écriture cursive élégante, avec de véritables contours vectoriels et un dégradé continu.</p></div>
   <section class="card" aria-label="Éditeur de lettering">
     <div class="canvas-top"><span class="label-title">Ton lettrage</span><span id="liveStatus" class="live" aria-live="polite">Aperçu en direct</span></div>
     <div class="stage" id="stage"><div id="preview" role="img" aria-label="Lettrage vectoriel"><span class="empty">Chargement du tracé…</span></div></div>
-    <div class="stage-bottom"><span class="hint">SVG monoligne · dégradé suivant le trait · défilement horizontal si nécessaire</span><div class="actions">
+    <div class="stage-bottom"><span class="hint">Police Parisienne · dégradé continu · SVG vectoriel</span><div class="actions">
       <button id="downloadPNG" class="btn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>PNG</button>
       <button id="downloadSVG" class="btn primary" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>SVG</button>
     </div></div>
     <div class="editor">
       <div class="control word"><label for="word">Ton mot</label><input id="word" type="text" maxlength="22" autocomplete="off" spellcheck="false" value="Nicolas" placeholder="Écris ici…"><p class="note">22 caractères maximum, accents inclus.</p></div>
       <div class="control"><div class="control-head"><label for="thickness">Épaisseur</label><output id="thicknessValue" for="thickness">64</output></div><input id="thickness" type="range" min="12" max="160" step="1" value="64"><div class="range-ends"><span>Fin</span><span>Très gras</span></div></div>
-      <div class="control"><div class="control-head"><label for="spacing">Espacement</label><output id="spacingValue" for="spacing">0</output></div><input id="spacing" type="range" min="-200" max="180" step="1" value="0"><div class="range-ends"><span>−200 · superposition</span><span>+180 · espacé</span></div><p class="note">Passe en négatif pour superposer les formes liées.</p></div>
+      <div class="control"><div class="control-head"><label for="spacing">Espacement</label><output id="spacingValue" for="spacing">0</output></div><input id="spacing" type="range" min="-200" max="180" step="1" value="0"><div class="range-ends"><span>−200 · superposition</span><span>+180 · espacé</span></div><p class="note">Passe en négatif pour rapprocher les lettres. L’épaisseur renforce le contour original.</p></div>
     </div>
   </section>
-  <footer class="bottom-note"><span>FLUID · Traits SVG centraux éditables</span><span>Tracés centraux adaptés de Pecita · Philippe Cochy · <a href="PECITA-OFL.txt" target="_blank" rel="noopener">Licence OFL 1.1</a></span></footer>
+  <footer class="bottom-note"><span>FLUID · Parisienne · tracés vectoriels éditables</span><span>Parisienne · Brian J. Bonislawsky (Astigmatic) · <a href="PARISIENNE-OFL.txt" target="_blank" rel="noopener">Licence SIL OFL 1.1</a></span></footer>
 </main>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
-<script src="pecita-outlines.js"></script>
-<script src="pecita-centerlines.js"></script>
+<script src="parisienne-outlines.js?v=1"></script>
 <script>
 'use strict';
 const $=id=>document.getElementById(id);
@@ -92,228 +91,58 @@ const palettes={jello:['#6150f7','#5e7bed','#53b4cf','#56dba2','#55fa78']};
 const state={word:'Nicolas',thickness:64,fusion:0,slant:0,palette:'jello',transparent:true,seed:11};
 let currentSvg='',svgDimensions={width:1000,height:600},lastGeneratedWord='Nicolas',pendingFrame=0,toastTimer=0;
 function escapeXML(s){return String(s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]));}
-function seeded(n){const v=Math.sin(n*87.12+state.seed*19.31)*43758.5453;return v-Math.floor(v);}
-/* Les données de courbes manuscrites sont issues de Pecita sous licence SIL OFL 1.1.
-   Les exports SVG contiennent de vrais chemins et un dégradé continu sur toute la composition. */
+/* Fluid uses authentic outline paths from the original Parisienne design,
+   Brian J. Bonislawsky / Astigmatic, SIL OFL 1.1. These are filled contours. */
 function getHandwrittenSVG(){
-  const data=window.FLUID_HANDWRITTEN_DATA;
-  if(!data) throw new Error('Les tracés manuscrits ne sont pas chargés. Recharge la page.');
+  const font=window.FLUID_PARISIENNE_DATA;
+  if(!font)throw new Error('Les tracés Parisienne ne sont pas disponibles.');
   const word=state.word.trim().slice(0,22);
   if(!word)return '';
-  const markSet=new Set(data.isMark.map(Number));
-  const seq=Array.from(word).map(ch => data.cmap[String(ch.codePointAt(0))] ?? data.cmap['63']);
-  // A minimal contextual OpenType substitution engine. It preserves initial,
-  // medial and final letter forms and mandatory joining ligatures.
-  function substitute(list, lookupId, pos, depth=0){
-    if(depth>9 || pos>=list.length)return false;
-    const lookup=data.lookups[String(lookupId)]||[];
-    const ignoreMarks=[10,11,12,13].includes(Number(lookupId));
-    for(const table of lookup){
-      const key=String(list[pos]);
-      if(table.t===1 && Object.prototype.hasOwnProperty.call(table.m,key)){
-        list.splice(pos,1,table.m[key]);return true;
-      }
-      if(table.t===2 && Object.prototype.hasOwnProperty.call(table.m,key)){
-        list.splice(pos,1,...table.m[key]);return true;
-      }
-      if(table.t===4 && table.m[key]){
-        for(const combination of table.m[key]){
-          const components=combination.slice(0,-1);
-          if(components.every((v,j)=>list[pos+1+j]===v)){
-            list.splice(pos,components.length+1,combination[combination.length-1]);return true;
-          }
-        }
-      }
-      if(table.t===5 && table.cov.includes(list[pos])){
-        const classes=table.cls;
-        const cls=classes[key]||0;
-        for(const [following,replacements] of (table.sets[String(cls)]||[])){
-          const places=[pos];let cursor=pos;let valid=true;
-          for(const expected of following){
-            cursor++;
-            if(ignoreMarks){while(cursor<list.length && markSet.has(list[cursor]))cursor++;}
-            if(cursor>=list.length || (classes[String(list[cursor])]||0)!==expected){valid=false;break;}
-            places.push(cursor);
-          }
-          if(!valid)continue;
-          let applied=false;
-          for(const [sequenceIndex,target] of replacements){
-            const targetIndex=places[sequenceIndex];
-            if(targetIndex!==undefined && substitute(list,target,targetIndex,depth+1))applied=true;
-          }
-          if(applied)return true;
-        }
-      }
+  const fmt=n=>Number(n).toFixed(2);
+  const source=Array.from(word.normalize('NFC').replace(/œ/g,'oe').replace(/Œ/g,'OE'));
+  const glyphs=[];
+  let cursor=0;
+  for(const char of source){
+    const g=font.glyphs[char]||font.glyphs['?'];
+    if(!g)continue;
+    if(g.d)glyphs.push({d:g.d,x:cursor});
+    cursor+=g.w+state.fusion;
+  }
+  if(!glyphs.length)return '';
+  const NS='http://www.w3.org/2000/svg';
+  const measure=document.createElementNS(NS,'svg');
+  measure.style.cssText='position:absolute;left:-99999px;top:-99999px;width:1px;height:1px;opacity:0;pointer-events:none';
+  document.body.appendChild(measure);
+  let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
+  try{
+    for(const glyph of glyphs){
+      const path=document.createElementNS(NS,'path');
+      path.setAttribute('d',glyph.d);
+      measure.appendChild(path);
+      const bounds=path.getBBox();
+      minX=Math.min(minX,bounds.x+glyph.x);
+      maxX=Math.max(maxX,bounds.x+bounds.width+glyph.x);
+      minY=Math.min(minY,bounds.y);
+      maxY=Math.max(maxY,bounds.y+bounds.height);
     }
-    return false;
-  }
-  // OpenType lookup order, with ligatures and contextual alternates.
-  for(const lookupId of data.lookupOrder.slice().sort((a,b)=>a-b)){
-    for(let position=0;position<seq.length;position++)substitute(seq,lookupId,position);
-  }
-  const chars=[];
-  let advance=0;
-  for(const gid of seq){
-    const outline=data.paths[String(gid)];
-    if(!outline)continue;
-    const isMark=markSet.has(gid);
-    chars.push({gid,outline,x:advance,dx:0,dy:0,mark:isMark});
-    advance+=outline[0]+(isMark?0:state.fusion);
-  }
-  // Position diacritics using mark-to-base GPOS anchors in original font units.
-  let lastBase=null;
-  for(const glyph of chars){
-    if(!glyph.mark){lastBase=glyph;continue;}
-    if(!lastBase)continue;
-    for(const table of data.gpos){
-      const mark=table.marks[String(glyph.gid)],anchors=table.bases[String(lastBase.gid)];
-      if(!mark || !anchors || !anchors[mark[0]])continue;
-      const [x,y]=anchors[mark[0]];
-      glyph.dx=lastBase.x+lastBase.dx+x-mark[1]-glyph.x;
-      glyph.dy=lastBase.dy+y-mark[2];
-      break;
-    }
-  }
-  const centers=window.FLUID_CENTERLINES;
-  if(!centers)throw new Error('Les lignes centrales ne sont pas chargées. Recharge la page.');
-  const weight=state.thickness;
-  let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
-  const baseContours=[],accentContours=[];
-  for(const item of chars){
-    const b=data.bounds[String(item.gid)];
-    if(b){
-      minX=Math.min(minX,item.x+item.dx+b[0]);
-      maxX=Math.max(maxX,item.x+item.dx+b[2]);
-      minY=Math.min(minY,item.dy+b[1]);
-      maxY=Math.max(maxY,item.dy+b[3]);
-    }
-    const paths=centers[String(item.gid)]||[];
-    for(const points of paths){
-      if(points.length<2)continue;
-      const shifted=points.map(pt=>[item.x+item.dx+pt[0],item.dy+pt[1]]);
-      (item.mark?accentContours:baseContours).push(shifted);
-    }
-  }
-  if(!Number.isFinite(minX)){minX=0;maxX=Math.max(500,advance);minY=-100;maxY=500;}
-  const padding=80+weight+Math.abs(state.slant)*8;
-  minX=Math.min(minX,0);maxX=Math.max(maxX,advance);
-  minY=Math.min(-170,minY);maxY=Math.max(650,maxY);
-  const viewMinX=minX-padding,viewMinY=-(maxY+padding);
-  const viewW=Math.max(300,maxX-minX+2*padding),viewH=Math.max(360,maxY-minY+2*padding);
-  svgDimensions={width:Math.ceil(viewW),height:Math.ceil(viewH)};
-  const round=x=>Number(x).toFixed(2);
-  const distance=(a,b)=>Math.hypot(b[0]-a[0],b[1]-a[1]);
-  // Strong smoothing without any synthetic joins between independent pen strokes:
-  // uniform arc-length resampling + repeated Gaussian convolution. Endpoints stay fixed.
-  function resample(points,step=10){
-    const clean=[points[0]];
-    for(let i=1;i<points.length;i++){
-      if(distance(points[i],clean[clean.length-1])>.01)clean.push(points[i]);
-    }
-    if(clean.length<2)return clean;
-    const cumulative=[0];
-    for(let i=1;i<clean.length;i++)cumulative.push(cumulative[i-1]+distance(clean[i-1],clean[i]));
-    const total=cumulative[cumulative.length-1];
-    if(total<step*2)return clean;
-    const result=[clean[0]];let seg=1;
-    for(let d=step;d<total-step*.35;d+=step){
-      while(seg<cumulative.length-1&&cumulative[seg]<d)seg++;
-      const len=cumulative[seg]-cumulative[seg-1]||1;
-      const t=(d-cumulative[seg-1])/len;
-      result.push([clean[seg-1][0]+(clean[seg][0]-clean[seg-1][0])*t,
-                   clean[seg-1][1]+(clean[seg][1]-clean[seg-1][1])*t]);
-    }
-    result.push(clean[clean.length-1]);
-    return result;
-  }
-  function smoothStroke(points){
-    let current=resample(points,9);
-    if(current.length<4)return current;
-    // Twelve smoothing passes remove pixel-skeleton jitter and harsh corners.
-    // Small strokes/diacritics need less smoothing to preserve their shape.
-    const passes=current.length<10?4:12;
-    for(let pass=0;pass<passes;pass++){
-      const last=current.length-1, next=[current[0]];
-      for(let i=1;i<last;i++){
-        const at=j=>current[Math.min(last,Math.max(0,j))];
-        const a=at(i-2),b=at(i-1),c=at(i),d=at(i+1),e=at(i+2);
-        next.push([(a[0]+4*b[0]+6*c[0]+4*d[0]+e[0])/16,
-                   (a[1]+4*b[1]+6*c[1]+4*d[1]+e[1])/16]);
-      }
-      next.push(current[last]);
-      current=next;
-    }
-    return current;
-  }
-  function pathFromPoints(points){
-    if(points.length<2)return '';
-    let d=`M ${round(points[0][0])} ${round(points[0][1])}`;
-    if(points.length===2)return d+` L ${round(points[1][0])} ${round(points[1][1])}`;
-    // Cubic Catmull–Rom conversion: tangent continuity across every point.
-    for(let i=0;i<points.length-1;i++){
-      const p0=points[i-1]||points[i],p1=points[i],p2=points[i+1],p3=points[i+2]||p2;
-      const cp1=[p1[0]+(p2[0]-p0[0])/6,p1[1]+(p2[1]-p0[1])/6];
-      const cp2=[p2[0]-(p3[0]-p1[0])/6,p2[1]-(p3[1]-p1[1])/6];
-      d+=` C ${round(cp1[0])} ${round(cp1[1])} ${round(cp2[0])} ${round(cp2[1])} ${round(p2[0])} ${round(p2[1])}`;
-    }
-    return d;
-  }
-  function splitAtLength(points,maxLength=65){
-    const pieces=[];let current=[points[0]],accumulated=0;
-    for(let i=1;i<points.length;i++){
-      const end=points[i],start=points[i-1];
-      const dx=end[0]-start[0],dy=end[1]-start[1];
-      const segmentLength=Math.hypot(dx,dy);
-      if(segmentLength<.01)continue;
-      let used=0;
-      while(used<segmentLength-1e-6){
-        const take=Math.min(maxLength-accumulated,segmentLength-used);
-        if(take<1e-7)break;
-        used+=take;accumulated+=take;
-        const p=[start[0]+dx*used/segmentLength,start[1]+dy*used/segmentLength];
-        current.push(p);
-        if(accumulated>=maxLength-1e-6){
-          pieces.push({points:current,length:accumulated});
-          current=[p];accumulated=0;
-        }
-      }
-    }
-    if(accumulated>.3&&current.length>=2)pieces.push({points:current,length:accumulated});
-    return pieces;
-  }
-  // Every original contour stays independent. No bridges, no single continuous word path.
-  const strokeGroups=[];
-  for(const contour of baseContours){
-    const smoothed=smoothStroke(contour);
-    if(smoothed.length>=2)strokeGroups.push(smoothed);
-  }
-  for(const contour of accentContours){
-    const smoothed=smoothStroke(contour);
-    if(smoothed.length>=2)strokeGroups.push(smoothed);
-  }
-  const pieces=strokeGroups.flatMap(points=>splitAtLength(points));
-  const totalLength=Math.max(1,pieces.reduce((n,p)=>n+p.length,0));
+  }finally{measure.remove();}
+  if(!Number.isFinite(minX)||!Number.isFinite(maxX))return '';
+  const thickening=Math.max(0,(state.thickness-12)*.78);
+  const padding=Math.max(65,thickening/2+65);
+  const left=minX-padding,top=-maxY-padding;
+  const width=Math.max(180,maxX-minX+2*padding),height=Math.max(200,maxY-minY+2*padding);
+  svgDimensions={width:Math.ceil(width),height:Math.ceil(height)};
   const colors=palettes[state.palette];
-  function colorAt(t){
-    t=Math.max(0,Math.min(1,t));const location=t*(colors.length-1);
-    const i=Math.min(colors.length-2,Math.floor(location)),f=location-i;
-    const rgb=(hex)=>[1,3,5].map(pos=>parseInt(hex.slice(pos,pos+2),16));
-    const a=rgb(colors[i]),b=rgb(colors[i+1]);
-    return '#'+a.map((v,k)=>Math.round(v+(b[k]-v)*f).toString(16).padStart(2,'0')).join('');
+  const span=Math.max(1,maxX-minX);
+  const stops=colors.map((color,i)=>`<stop offset="${fmt(100*i/(colors.length-1))}%" stop-color="${color}"/>`).join('');
+  const defs=[],parts=[];
+  for(let i=0;i<glyphs.length;i++){
+    const g=glyphs[i],id='parisienne-gradient-'+i;
+    const x1=minX-g.x;
+    defs.push(`<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${fmt(x1)}" y1="0" x2="${fmt(x1+span)}" y2="0">${stops}</linearGradient>`);
+    parts.push(`<g transform="translate(${fmt(g.x)} 0)"><path d="${g.d}" fill="url(#${id})" fill-rule="nonzero" stroke="url(#${id})" stroke-width="${fmt(thickening)}" stroke-linecap="round" stroke-linejoin="round" paint-order="stroke fill"/></g>`);
   }
-  let progress=0;
-  const gradients=[],strokePaths=[];
-  for(let i=0;i<pieces.length;i++){
-    const piece=pieces[i],p0=piece.points[0],p1=piece.points[piece.points.length-1];
-    const c0=colorAt(progress/totalLength);
-    progress+=piece.length;
-    const c1=colorAt(progress/totalLength);
-    const id='ink-segment-'+i;
-    gradients.push(`<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${round(p0[0])}" y1="${round(p0[1])}" x2="${round(p1[0])}" y2="${round(p1[1])}"><stop offset="0%" stop-color="${c0}"/><stop offset="100%" stop-color="${c1}"/></linearGradient>`);
-    strokePaths.push(`<path d="${pathFromPoints(piece.points)}" fill="none" stroke="url(#${id})" stroke-width="${weight}" stroke-linecap="round" stroke-linejoin="round"/>`);
-  }
-  const bg=state.transparent?'':`<rect x="${viewMinX}" y="${viewMinY}" width="${viewW}" height="${viewH}" fill="#fff"/>`;
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${Math.ceil(viewW)}" height="${Math.ceil(viewH)}" viewBox="${round(viewMinX)} ${round(viewMinY)} ${round(viewW)} ${round(viewH)}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Lettrage monoligne ${escapeXML(word)}"><title>${escapeXML(word)} — lettering SVG monoligne</title><desc>Tracés centraux indépendants, fortement lissés en courbes de Bézier et colorés selon leur longueur cumulée.</desc><defs>${gradients.join('')}</defs>${bg}<g transform="scale(1,-1)">${strokePaths.join('')}</g></svg>`;
+  return `<svg xmlns="${NS}" width="${Math.ceil(width)}" height="${Math.ceil(height)}" viewBox="${fmt(left)} ${fmt(top)} ${fmt(width)} ${fmt(height)}" role="img" aria-label="${escapeXML(word)} en Parisienne"><title>${escapeXML(word)} — Parisienne</title><desc>Parisienne : contours vectoriels authentiques, épaisseur réglable et dégradé horizontal continu sur toute l'inscription.</desc><defs>${defs.join('')}</defs><g transform="scale(1,-1)">${parts.join('')}</g></svg>`;
 }
 
 function maintainLetterProportions(){
