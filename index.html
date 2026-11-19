@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#f7f8f5">
-<meta name="description" content="Fluid : lettering cursif avec les courbes vectorielles originales de Parisienne, dégradé continu, épaisseur et espacement réglables.">
+<meta name="description" content="Fluid : éditeur de lettering avec 11 polices cursives et export vectoriel SVG/PNG.">
 <title>Fluid — Atelier de lettering</title>
 <style>
   :root { color-scheme:light; --ink:#1c2923;--muted:#73817a;--line:#e4e9e5;--paper:#f7f8f5;--purple:#6150f7; }
@@ -13,7 +13,7 @@
   body {margin:0;min-width:320px}
   button,input {font:inherit}
   button {cursor:pointer}
-  button:focus-visible,input:focus-visible {outline:3px solid #8a7df6;outline-offset:3px}
+  button:focus-visible,input:focus-visible,select:focus-visible {outline:3px solid #8a7df6;outline-offset:3px}
   .wrap {max-width:1180px;margin:0 auto;padding:0 27px}
   header {border-bottom:1px solid var(--line);background:#ffffffa8}
   .head {min-height:78px;display:flex;align-items:center;justify-content:space-between;gap:18px}
@@ -43,13 +43,15 @@
   .btn.primary:hover {background:#3e4942}
   .btn:disabled {opacity:.45;cursor:not-allowed}
   .btn svg {width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-  .editor {padding:25px 25px 26px;display:grid;grid-template-columns:minmax(210px,1.4fr) minmax(170px,1fr) minmax(190px,1fr);gap:24px;align-items:start}
+  .editor {padding:25px 25px 26px;display:grid;grid-template-columns:minmax(185px,1.35fr) minmax(175px,1.1fr) minmax(145px,1fr) minmax(145px,1fr);gap:20px;align-items:start}
   .control {min-width:0}
   .control label,.control-head label {font-size:12px;font-weight:820}
   .control-head {display:flex;justify-content:space-between;gap:12px;align-items:baseline;margin-bottom:14px}
   output {font-size:12px;font-variant-numeric:tabular-nums;color:#5e4fdb;font-weight:850}
   input[type=text] {margin-top:10px;min-width:0;width:100%;border:1.5px solid #d9e0d9;border-radius:10px;height:53px;padding:0 15px;background:#fafbf9;font-size:20px;font-weight:720;letter-spacing:-.5px;color:var(--ink)}
   input[type=text]:focus {border-color:#7c6af4;background:#fff}
+  select {margin-top:10px;min-width:0;width:100%;border:1.5px solid #d9e0d9;border-radius:10px;height:53px;padding:0 12px;background:#fafbf9;color:var(--ink);font-size:14px;font-weight:740;cursor:pointer}
+  select:focus {border-color:#7c6af4;background:#fff}
   input[type=range] {width:100%;accent-color:#6654f5;cursor:pointer;margin:2px 0 7px;height:23px;touch-action:pan-y}
   .range-ends {display:flex;justify-content:space-between;color:#9ca7a0;font-size:10px;font-weight:680;font-variant-numeric:tabular-nums}
   .note {font-size:11px;color:#88978c;margin:10px 0 0}
@@ -66,21 +68,34 @@
 <body>
 <header><div class="wrap head"><div class="brand"><span class="brand-mark">f</span>fluid<span style="color:#6c58f6">.</span></div><span class="head-note">Vector lettering studio</span></div></header>
 <main class="wrap">
-  <div class="heading"><div><div class="eyebrow">Atelier typographique</div><h1>Un mot, des courbes.</h1></div><p class="subtitle">La Parisienne : écriture cursive élégante, avec ses courbes vectorielles fidèles et un dégradé continu.</p></div>
+  <div class="heading"><div><div class="eyebrow">Atelier typographique</div><h1>Un mot, des courbes.</h1></div><p class="subtitle">La Choisis parmi 11 écritures manuscrites : aperçu vectoriel, dégradé continu et export SVG/PNG.</p></div>
   <section class="card" aria-label="Éditeur de lettering">
     <div class="canvas-top"><span class="label-title">Ton lettrage</span><span id="liveStatus" class="live" aria-live="polite">Aperçu en direct</span></div>
     <div class="stage" id="stage"><div id="preview" role="img" aria-label="Lettrage vectoriel"><span class="empty">Chargement du tracé…</span></div></div>
-    <div class="stage-bottom"><span class="hint">Police La Parisienne · dégradé continu · SVG vectoriel</span><div class="actions">
+    <div class="stage-bottom"><span class="hint"><span id="fontHint">Police Parisienne · dégradé continu · SVG vectoriel</span></span><div class="actions">
       <button id="downloadPNG" class="btn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>PNG</button>
       <button id="downloadSVG" class="btn primary" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>SVG</button>
     </div></div>
     <div class="editor">
       <div class="control word"><label for="word">Ton mot</label><input id="word" type="text" maxlength="22" autocomplete="off" spellcheck="false" value="bonjour" placeholder="Écris ici…"><p class="note">22 caractères maximum, accents inclus.</p></div>
+      <div class="control"><label for="font">Police d’écriture</label><select id="font" aria-label="Choisir une police">
+          <option value="parisienne">Parisienne</option>
+          <option value="fabfelt">Fabfelt Script</option>
+          <option value="farewell">Farewell</option>
+          <option value="league-script">League Script</option>
+          <option value="cetary">Cetary</option>
+          <option value="alucky">Alucky</option>
+          <option value="my-ugly-handwritting">My Ugly Handwritting</option>
+          <option value="pacifico">Pacifico</option>
+          <option value="gruenewald-va">Gruenewald VA</option>
+          <option value="banteng-story">Banteng Story</option>
+          <option value="stevilla">Stevilla Script</option>
+        </select><p class="note">Les polices se chargent à la demande.</p></div>
       <div class="control"><div class="control-head"><label for="thickness">Épaisseur</label><output id="thicknessValue" for="thickness">150</output></div><input id="thickness" type="range" min="12" max="320" step="1" value="150"><div class="range-ends"><span>Fin</span><span>Ultra épais</span></div></div>
       <div class="control"><div class="control-head"><label for="spacing">Espacement</label><output id="spacingValue" for="spacing">0</output></div><input id="spacing" type="range" min="-200" max="180" step="1" value="0"><div class="range-ends"><span>−200 · superposition</span><span>+180 · espacé</span></div><p class="note">Passe en négatif pour rapprocher les lettres. L’épaisseur renforce le contour original.</p></div>
     </div>
   </section>
-  <footer class="bottom-note"><span>FLUID · La Parisienne · tracés vectoriels éditables</span><span>Parisienne · Brian J. Bonislawsky (Astigmatic) · <a href="PARISIENNE-OFL.txt" target="_blank" rel="noopener">Licence SIL OFL 1.1</a></span></footer>
+  <footer class="bottom-note"><span>FLUID · 11 polices · tracés vectoriels éditables</span><span><a href="FONT-LICENSES.md" target="_blank" rel="noopener">Crédits et licences des polices</a></span></footer>
 </main>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 <script src="parisienne-outlines.js?v=2"></script>
@@ -88,25 +103,62 @@
 'use strict';
 const $=id=>document.getElementById(id);
 const palettes={jello:['#6150f7','#5e7bed','#53b4cf','#56dba2','#55fa78']};
-const state={word:'bonjour',thickness:150,fusion:0,slant:0,palette:'jello',transparent:true,seed:11};
-let currentSvg='',svgDimensions={width:1000,height:600},lastGeneratedWord='bonjour',pendingFrame=0,toastTimer=0;
+const state={word:'bonjour',font:'parisienne',thickness:150,fusion:0,slant:0,palette:'jello',transparent:true,seed:11};
+let currentSvg='',svgDimensions={width:1000,height:600},lastGeneratedWord='bonjour',pendingFrame=0,toastTimer=0,renderRevision=0;
 function escapeXML(s){return String(s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]));}
-/* Fluid uses authentic outline paths from the original Parisienne design,
-   Brian J. Bonislawsky / Astigmatic, SIL OFL 1.1. These are filled contours. */
-function getHandwrittenSVG(){
-  const font=window.FLUID_PARISIENNE_DATA;
-  if(!font)throw new Error('Les tracés Parisienne ne sont pas disponibles.');
+/* Font outline packs are loaded on first selection and cached. */
+
+const VALID_FONTS=new Set(Array.from($('font').options,o=>o.value));
+const fontCache=new Map();
+function getFontData(fontId){
+ if(!VALID_FONTS.has(fontId))return Promise.reject(new Error('Police inconnue'));
+ if(!fontCache.has(fontId)){
+  const loading=(async()=>{
+   if(fontId==='parisienne'){
+    const f=window.FLUID_PARISIENNE_DATA;
+    if(!f)throw new Error('Parisienne indisponible');
+    return {unitsPerEm:f.unitsPerEm,glyphs:f.glyphs,kerning:{},ligatures:{}};
+   }
+   const response=await fetch('./font-packs/'+encodeURIComponent(fontId)+'.json?v=1');
+   if(!response.ok)throw new Error('Chargement échoué : HTTP '+response.status);
+   const pack=await response.json();
+   if(!pack||typeof pack.z!=='string')throw new Error('Données de police incorrectes');
+   if(typeof DecompressionStream==='undefined')throw new Error('Navigateur incompatible avec le format de police');
+   const bytes=Uint8Array.from(atob(pack.z),c=>c.charCodeAt(0));
+   const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate'));
+   const data=await new Response(stream).json();
+   if(!data.u||!data.g)throw new Error('Tracés invalides');
+   return {unitsPerEm:data.u,glyphs:data.g,kerning:data.k||{},ligatures:data.l||{}};
+  })().catch(e=>{fontCache.delete(fontId);throw e;});
+  fontCache.set(fontId,loading);
+ }
+ return fontCache.get(fontId);
+}
+function getHandwrittenSVG(font){
+  const fontName=$('font').selectedOptions[0].textContent;
+  const unitScale=font.unitsPerEm/2048;
   const word=state.word.trim().slice(0,22);
   if(!word)return '';
   const fmt=n=>Number(n).toFixed(2);
-  const source=Array.from(word.normalize('NFC').replace(/œ/g,'oe').replace(/Œ/g,'OE'));
+
+  const source=Array.from(word.normalize('NFC'));
   const glyphs=[];
-  let cursor=0;
-  for(const char of source){
-    const g=font.glyphs[char]||font.glyphs['?'];
-    if(!g)continue;
-    if(g.d)glyphs.push({d:g.d,x:cursor});
-    cursor+=g.w+state.fusion;
+  let cursor=0,previous='';
+  for(let i=0;i<source.length;){
+    let glyph=null,token=source[i],count=1;
+    for(let n=Math.min(4,source.length-i);n>=2;n--){
+      const key=source.slice(i,i+n).join('');
+      if(font.ligatures[key]){glyph=font.ligatures[key];token=key;count=n;break;}
+    }
+    if(!glyph)glyph=font.glyphs[token]||font.glyphs['?'];
+    if(!glyph){cursor+=font.unitsPerEm*.4;previous='';i++;continue;}
+    const w=Array.isArray(glyph)?glyph[0]:glyph.w;
+    const d=Array.isArray(glyph)?glyph[1]:glyph.d;
+    if(previous&&font.kerning[previous+token])cursor+=font.kerning[previous+token];
+    if(d)glyphs.push({d:d,x:cursor});
+    cursor+=w+state.fusion*unitScale;
+    previous=token;
+    i+=count;
   }
   if(!glyphs.length)return '';
   const NS='http://www.w3.org/2000/svg';
@@ -127,10 +179,10 @@ function getHandwrittenSVG(){
     }
   }finally{measure.remove();}
   if(!Number.isFinite(minX)||!Number.isFinite(maxX))return '';
-  const thickening=Math.max(0,(state.thickness-12)*1.45);
-  const padding=Math.max(65,thickening/2+65);
+  const thickening=Math.max(0,(state.thickness-12)*1.45)*unitScale;
+  const padding=Math.max(65*unitScale,thickening/2+65*unitScale);
   const left=minX-padding,top=-maxY-padding;
-  const width=Math.max(180,maxX-minX+2*padding),height=Math.max(200,maxY-minY+2*padding);
+  const width=Math.max(180*unitScale,maxX-minX+2*padding),height=Math.max(200*unitScale,maxY-minY+2*padding);
   svgDimensions={width:Math.ceil(width),height:Math.ceil(height)};
   const colors=palettes[state.palette];
   const span=Math.max(1,maxX-minX);
@@ -142,7 +194,7 @@ function getHandwrittenSVG(){
     defs.push(`<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${fmt(x1)}" y1="0" x2="${fmt(x1+span)}" y2="0">${stops}</linearGradient>`);
     parts.push(`<g transform="translate(${fmt(g.x)} 0)"><path d="${g.d}" fill="url(#${id})" fill-rule="nonzero" stroke="url(#${id})" stroke-width="${fmt(thickening)}" stroke-linecap="round" stroke-linejoin="round" paint-order="stroke fill"/></g>`);
   }
-  return `<svg xmlns="${NS}" width="${Math.ceil(width)}" height="${Math.ceil(height)}" viewBox="${fmt(left)} ${fmt(top)} ${fmt(width)} ${fmt(height)}" role="img" aria-label="${escapeXML(word)} en Parisienne"><title>${escapeXML(word)} — Parisienne</title><desc>La Parisienne : courbes quadratiques vectorielles fidèles à la police, épaisseur réglable et dégradé horizontal continu sur toute l'inscription.</desc><defs>${defs.join('')}</defs><g transform="scale(1,-1)">${parts.join('')}</g></svg>`;
+  return `<svg xmlns="${NS}" width="${Math.ceil(width)}" height="${Math.ceil(height)}" viewBox="${fmt(left)} ${fmt(top)} ${fmt(width)} ${fmt(height)}" role="img" aria-label="${escapeXML(word)} en ${escapeXML(fontName)}"><title>${escapeXML(word)} — ${escapeXML(fontName)}</title><desc>${escapeXML(fontName)} : courbes quadratiques vectorielles fidèles à la police, épaisseur réglable et dégradé horizontal continu sur toute l'inscription.</desc><defs>${defs.join('')}</defs><g transform="scale(1,-1)">${parts.join('')}</g></svg>`;
 }
 
 function maintainLetterProportions(){
@@ -153,30 +205,65 @@ function maintainLetterProportions(){
  svg.style.height=targetHeight+'px';svg.style.width=displayWidth+'px';
  $('preview').style.width=displayWidth+'px';
 }
-function render(){
- const word=state.word.trim();lastGeneratedWord=word;
- if(!word){currentSvg='';$('preview').style.width='auto';$('preview').innerHTML='<span class="empty">Écris un mot pour commencer</span>';}
- else {
-   currentSvg=getHandwrittenSVG();
-   $('preview').innerHTML=currentSvg;
-   maintainLetterProportions();
+
+async function render(revision){
+ const word=state.word.trim(),fontId=state.font;
+ lastGeneratedWord=word;
+ currentSvg='';
+ $('downloadSVG').disabled=true;$('downloadPNG').disabled=true;
+ $('fontHint').textContent='Police '+$('font').selectedOptions[0].textContent+' · dégradé continu · SVG vectoriel';
+ $('liveStatus').textContent=word?'Chargement…':'Aperçu en direct';
+ $('liveStatus').style.color='#34875f';
+ if(!word){
+   $('preview').style.width='auto';
+   $('preview').innerHTML='<span class="empty">Écris un mot pour commencer</span>';
+ }else{
+   try{
+     const font=await getFontData(fontId);
+     if(revision!==renderRevision)return;
+     const svg=getHandwrittenSVG(font);
+     if(!svg)throw new Error('Aucun tracé disponible pour ce texte.');
+     currentSvg=svg;
+     $('preview').innerHTML=svg;
+     maintainLetterProportions();
+     $('downloadSVG').disabled=false;$('downloadPNG').disabled=false;
+     $('liveStatus').textContent='Aperçu en direct';
+   }catch(e){
+     if(revision!==renderRevision)return;
+     console.error(e);
+     $('preview').style.width='auto';
+     $('preview').innerHTML='<span class="empty">Police indisponible. Choisis-en une autre.</span>';
+     $('liveStatus').textContent='Erreur de rendu';
+     $('liveStatus').style.color='#c03838';
+   }
  }
+ if(revision!==renderRevision)return;
  $('preview').setAttribute('aria-label',word?'Lettrage du mot '+word:'Aucun mot');
- $('downloadSVG').disabled=!word;$('downloadPNG').disabled=!word;
- $('liveStatus').textContent='Aperçu en direct';$('liveStatus').style.color='#34875f';
- try {const url=new URL(location.href);if(word)url.searchParams.set('mot',word);else url.searchParams.delete('mot');history.replaceState(null,'',url.toString());}catch(e){}
+ try{
+   const url=new URL(location.href);
+   if(word)url.searchParams.set('mot',word);else url.searchParams.delete('mot');
+   if(fontId==='parisienne')url.searchParams.delete('police');else url.searchParams.set('police',fontId);
+   history.replaceState(null,'',url.toString());
+ }catch(e){}
 }
-function requestRender(){if(pendingFrame)return;pendingFrame=requestAnimationFrame(()=>{pendingFrame=0;try{render()}catch(e){console.error(e);$('liveStatus').textContent='Erreur de rendu';$('liveStatus').style.color='#c03838';}});}
+function requestRender(){
+ ++renderRevision;
+ if(pendingFrame)return;
+ pendingFrame=requestAnimationFrame(()=>{pendingFrame=0;render(renderRevision);});
+}
 function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2200);}
 function download(blob,name){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 function exportName(){return (lastGeneratedWord||'lettering').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9_-]/g,'-').replace(/-+/g,'-').toLowerCase();}
 $('word').addEventListener('input',e=>{state.word=e.target.value.slice(0,22);requestRender();});
+$('font').addEventListener('change',e=>{if(VALID_FONTS.has(e.target.value)){state.font=e.target.value;requestRender();}});
 $('thickness').addEventListener('input',e=>{state.thickness=Number(e.target.value);$('thicknessValue').textContent=state.thickness;requestRender();});
 $('spacing').addEventListener('input',e=>{state.fusion=Number(e.target.value);$('spacingValue').textContent=(state.fusion>0?'+':'')+state.fusion;requestRender();});
 $('downloadSVG').addEventListener('click',()=>{if(!currentSvg)return;download(new Blob([currentSvg],{type:'image/svg+xml;charset=utf-8'}),exportName()+'-fluid.svg');toast('SVG vectoriel exporté');});
 $('downloadPNG').addEventListener('click',()=>{if(!currentSvg)return;const img=new Image(),src=URL.createObjectURL(new Blob([currentSvg],{type:'image/svg+xml;charset=utf-8'}));img.onload=()=>{const factor=Math.min(3,Math.max(1,4096/svgDimensions.width));const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(svgDimensions.width*factor));canvas.height=Math.max(1,Math.round(svgDimensions.height*factor));canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);canvas.toBlob(blob=>{if(blob)download(blob,exportName()+'-fluid.png');URL.revokeObjectURL(src);toast(blob?'PNG exporté':'Impossible de créer le PNG')},'image/png');};img.onerror=()=>{URL.revokeObjectURL(src);toast('Impossible de créer le PNG');};img.src=src;});
 const wordFromUrl=new URLSearchParams(location.search).get('mot')||new URLSearchParams(location.search).get('word');
 if(wordFromUrl){state.word=wordFromUrl.slice(0,22);$('word').value=state.word;}
+const fontFromUrl=new URLSearchParams(location.search).get('police');
+if(VALID_FONTS.has(fontFromUrl)){state.font=fontFromUrl;$('font').value=fontFromUrl;}
 requestRender();window.addEventListener('resize',maintainLetterProportions);
 </script>
 </body>
