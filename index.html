@@ -76,7 +76,7 @@
     </div></div>
     <div class="editor">
       <div class="control word"><label for="word">Ton mot</label><input id="word" type="text" maxlength="22" autocomplete="off" spellcheck="false" value="bonjour" placeholder="Écris ici…"><p class="note">22 caractères maximum, accents inclus.</p></div>
-      <div class="control"><div class="control-head"><label for="thickness">Épaisseur</label><output id="thicknessValue" for="thickness">64</output></div><input id="thickness" type="range" min="12" max="160" step="1" value="64"><div class="range-ends"><span>Fin</span><span>Très gras</span></div></div>
+      <div class="control"><div class="control-head"><label for="thickness">Épaisseur</label><output id="thicknessValue" for="thickness">150</output></div><input id="thickness" type="range" min="12" max="320" step="1" value="150"><div class="range-ends"><span>Fin</span><span>Ultra épais</span></div></div>
       <div class="control"><div class="control-head"><label for="spacing">Espacement</label><output id="spacingValue" for="spacing">0</output></div><input id="spacing" type="range" min="-200" max="180" step="1" value="0"><div class="range-ends"><span>−200 · superposition</span><span>+180 · espacé</span></div><p class="note">Passe en négatif pour rapprocher les lettres. L’épaisseur renforce le contour original.</p></div>
     </div>
   </section>
@@ -88,7 +88,7 @@
 'use strict';
 const $=id=>document.getElementById(id);
 const palettes={jello:['#6150f7','#5e7bed','#53b4cf','#56dba2','#55fa78']};
-const state={word:'bonjour',thickness:64,fusion:0,slant:0,palette:'jello',transparent:true,seed:11};
+const state={word:'bonjour',thickness:150,fusion:0,slant:0,palette:'jello',transparent:true,seed:11};
 let currentSvg='',svgDimensions={width:1000,height:600},lastGeneratedWord='bonjour',pendingFrame=0,toastTimer=0;
 function escapeXML(s){return String(s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]));}
 /* Fluid uses authentic outline paths from the original Parisienne design,
@@ -127,7 +127,7 @@ function getHandwrittenSVG(){
     }
   }finally{measure.remove();}
   if(!Number.isFinite(minX)||!Number.isFinite(maxX))return '';
-  const thickening=Math.max(0,(state.thickness-12)*.78);
+  const thickening=Math.max(0,(state.thickness-12)*1.45);
   const padding=Math.max(65,thickening/2+65);
   const left=minX-padding,top=-maxY-padding;
   const width=Math.max(180,maxX-minX+2*padding),height=Math.max(200,maxY-minY+2*padding);
