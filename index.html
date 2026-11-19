@@ -4,16 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#f7f8f5">
-<meta name="description" content="Fluid : lettering vectoriel utilisant les traits originaux de EMS Allure Smooth, épaisseur, espacement et dégradé continu sur tout le mot.">
+<meta name="description" content="Fluid : lettering vectoriel EMS Allure Smooth ou Pecita, épaisseur, espacement, animation d’écriture et dégradé continu.">
 <title>Fluid — Atelier de lettering</title>
 <style>
   :root { color-scheme:light; --ink:#1c2923;--muted:#73817a;--line:#e4e9e5;--paper:#f7f8f5;--purple:#6150f7; }
   * {box-sizing:border-box}
   html {font:16px/1.5 Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--paper);color:var(--ink)}
   body {margin:0;min-width:320px}
-  button,input {font:inherit}
+  button,input,select {font:inherit}
   button {cursor:pointer}
-  button:focus-visible,input:focus-visible {outline:3px solid #8a7df6;outline-offset:3px}
+  button:focus-visible,input:focus-visible,select:focus-visible {outline:3px solid #8a7df6;outline-offset:3px}
   .wrap {max-width:1180px;margin:0 auto;padding:0 27px}
   header {border-bottom:1px solid var(--line);background:#ffffffa8}
   .head {min-height:78px;display:flex;align-items:center;justify-content:space-between;gap:18px}
@@ -47,8 +47,10 @@
   .btn.primary:hover {background:#3e4942}
   .btn:disabled {opacity:.45;cursor:not-allowed}
   .btn svg {width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-  .editor {padding:25px 25px 26px;display:grid;grid-template-columns:minmax(210px,1.4fr) minmax(170px,1fr) minmax(190px,1fr);gap:24px;align-items:start}
+  .editor {padding:25px 25px 26px;display:grid;grid-template-columns:minmax(205px,1.3fr) minmax(175px,1fr) minmax(145px,.85fr) minmax(165px,.9fr);gap:20px;align-items:start}
   .control {min-width:0}
+  .font-select {margin-top:10px;width:100%;height:53px;border:1.5px solid #d9e0d9;border-radius:10px;padding:0 12px;background:#fafbf9;color:var(--ink);font-size:14px;font-weight:750;cursor:pointer}
+  .font-select:focus {border-color:#7c6af4;background:#fff}
   .control label,.control-head label {font-size:12px;font-weight:820}
   .control-head {display:flex;justify-content:space-between;gap:12px;align-items:baseline;margin-bottom:14px}
   output {font-size:12px;font-variant-numeric:tabular-nums;color:#5e4fdb;font-weight:850}
@@ -63,7 +65,7 @@
   .bottom-note a {color:inherit;text-decoration:underline;text-underline-offset:2px}
   .toast {position:fixed;left:50%;bottom:24px;transform:translate(-50%,12px);opacity:0;pointer-events:none;background:#213029;color:#fff;padding:12px 17px;border-radius:10px;font-size:12px;font-weight:750;transition:.17s;z-index:3;white-space:nowrap}
   .toast.show {transform:translate(-50%,0);opacity:1}
-  @media(max-width:820px){.editor{grid-template-columns:1fr 1fr}.control.word{grid-column:1/-1}.heading{align-items:start;flex-direction:column;gap:10px}.subtitle{max-width:570px}.stage{height:320px}}
+  @media(max-width:980px){.editor{grid-template-columns:1fr 1fr}.control.word{grid-column:1/-1}.heading{align-items:start;flex-direction:column;gap:10px}.subtitle{max-width:570px}.stage{height:320px}}
   @media(max-width:520px){.wrap{padding:0 16px}.head{min-height:64px}.brand{font-size:25px}.head-note{font-size:9px;letter-spacing:1px}main{padding-top:29px;padding-bottom:26px}h1{letter-spacing:-1.4px}.stage{height:235px;padding:14px 16px 20px}.editor{grid-template-columns:1fr;gap:21px;padding:21px 18px}.control.word{grid-column:auto}.canvas-top{padding:0 16px}.stage-bottom{padding:15px;gap:15px}.actions{width:100%}.btn{flex:1;justify-content:center}.btn.animate{flex:1 1 100%}.hint{font-size:10px}.bottom-note{margin-top:17px}}
   @media(max-width:520px){
     .canvas-top {padding:10px 14px;min-height:62px;gap:8px}
@@ -76,7 +78,7 @@
 <body>
 <header><div class="wrap head"><div class="brand"><span class="brand-mark">f</span>fluid<span style="color:#6c58f6">.</span></div><span class="head-note">Vector lettering studio</span></div></header>
 <main class="wrap">
-  <div class="heading"><div><div class="eyebrow">Atelier typographique</div><h1>Un mot, des courbes.</h1></div><p class="subtitle">EMS Allure Smooth : une écriture plus souple, composée de courbes vectorielles ouvertes.</p></div>
+  <div class="heading"><div><div class="eyebrow">Atelier typographique</div><h1>Un mot, des courbes.</h1></div><p class="subtitle"><span id="fontSubtitle">EMS Allure Smooth : une écriture plus souple, composée de courbes vectorielles ouvertes.</span></p></div>
   <section class="card" aria-label="Éditeur de lettering">
     <div class="canvas-top">
       <span class="label-title">Ton lettrage</span>
@@ -86,17 +88,18 @@
       </div>
     </div>
     <div class="stage" id="stage"><div id="preview" role="img" aria-label="Lettrage vectoriel"><span class="empty">Chargement du tracé…</span></div></div>
-    <div class="stage-bottom"><span class="hint">EMS Allure Smooth · dégradé continu sur tout le mot · SVG ouvert</span><div class="actions">
+    <div class="stage-bottom"><span class="hint" id="fontHint">EMS Allure Smooth · dégradé continu sur tout le mot · SVG ouvert</span><div class="actions">
       <button id="downloadPNG" class="btn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>PNG</button>
       <button id="downloadSVG" class="btn primary" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>SVG</button>
     </div></div>
     <div class="editor">
-      <div class="control word"><label for="word">Ton mot</label><input id="word" type="text" maxlength="22" autocomplete="off" spellcheck="false" value="bonjour" placeholder="Écris ici…"><p class="note">EMS Allure Smooth, 22 caractères maximum, accents compris.</p></div>
+      <div class="control word"><label for="word">Ton mot</label><input id="word" type="text" maxlength="22" autocomplete="off" spellcheck="false" value="bonjour" placeholder="Écris ici…"><p class="note">22 caractères maximum, accents compris.</p></div>
+      <div class="control"><label for="fontChoice">Police</label><select class="font-select" id="fontChoice" aria-label="Choisir la police"><option value="allure" selected>EMS Allure Smooth</option><option value="pecita">Pecita</option></select><p class="note" id="fontNote">Écriture manuscrite monoligne.</p></div>
       <div class="control"><div class="control-head"><label for="thickness">Épaisseur</label><output id="thicknessValue" for="thickness">42</output></div><input id="thickness" type="range" min="12" max="160" step="1" value="42"><div class="range-ends"><span>Fin</span><span>Très gras</span></div></div>
       <div class="control"><div class="control-head"><label for="spacing">Espacement</label><output id="spacingValue" for="spacing">0</output></div><input id="spacing" type="range" min="-200" max="180" step="1" value="0"><div class="range-ends"><span>−200 · superposition</span><span>+180 · espacé</span></div><p class="note">Passe en négatif pour superposer les formes liées.</p></div>
     </div>
   </section>
-  <footer class="bottom-note"><span>FLUID · Courbes vectorielles EMS Allure Smooth</span><span>EMS Allure Smooth · <a href="EMS-ALLURE-OFL.txt" target="_blank" rel="noopener">Licence SIL OFL 1.1</a></span></footer>
+  <footer class="bottom-note"><span id="footerFont">FLUID · EMS Allure Smooth</span><span><span id="footerLicense">EMS Allure Smooth</span> · <a id="licenseLink" href="EMS-ALLURE-OFL.txt" target="_blank" rel="noopener">Licence SIL OFL 1.1</a></span></footer>
 </main>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 <script src="ems-allure-smooth.js"></script>
@@ -104,34 +107,200 @@
 'use strict';
 const $=id=>document.getElementById(id);
 const palettes={jello:['#6150f7','#5e7bed','#53b4cf','#56dba2','#55fa78']};
-const state={word:'bonjour',thickness:42,fusion:0,palette:'jello'};
+const state={word:'bonjour',thickness:42,fusion:0,palette:'jello',font:'allure'};
 let currentSvg='',svgDimensions={width:1000,height:600},lastGeneratedWord='bonjour',pendingFrame=0,toastTimer=0;
 let writingAnimations=[],writingMasks=[],writingTargets=[],writingSession=0;
 function escapeXML(s){return String(s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]));}
 /* EMS Allure Smooth: original single-line SVG curves by Cutlings (Ellen Wasbø),
    based on EMS Allure by Sheldon B. Michaels / Windell H. Oskay,
    derived from Allura by Rob Leuschke (SIL Open Font License 1.1). */
-function getHandwrittenSVG(){
-  const font=window.FLUID_ALLURE_DATA;
-  if(!font)throw new Error('Le fichier ems-allure-smooth.js est introuvable.');
-  const word=state.word.slice(0,22);
-  if(!word.trim())return '';
-  const NS='http://www.w3.org/2000/svg';
+// Pecita is loaded only when chosen, so the default Allure page remains fast.
+let pecitaLoadPromise=null,loadingPecita=false;
+function loadPecita(){
+  if(window.FLUID_HANDWRITTEN_DATA&&window.FLUID_CENTERLINES)return Promise.resolve();
+  if(!pecitaLoadPromise){
+    const load=src=>new Promise((resolve,reject)=>{
+      const script=document.createElement('script');
+      script.src=src;script.async=true;
+      script.onload=resolve;
+      script.onerror=()=>reject(new Error('Chargement impossible : '+src));
+      document.head.appendChild(script);
+    });
+    pecitaLoadPromise=Promise.all([load('pecita-outlines.js'),load('pecita-centerlines.js')]).then(()=>{
+      if(!window.FLUID_HANDWRITTEN_DATA||!window.FLUID_CENTERLINES)throw new Error('Les tracés Pecita sont incomplets.');
+    }).catch(error=>{pecitaLoadPromise=null;throw error;});
+  }
+  return pecitaLoadPromise;
+}
+function smoothPecitaStroke(points){
+  let curve=points.map(p=>[p[0],p[1]]);
+  if(curve.length<=3)return curve;
+  // Gaussian averaging with fixed endpoints to avoid sharp pixel-skeleton bends.
+  for(let pass=0;pass<3;pass++){
+    const next=[curve[0]];
+    for(let i=1;i<curve.length-1;i++){
+      const prev=curve[i-1],now=curve[i],after=curve[i+1];
+      next.push([prev[0]*.2+now[0]*.6+after[0]*.2,
+                 prev[1]*.2+now[1]*.6+after[1]*.2]);
+    }
+    next.push(curve[curve.length-1]);curve=next;
+  }
+  return curve;
+}
+function pecitaCenterlinePath(points){
+  const pts=smoothPecitaStroke(points);
   const fmt=n=>Number(n).toFixed(2);
-  const glyphs=font.glyphs;
-  const chars=Array.from(word.replace(/œ/g,'oe').replace(/Œ/g,'OE'));
-  const shapes=[];
+  if(pts.length<2)return '';
+  let d=`M ${fmt(pts[0][0])} ${fmt(pts[0][1])}`;
+  for(let i=0;i<pts.length-1;i++){
+    const a=pts[Math.max(0,i-1)],b=pts[i],c=pts[i+1],e=pts[Math.min(pts.length-1,i+2)];
+    const cp1=[b[0]+(c[0]-a[0])/6,b[1]+(c[1]-a[1])/6];
+    const cp2=[c[0]-(e[0]-b[0])/6,c[1]-(e[1]-b[1])/6];
+    d+=` C ${fmt(cp1[0])} ${fmt(cp1[1])} ${fmt(cp2[0])} ${fmt(cp2[1])} ${fmt(c[0])} ${fmt(c[1])}`;
+  }
+  return d;
+}
+function getPecitaShapes(word){
+  const data=window.FLUID_HANDWRITTEN_DATA,centers=window.FLUID_CENTERLINES;
+  if(!data||!centers)throw new Error('Pecita n’est pas encore chargée.');
+  const markSet=new Set(data.isMark.map(Number));
+  const seq=Array.from(word).map(ch => data.cmap[String(ch.codePointAt(0))] ?? data.cmap['63']);
+  // A minimal contextual OpenType substitution engine. It preserves initial,
+  // medial and final letter forms and mandatory joining ligatures.
+  function substitute(list, lookupId, pos, depth=0){
+    if(depth>9 || pos>=list.length)return false;
+    const lookup=data.lookups[String(lookupId)]||[];
+    const ignoreMarks=[10,11,12,13].includes(Number(lookupId));
+    for(const table of lookup){
+      const key=String(list[pos]);
+      if(table.t===1 && Object.prototype.hasOwnProperty.call(table.m,key)){
+        list.splice(pos,1,table.m[key]);return true;
+      }
+      if(table.t===2 && Object.prototype.hasOwnProperty.call(table.m,key)){
+        list.splice(pos,1,...table.m[key]);return true;
+      }
+      if(table.t===4 && table.m[key]){
+        for(const combination of table.m[key]){
+          const components=combination.slice(0,-1);
+          if(components.every((v,j)=>list[pos+1+j]===v)){
+            list.splice(pos,components.length+1,combination[combination.length-1]);return true;
+          }
+        }
+      }
+      if(table.t===5 && table.cov.includes(list[pos])){
+        const classes=table.cls;
+        const cls=classes[key]||0;
+        for(const [following,replacements] of (table.sets[String(cls)]||[])){
+          const places=[pos];let cursor=pos;let valid=true;
+          for(const expected of following){
+            cursor++;
+            if(ignoreMarks){while(cursor<list.length && markSet.has(list[cursor]))cursor++;}
+            if(cursor>=list.length || (classes[String(list[cursor])]||0)!==expected){valid=false;break;}
+            places.push(cursor);
+          }
+          if(!valid)continue;
+          let applied=false;
+          for(const [sequenceIndex,target] of replacements){
+            const targetIndex=places[sequenceIndex];
+            if(targetIndex!==undefined && substitute(list,target,targetIndex,depth+1))applied=true;
+          }
+          if(applied)return true;
+        }
+      }
+    }
+    return false;
+  }
+  // OpenType lookup order, with ligatures and contextual alternates.
+  for(const lookupId of data.lookupOrder.slice().sort((a,b)=>a-b)){
+    for(let position=0;position<seq.length;position++)substitute(seq,lookupId,position);
+  }
+  const chars=[];
   let advance=0;
-  // Keep the native Bézier centerlines. A glyph may contain several independent strokes.
+  for(const gid of seq){
+    const outline=data.paths[String(gid)];
+    if(!outline)continue;
+    const isMark=markSet.has(gid);
+    chars.push({gid,outline,x:advance,dx:0,dy:0,mark:isMark});
+    advance+=outline[0]+(isMark?0:state.fusion);
+  }
+  // Position diacritics using mark-to-base GPOS anchors in original font units.
+  let lastBase=null;
+  for(const glyph of chars){
+    if(!glyph.mark){lastBase=glyph;continue;}
+    if(!lastBase)continue;
+    for(const table of data.gpos){
+      const mark=table.marks[String(glyph.gid)],anchors=table.bases[String(lastBase.gid)];
+      if(!mark || !anchors || !anchors[mark[0]])continue;
+      const [x,y]=anchors[mark[0]];
+      glyph.dx=lastBase.x+lastBase.dx+x-mark[1]-glyph.x;
+      glyph.dy=lastBase.dy+y-mark[2];
+      break;
+    }
+  }
+  const shapes=[];
+  for(const glyph of chars){
+    const contours=centers[String(glyph.gid)]||[];
+    for(const points of contours){
+      if(points.length<2)continue;
+      const d=pecitaCenterlinePath(points);
+      if(d)shapes.push({d,tx:glyph.x+glyph.dx,ty:glyph.dy});
+    }
+  }
+  return shapes;
+}
+function getAllureShapes(word){
+  const font=window.FLUID_ALLURE_DATA;
+  if(!font)throw new Error('Le fichier EMS Allure Smooth est introuvable.');
+  const glyphs=font.glyphs,chars=Array.from(word.replace(/œ/g,'oe').replace(/Œ/g,'OE'));
+  const shapes=[];let advance=0;
   for(const ch of chars){
     const item=glyphs[ch]||glyphs[ch.normalize('NFD').replace(/[\u0300-\u036f]/g,'')]||glyphs['?'];
     if(!item)continue;
     if(item.d){
       const subPaths=item.d.match(/[Mm][^Mm]*/g)||[item.d];
-      for(const d of subPaths)if(d.trim())shapes.push({d:d.trim(),tx:advance});
+      for(const d of subPaths)if(d.trim())shapes.push({d:d.trim(),tx:advance,ty:0});
     }
     advance+=item.w+state.fusion;
   }
+  return shapes;
+}
+function getFontDescription(){
+  return state.font==='pecita'?'Pecita (tracés centraux lissés, SIL OFL 1.1)':'EMS Allure Smooth (tracés natifs, SIL OFL 1.1)';
+}
+function updateFontUI(){
+  const pecita=state.font==='pecita';
+  $('fontSubtitle').textContent=pecita?'Pecita : une écriture manuscrite expressive aux tracés centraux lissés.':'EMS Allure Smooth : une écriture plus souple, composée de courbes vectorielles ouvertes.';
+  $('fontHint').textContent=(pecita?'Pecita':'EMS Allure Smooth')+' · dégradé continu sur tout le mot · SVG ouvert';
+  $('fontNote').textContent=pecita?'Tracés monolignes extraits de Pecita.':'Écriture manuscrite monoligne.';
+  $('footerFont').textContent='FLUID · '+(pecita?'Pecita':'EMS Allure Smooth');
+  $('footerLicense').textContent=pecita?'Pecita':'EMS Allure Smooth';
+  $('licenseLink').href=pecita?'PECITA-OFL.txt':'EMS-ALLURE-OFL.txt';
+}
+$('fontChoice').addEventListener('change',async event=>{
+  const chosen=event.target.value;
+  state.font=chosen;
+  updateFontUI();
+  clearWritingAnimation();
+  if(chosen==='pecita'&&!window.FLUID_CENTERLINES){
+    loadingPecita=true;
+    $('animateWriting').disabled=true;
+    $('liveStatus').textContent='Chargement Pecita…';
+    $('preview').innerHTML='<span class="empty">Chargement des tracés Pecita…</span>';
+    try{await loadPecita();}
+    catch(error){
+      if(state.font===chosen){
+        console.error(error);state.font='allure';$('fontChoice').value='allure';updateFontUI();toast('Pecita indisponible, retour à EMS Allure Smooth');
+      }
+    }finally{loadingPecita=false;requestRender();}
+  }else requestRender();
+});
+
+function getHandwrittenSVG(){
+  const word=state.word.slice(0,22);
+  if(!word.trim())return '';
+  const NS='http://www.w3.org/2000/svg';
+  const fmt=n=>Number(n).toFixed(2);
+  const shapes=state.font==='pecita'?getPecitaShapes(word):getAllureShapes(word);
   if(!shapes.length)return '';
   const measure=document.createElementNS(NS,'svg');
   measure.style.cssText='position:absolute;width:0;height:0;left:-99999px;top:-99999px;opacity:0;pointer-events:none';
@@ -148,9 +317,9 @@ function getHandwrittenSVG(){
       for(let j=0;j<=samples;j++){
         const pt=p.getPointAtLength(length*j/samples);
         minX=Math.min(minX,pt.x+shape.tx);maxX=Math.max(maxX,pt.x+shape.tx);
-        minY=Math.min(minY,pt.y);maxY=Math.max(maxY,pt.y);
+        minY=Math.min(minY,pt.y+shape.ty);maxY=Math.max(maxY,pt.y+shape.ty);
       }
-      geometries.push({p,length,tx:shape.tx,d:shape.d});
+      geometries.push({p,length,tx:shape.tx,ty:shape.ty,d:shape.d});
     }
     if(!geometries.length)return '';
     const colors=palettes[state.palette];
@@ -168,14 +337,14 @@ function getHandwrittenSVG(){
       const x2=x1+span;
       const stops=colors.map((color,j)=>`<stop offset="${fmt(j*100/(colors.length-1))}%" stop-color="${color}"/>`).join('');
       defs.push(`<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${fmt(x1)}" y1="0" x2="${fmt(x2)}" y2="0">${stops}</linearGradient>`);
-      parts.push(`<g data-writing-stroke="1" transform="translate(${fmt(shape.tx)} 0)"><path d="${shape.d}" fill="none" stroke="url(#${id})" stroke-width="${weight}" stroke-linecap="round" stroke-linejoin="round"/></g>`);
+      parts.push(`<g data-writing-stroke="1" transform="translate(${fmt(shape.tx)} ${fmt(shape.ty)})"><path d="${shape.d}" fill="none" stroke="url(#${id})" stroke-width="${weight}" stroke-linecap="round" stroke-linejoin="round"/></g>`);
     }
     const padding=weight/2+45;
     const left=minX-padding,top=-(maxY+padding);
     const width=Math.max(180,maxX-minX+2*padding),height=Math.max(200,maxY-minY+2*padding);
     svgDimensions={width:Math.ceil(width),height:Math.ceil(height)};
-    const description='Véritables tracés ouverts EMS Allure Smooth ; un seul dégradé visuellement continu sur tout le mot. Licence SIL OFL 1.1.';
-    return `<svg xmlns="${NS}" width="${Math.ceil(width)}" height="${Math.ceil(height)}" viewBox="${fmt(left)} ${fmt(top)} ${fmt(width)} ${fmt(height)}" role="img" aria-label="${escapeXML(word)} en EMS Allure Smooth"><title>${escapeXML(word)} — EMS Allure Smooth</title><desc>${description}</desc><defs>${defs.join('')}</defs><g transform="scale(1,-1)">${parts.join('')}</g></svg>`;
+    const description=getFontDescription()+' ; dégradé visuellement continu sur tout le mot.';
+    return `<svg xmlns="${NS}" width="${Math.ceil(width)}" height="${Math.ceil(height)}" viewBox="${fmt(left)} ${fmt(top)} ${fmt(width)} ${fmt(height)}" role="img" aria-label="${escapeXML(word)} en ${state.font==='pecita'?'Pecita':'EMS Allure Smooth'}"><title>${escapeXML(word)} — ${state.font==='pecita'?'Pecita':'EMS Allure Smooth'}</title><desc>${description}</desc><defs>${defs.join('')}</defs><g transform="scale(1,-1)">${parts.join('')}</g></svg>`;
   }finally{measure.remove();}
 }
 function maintainLetterProportions(){
@@ -273,7 +442,7 @@ function render(){
  $('liveStatus').textContent='Aperçu en direct';$('liveStatus').style.color='#34875f';
  try {const url=new URL(location.href);if(word)url.searchParams.set('mot',word);else url.searchParams.delete('mot');history.replaceState(null,'',url.toString());}catch(e){}
 }
-function requestRender(){if(pendingFrame)return;pendingFrame=requestAnimationFrame(()=>{pendingFrame=0;try{render()}catch(e){console.error(e);$('liveStatus').textContent='Erreur de rendu';$('liveStatus').style.color='#c03838';}});}
+function requestRender(){if(loadingPecita)return;if(pendingFrame)return;pendingFrame=requestAnimationFrame(()=>{pendingFrame=0;try{render()}catch(e){console.error(e);$('liveStatus').textContent='Erreur de rendu';$('liveStatus').style.color='#c03838';}});}
 function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2200);}
 function download(blob,name){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 function exportName(){return (lastGeneratedWord||'lettering').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9_-]/g,'-').replace(/-+/g,'-').toLowerCase();}
@@ -285,7 +454,7 @@ $('downloadSVG').addEventListener('click',()=>{if(!currentSvg)return;download(ne
 $('downloadPNG').addEventListener('click',()=>{if(!currentSvg)return;const img=new Image(),src=URL.createObjectURL(new Blob([currentSvg],{type:'image/svg+xml;charset=utf-8'}));img.onload=()=>{const factor=Math.min(3,Math.max(1,4096/svgDimensions.width));const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(svgDimensions.width*factor));canvas.height=Math.max(1,Math.round(svgDimensions.height*factor));canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);canvas.toBlob(blob=>{if(blob)download(blob,exportName()+'-fluid.png');URL.revokeObjectURL(src);toast(blob?'PNG exporté':'Impossible de créer le PNG')},'image/png');};img.onerror=()=>{URL.revokeObjectURL(src);toast('Impossible de créer le PNG');};img.src=src;});
 const wordFromUrl=new URLSearchParams(location.search).get('mot')||new URLSearchParams(location.search).get('word');
 if(wordFromUrl){state.word=wordFromUrl.slice(0,22);$('word').value=state.word;}
-requestRender();window.addEventListener('resize',maintainLetterProportions);
+updateFontUI();requestRender();window.addEventListener('resize',maintainLetterProportions);
 </script>
 </body>
 </html>
