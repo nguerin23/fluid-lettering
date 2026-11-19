@@ -1,26 +1,33 @@
-# Fluid — Mistral SingleLine
+# Fluid — EMS Allure Smooth
 
-Ce générateur de lettering affiche des courbes ouvertes issues de **Mistral SingleLine**, projet d'isdaT-type, sous **SIL Open Font License 1.1**.
+Générateur de lettering SVG fondé sur les véritables courbes monolinéaires de **EMS Allure Smooth**, version retravaillée par Ellen Wasbø (Cutlings), dérivée de EMS Allure / Allura. Les données des glyphes sont sous licence **SIL Open Font License 1.1**.
 
-Source des données : https://github.com/isdat-type/Mistral-SingleLine (fichier `sources/Mistral_SingleLine.glyphs`).
+**Démo :** https://nguerin23.github.io/fluid-lettering/
 
-## Fonctionnement
+**Sources :**
+- https://cutlings.datafil.no/smoothed-single-line-fonts/
+- https://github.com/msurguy/watercolor-playground/blob/main/public/fonts/single-line/Cutlings/EMS_Allure_Smooth.svg
 
-- Le texte (22 caractères maximum) est dessiné directement en SVG : aucun glyphe n'est reconstruit par squelettisation et aucun tracé n'est raccordé artificiellement.
-- Curseur **Épaisseur** : modifie `stroke-width` sur les lignes centrales natives.
-- Curseur **Espacement** : de −200 à +180 ; valeurs négatives = chevauchement possible.
-- Couleur : interpolation violet → bleu → turquoise → vert, calculée selon la longueur cumulée des chemins. Les courbes sont affichées en petits segments colorés, chacun suivant la tangente locale.
-- Exports SVG (paths ouverts et dégradés) et PNG, sans besoin de police installée.
-- Gestion des glyphes accentués par composants et de quelques ligatures documentées (`ll`, `on`, `qu`, `st`, `th`, `ff`, `pp`, `ss`, `fi`, `fl`). Il ne s'agit pas d'un moteur OpenType complet : les substitutions contextuelles avancées ne sont pas toutes reproduites.
+## Fonctions
 
-## Fichiers
+- Prévisualisation en direct pour un mot de 22 caractères maximum.
+- Courbes SVG à lignes centrales ouvertes issues du SVG de la police, **sans squelettisation** et **sans raccords ajoutés artificiellement**.
+- **Épaisseur** : règle `stroke-width`.
+- **Espacement** : −200 à +180 ; valeurs négatives pour superposer les lettres.
+- Dégradé violet → bleu → turquoise → vert suivant la longueur cumulée des traits, y compris les boucles.
+- Exports **SVG et PNG** sans police installée ni serveur.
+- Accents pris en charge quand les glyphes sont présents dans la police (notamment `é`, `è`, `à`, `ç`). Les autres caractères utilisent un repli approximatif.
 
-- `index.html` : interface et moteur SVG
-- `mistral-strokes.js` : données de Bézier issues du source Glyphs de Mistral SingleLine
-- `MISTRAL-OFL.txt` : licence d'origine de Mistral SingleLine
+## Fichiers actifs
 
-Le site est statique et peut être hébergé sur GitHub Pages, sans serveur. Le fichier `index.html` doit être dans le même dossier que `mistral-strokes.js`.
+- `index.html` : application et rendu SVG.
+- `ems-allure-smooth.js` : 205 glyphes de la vraie police single-line lissée.
+- `EMS-ALLURE-OFL.txt` : crédit des créateurs et texte de la licence.
 
-## Licence
+Le site est statique, hébergé sur GitHub Pages. Pour une installation hors ligne, placer ces trois fichiers dans le même dossier.
 
-Les données vectorielles de Mistral SingleLine restent couvertes par SIL OFL 1.1. Voir `MISTRAL-OFL.txt` et le dépôt de référence des auteurs. Le nom du projet ici est **Fluid**.
+## Attribution
+
+Allura par Rob Leuschke (TypeSETit), EMS Allure par Sheldon B. Michaels, conversion SVG par Windell H. Oskay, lissage et ajustements par Ellen Wasbø (Cutlings). Voir `EMS-ALLURE-OFL.txt`.
+
+**Note :** les fichiers historiques de Pecita et Mistral sont conservés dans le dépôt mais ne sont plus chargés par le site. EMS Allure Smooth ne garantit pas une liaison physique entre toutes les lettres ; la continuité visuelle dépend de l'espacement.
