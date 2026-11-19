@@ -1,35 +1,34 @@
-# Fluid — EMS Allure Smooth ou Pecita
+# Fluid — EMS Capitol (Sacramento) et Pecita
 
-Générateur de lettering SVG proposant deux polices sélectionnables : **EMS Allure Smooth** (courbes monolinéaires natives, lissées par Ellen Wasbø / Cutlings) et **Pecita** (lignes centrales reconstruites puis adoucies à partir de la police de Philippe Cochy). Les données des deux polices sont sous licence **SIL Open Font License 1.1**.
+Générateur de lettering SVG utilisant deux polices monolignes sous licence **SIL Open Font License 1.1** : **EMS Capitol**, une adaptation monoligne de **Sacramento**, par défaut ; et **Pecita**, disponible dans le sélecteur.
 
-**Démo :** https://nguerin23.github.io/fluid-lettering/
+**Site :** https://nguerin23.github.io/fluid-lettering/
 
-**Sources :**
-- https://cutlings.datafil.no/smoothed-single-line-fonts/
-- https://github.com/msurguy/watercolor-playground/blob/main/public/fonts/single-line/Cutlings/EMS_Allure_Smooth.svg
+## Polices
+
+- **EMS Capitol (défaut)** : dérivé de Sacramento (Brian J. Bonislawsky / Astigmatic). Adaptation monoligne par Sheldon B. Michaels et conversion SVG par Windell H. Oskay ; les segments linéaires denses sont adoucis en courbes de Bézier dans Fluid, sans ajouter de raccords entre les lettres. [SVG original](https://github.com/msurguy/watercolor-playground/blob/main/public/fonts/single-line/EMS/EMSCapitol.svg)
+- **Pecita (option)** : dessin manuscrit de Philippe Cochy ; chemins centraux calculés à partir des contours, avec lissage et gestion des ligatures et accents.
 
 ## Fonctions
 
-- Prévisualisation en direct pour un mot de 22 caractères maximum.\n- **Sélecteur de police** : EMS Allure Smooth par défaut, ou Pecita. Les données Pecita sont chargées à la demande.
-- Tracés ouverts SVG : courbes Bézier natives pour EMS Allure Smooth ; extraction de lignes centrales et lissage de courbes pour Pecita. Aucun raccord artificiel n'est ajouté entre les lettres.
-- **Épaisseur** : règle `stroke-width`.
-- **Espacement** : −200 à +180 ; valeurs négatives pour superposer les lettres.
-- Dégradé violet → bleu → turquoise → vert **continu à l’échelle de tout le mot**. Les coordonnées des dégradés compensent le décalage de chaque glyphe pour éviter toute rupture de couleur aux changements de lettre.
-- Exports **SVG et PNG** sans police installée ni serveur.
-- Accents pris en charge quand les glyphes sont présents dans la police (notamment `é`, `è`, `à`, `ç`). Les autres caractères utilisent un repli approximatif.
+- Texte libre jusqu'à **22 caractères**, initialement **bonjour**.
+- Sélecteur **EMS Capitol / Pecita** (chargement différé des données Pecita).
+- Curseurs **Épaisseur** et **Espacement** (−200 à +180).
+- Dégradé violet → bleu → turquoise → vert **continu à l'échelle de tout le mot** : les coordonnées de chaque dégradé local compensent le décalage des lettres.
+- Bouton **Animer l'écriture** pour révéler les traits suivant leur trajectoire. Les traits qui ne sont pas connectés restent séparés ; l'animation ne crée pas de raccord artificiel.
+- Exports **SVG et PNG** statiques, compatibles avec un navigateur sans installer de police.
 
 ## Fichiers actifs
 
-- `index.html` : application et rendu SVG.
-- `ems-allure-smooth.js` : 205 glyphes de la vraie police single-line lissée.
-- `EMS-ALLURE-OFL.txt` : crédit des créateurs et texte de la licence.\n- `pecita-outlines.js` : glyphes, ligatures et métriques utilisés pour la composition de Pecita.\n- `pecita-centerlines.js` : tracés centraux de Pecita utilisés pour le rendu monoligne.\n- `PECITA-OFL.txt` : licence de Pecita.
+- `index.html` — interface, génération des chemins SVG, animation et exports.
+- `ems-capitol.js` — 206 glyphes d'EMS Capitol dans leur géométrie originale monoligne.
+- `EMS-CAPITOL-OFL.txt` — attribution et texte de la licence SIL OFL 1.1.
+- `pecita-outlines.js` — glyphes, métriques et substitutions OpenType Pecita.
+- `pecita-centerlines.js` — lignes centrales reconstruites Pecita.
+- `PECITA-OFL.txt` — licence Pecita.
 
-Le bouton **Animer l’écriture** révèle les chemins dans l’ordre de tracé ; les exports SVG et PNG restent statiques. Le mot par défaut est **bonjour**.
+Les anciens fichiers EMS Allure Smooth et Mistral restent conservés dans le dépôt à titre historique, mais ne sont plus chargés par l'interface. Pour un fonctionnement hors ligne, placer les fichiers actifs dans le même dossier.
 
-Le site est statique, hébergé sur GitHub Pages. Pour une installation hors ligne, conserver `index.html`, les trois fichiers JavaScript des polices et les deux licences dans le même dossier.
+## Licence et attribution
 
-## Attribution
-
-Allura par Rob Leuschke (TypeSETit), EMS Allure par Sheldon B. Michaels, conversion SVG par Windell H. Oskay, lissage et ajustements par Ellen Wasbø (Cutlings). Voir `EMS-ALLURE-OFL.txt`.
-
-**Note :** les lignes centrales de Pecita sont des reconstructions approximatives de trajectoires d'écriture, et non des tracés originaux de la police. Le fichier historique Mistral est conservé dans le dépôt mais n'est pas chargé par le site. Aucune des deux polices ne garantit une liaison physique entre toutes les lettres ; la continuité visuelle dépend de l'espacement.
+Le code de Fluid et les polices sont des éléments distincts. Les données typographiques demeurent couvertes par les licences et attributions de leurs auteurs ; voir `EMS-CAPITOL-OFL.txt` et `PECITA-OFL.txt`. La licence SIL OFL 1.1 autorise notamment la modification et la redistribution sous conditions.
