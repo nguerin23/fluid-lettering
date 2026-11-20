@@ -4,7 +4,7 @@
 
 Une **proposition graphique non officielle** de Plénée-Jugon, organisée en **5 pages courtes** :
 
-1. **Logo** — une signature et ses versions claire / inversée ; téléchargement du symbole SVG.
+1. **Logo** — le logo fourni en source, avec versions monochromes bleu nuit / blanc ; téléchargement SVG.
 2. **Typographies** — Outfit pour les titres, Manrope pour le texte. Inspiration du style géométrique de Nuuday 2025 ; Nuu Type (police propriétaire) n'est pas distribuée.
 3. **Couleurs** — six nuances de bleu avec codes HEX copiables.
 4. **Facebook 4:5** — quatre modèles : annonce, événement, retour en images, information pratique. Titre, texte et date visibles ; rubrique et pied de page sous « Plus d'options ». Ajout d'une photo seulement sur le modèle « En images ». Export PNG **1080 × 1350** local.
@@ -17,7 +17,11 @@ La navigation est horizontale et adaptée au mobile. Le site s'ouvre directement
 - `index.html` — site principal, 5 pages, navigation et palette.
 - `facebook-posts.css`, `facebook-posts.js` — modèles Facebook et générateur PNG.
 - `fluid-lettering.html`, `signature-studio.js`, `signature-studio.css` — atelier de lettrage et dessin libre.
-- `logo-plenee-jugon-concept.svg` — symbole conceptuel, désormais en bleus.
+- `logo-plenee-jugon-monochrome-bleu-nuit.svg` — logo vectoriel issu du PDF fourni, intégralement bleu nuit (#070B66).
+- `logo-plenee-jugon-monochrome-blanc.svg` — le même logo vectoriel, intégralement blanc pour fond bleu nuit.
+- `logo-plenee-jugon-concept.svg` — ancien lien conservé pour compatibilité (redirigé graphiquement vers le logo source).
+
+Le logo source fourni, incluant le lettrage **Plénée-Jugon** et ses **cinq pictogrammes**, remplace le monogramme pixelisé provisoire dans l'en-tête et dans les deux cartes de la rubrique Logo. Les visuels Facebook utilisent aussi ces fichiers SVG monochromes.
 
 ## Identité visuelle
 
