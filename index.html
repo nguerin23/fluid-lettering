@@ -70,7 +70,7 @@
 <body>
 <header><div class="wrap head"><div class="brand"><span class="brand-mark">f</span>fluid<span style="color:#6c58f6">.</span></div><span class="head-note">Vector lettering studio</span></div></header>
 <main class="wrap">
-  <div class="heading"><div><div class="eyebrow">Atelier typographique</div><h1>Un mot, des courbes.</h1></div><p class="subtitle">Choisis une police ou dessine à main levée : tracés vectoriels, dégradé continu et exports SVG/PNG.</p></div>
+  <div class="heading"><div><div class="eyebrow">Atelier typographique</div><h1>Un mot, des courbes.</h1></div><p class="subtitle">Choisis une police ou dessine à main levée : le dégradé suit désormais la courbe de chaque trait, avec exports SVG/PNG.</p></div>
   <section class="card" aria-label="Éditeur de lettering">
     <div class="canvas-top"><span class="label-title">Ton lettrage</span><span id="liveStatus" class="live" aria-live="polite">Aperçu en direct</span></div>
     <div class="stage" id="stage"><div id="preview" role="img" aria-label="Lettrage vectoriel"><span class="empty">Chargement du tracé…</span></div></div>
@@ -126,6 +126,7 @@
           </mask>
         </defs>
         <rect id="drawingInkFill" width="800" height="350" fill="url(#drawingGradient)" mask="url(#drawingInkMask)" pointer-events="none"/>
+        <g id="drawingFlowPaths" pointer-events="none"></g>
         <rect width="100%" height="100%" fill="transparent" pointer-events="all"/>
       </svg>
       <span id="drawingEmpty" class="draw-empty">Trace ton premier trait ici ✍</span>
