@@ -180,6 +180,8 @@
     current=template;
     for(const [key,field] of Object.entries(fields))field.value=templates[template][key];
     templateButtons.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.fbTemplate===template)));
+    const photoRow=$('fbPhotoRow');
+    if(photoRow)photoRow.hidden=template!=='images';
     schedule();
   }
   templateButtons.forEach(button=>button.addEventListener('click',()=>choose(button.dataset.fbTemplate)));
