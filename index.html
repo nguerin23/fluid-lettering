@@ -6,6 +6,7 @@
 <meta name="theme-color" content="#f7f8f5">
 <meta name="description" content="Fluid : éditeur de lettering avec 11 polices cursives et export vectoriel SVG/PNG.">
 <title>Fluid — Atelier de lettering</title>
+<link rel="stylesheet" href="signature-studio.css?v=1">
 <style>
   :root { color-scheme:light; --ink:#1c2923;--muted:#73817a;--line:#e4e9e5;--paper:#f7f8f5;--purple:#6150f7; }
   * {box-sizing:border-box}
@@ -68,11 +69,12 @@
 <body>
 <header><div class="wrap head"><div class="brand"><span class="brand-mark">f</span>fluid<span style="color:#6c58f6">.</span></div><span class="head-note">Vector lettering studio</span></div></header>
 <main class="wrap">
-  <div class="heading"><div><div class="eyebrow">Atelier typographique</div><h1>Un mot, des courbes.</h1></div><p class="subtitle">La Choisis parmi 11 écritures manuscrites : aperçu vectoriel, dégradé continu et export SVG/PNG.</p></div>
+  <div class="heading"><div><div class="eyebrow">Atelier typographique</div><h1>Un mot, des courbes.</h1></div><p class="subtitle">Choisis une police ou dessine à main levée : tracés vectoriels, dégradé continu et exports SVG/PNG.</p></div>
   <section class="card" aria-label="Éditeur de lettering">
     <div class="canvas-top"><span class="label-title">Ton lettrage</span><span id="liveStatus" class="live" aria-live="polite">Aperçu en direct</span></div>
     <div class="stage" id="stage"><div id="preview" role="img" aria-label="Lettrage vectoriel"><span class="empty">Chargement du tracé…</span></div></div>
     <div class="stage-bottom"><span class="hint"><span id="fontHint">Police Parisienne · dégradé continu · SVG vectoriel</span></span><div class="actions">
+      <button id="openDrawing" class="btn" type="button" aria-haspopup="dialog" aria-controls="drawingDialog">✎ Dessiner</button>
       <button id="downloadPNG" class="btn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>PNG</button>
       <button id="downloadSVG" class="btn primary" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>SVG</button>
     </div></div>
@@ -97,13 +99,68 @@
   </section>
   <footer class="bottom-note"><span>FLUID · 11 polices · tracés vectoriels éditables</span><span><a href="FONT-LICENSES.md" target="_blank" rel="noopener">Crédits et licences des polices</a></span></footer>
 </main>
+
+<dialog id="drawingDialog" class="draw-dialog" aria-labelledby="drawingTitle" aria-describedby="drawingDescription">
+  <div class="draw-shell">
+    <div class="draw-header">
+      <div>
+        <span class="draw-kicker">Atelier de dessin vectoriel</span>
+        <h2 id="drawingTitle">Écris à main levée.</h2>
+        <p id="drawingDescription" class="draw-description">Dessine avec la souris, le doigt ou un stylet. Les croisements sont fusionnés visuellement : aucune surépaisseur ni rupture du dégradé.</p>
+      </div>
+      <button id="drawingClose" class="draw-cross" type="button" aria-label="Fermer la fenêtre de dessin">×</button>
+    </div>
+    <div class="draw-paper">
+      <svg id="drawingPad" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 350" preserveAspectRatio="none" role="application" aria-label="Zone de dessin à main levée">
+        <defs>
+          <linearGradient id="drawingGradient" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="800" y2="0">
+            <stop offset="0%" stop-color="#6150f7"/>
+            <stop offset="25%" stop-color="#5e7bed"/>
+            <stop offset="50%" stop-color="#53b4cf"/>
+            <stop offset="75%" stop-color="#56dba2"/>
+            <stop offset="100%" stop-color="#55fa78"/>
+          </linearGradient>
+          <mask id="drawingInkMask" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="0" y="0" width="800" height="350">
+            <g id="drawingMaskPaths"></g>
+          </mask>
+        </defs>
+        <rect id="drawingInkFill" width="800" height="350" fill="url(#drawingGradient)" mask="url(#drawingInkMask)" pointer-events="none"/>
+        <rect width="100%" height="100%" fill="transparent" pointer-events="all"/>
+      </svg>
+      <span id="drawingEmpty" class="draw-empty">Trace ton premier trait ici ✍</span>
+    </div>
+    <div class="draw-controls">
+      <div class="draw-control">
+        <div class="draw-control-header"><label for="drawingSmooth">Lisser</label><output id="drawingSmoothValue" for="drawingSmooth">45 %</output></div>
+        <input id="drawingSmooth" type="range" min="0" max="100" step="1" value="45">
+        <div class="draw-ends"><span>Tracé brut</span><span>Très lisse</span></div>
+      </div>
+      <div class="draw-control">
+        <div class="draw-control-header"><label for="drawingWidth">Épaisseur du trait</label><output id="drawingWidthValue" for="drawingWidth">18 px</output></div>
+        <input id="drawingWidth" type="range" min="1" max="90" step="1" value="18">
+        <div class="draw-ends"><span>1 px · fin</span><span>90 px · épais</span></div>
+      </div>
+    </div>
+    <p class="draw-tip">Modifie les curseurs même après avoir dessiné. Le SVG conserve les chemins centraux et réunit les traits dans un masque pour éviter les superpositions visibles.</p>
+    <div class="draw-footer">
+      <div class="draw-button-group">
+        <button id="drawingUndo" type="button" class="btn" disabled>↶ Annuler le trait</button>
+        <button id="drawingErase" type="button" class="btn" disabled>Tout effacer</button>
+      </div>
+      <div class="draw-button-group">
+        <button id="drawingSave" type="button" class="btn" disabled>Exporter SVG</button>
+        <button id="drawingApply" type="button" class="btn primary" disabled>Utiliser ce dessin</button>
+      </div>
+    </div>
+  </div>
+</dialog>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 <script src="parisienne-outlines.js?v=2"></script>
 <script>
 'use strict';
 const $=id=>document.getElementById(id);
 const palettes={jello:['#6150f7','#5e7bed','#53b4cf','#56dba2','#55fa78']};
-const state={word:'bonjour',font:'parisienne',thickness:150,fusion:0,slant:0,palette:'jello',transparent:true,seed:11};
+const state={word:'bonjour',font:'parisienne',freehand:null,thickness:150,fusion:0,slant:0,palette:'jello',transparent:true,seed:11};
 let currentSvg='',svgDimensions={width:1000,height:600},lastGeneratedWord='bonjour',pendingFrame=0,toastTimer=0,renderRevision=0;
 function escapeXML(s){return String(s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]));}
 /* Font outline packs are loaded on first selection and cached. */
@@ -207,14 +264,21 @@ function maintainLetterProportions(){
 }
 
 async function render(revision){
- const word=state.word.trim(),fontId=state.font;
- lastGeneratedWord=word;
+ const word=state.word.trim(),fontId=state.font,isFreehand=Boolean(state.freehand);
+ lastGeneratedWord=isFreehand?'dessin-main-levee':word;
  currentSvg='';
  $('downloadSVG').disabled=true;$('downloadPNG').disabled=true;
- $('fontHint').textContent='Police '+$('font').selectedOptions[0].textContent+' · dégradé continu · SVG vectoriel';
- $('liveStatus').textContent=word?'Chargement…':'Aperçu en direct';
+ $('fontHint').textContent=isFreehand?'Dessin à main levée · tracés monolignes · masque de fusion SVG':'Police '+$('font').selectedOptions[0].textContent+' · dégradé continu · SVG vectoriel';
+ $('liveStatus').textContent=isFreehand?'Aperçu en direct':word?'Chargement…':'Aperçu en direct';
  $('liveStatus').style.color='#34875f';
- if(!word){
+ if(isFreehand){
+   currentSvg=state.freehand.svg;
+   svgDimensions={width:state.freehand.width,height:state.freehand.height};
+   $('preview').innerHTML=currentSvg;
+   maintainLetterProportions();
+   $('downloadSVG').disabled=false;
+   $('downloadPNG').disabled=false;
+ }else if(!word){
    $('preview').style.width='auto';
    $('preview').innerHTML='<span class="empty">Écris un mot pour commencer</span>';
  }else{
@@ -238,7 +302,7 @@ async function render(revision){
    }
  }
  if(revision!==renderRevision)return;
- $('preview').setAttribute('aria-label',word?'Lettrage du mot '+word:'Aucun mot');
+ $('preview').setAttribute('aria-label',isFreehand?'Dessin SVG à main levée':word?'Lettrage du mot '+word:'Aucun mot');
  try{
    const url=new URL(location.href);
    if(word)url.searchParams.set('mot',word);else url.searchParams.delete('mot');
@@ -254,17 +318,25 @@ function requestRender(){
 function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2200);}
 function download(blob,name){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 function exportName(){return (lastGeneratedWord||'lettering').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9_-]/g,'-').replace(/-+/g,'-').toLowerCase();}
-$('word').addEventListener('input',e=>{state.word=e.target.value.slice(0,22);requestRender();});
-$('font').addEventListener('change',e=>{if(VALID_FONTS.has(e.target.value)){state.font=e.target.value;requestRender();}});
-$('thickness').addEventListener('input',e=>{state.thickness=Number(e.target.value);$('thicknessValue').textContent=state.thickness;requestRender();});
-$('spacing').addEventListener('input',e=>{state.fusion=Number(e.target.value);$('spacingValue').textContent=(state.fusion>0?'+':'')+state.fusion;requestRender();});
+$('word').addEventListener('input',e=>{state.freehand=null;state.word=e.target.value.slice(0,22);requestRender();});
+$('font').addEventListener('change',e=>{if(VALID_FONTS.has(e.target.value)){state.freehand=null;state.font=e.target.value;requestRender();}});
+$('thickness').addEventListener('input',e=>{state.freehand=null;state.thickness=Number(e.target.value);$('thicknessValue').textContent=state.thickness;requestRender();});
+$('spacing').addEventListener('input',e=>{state.freehand=null;state.fusion=Number(e.target.value);$('spacingValue').textContent=(state.fusion>0?'+':'')+state.fusion;requestRender();});
 $('downloadSVG').addEventListener('click',()=>{if(!currentSvg)return;download(new Blob([currentSvg],{type:'image/svg+xml;charset=utf-8'}),exportName()+'-fluid.svg');toast('SVG vectoriel exporté');});
 $('downloadPNG').addEventListener('click',()=>{if(!currentSvg)return;const img=new Image(),src=URL.createObjectURL(new Blob([currentSvg],{type:'image/svg+xml;charset=utf-8'}));img.onload=()=>{const factor=Math.min(3,Math.max(1,4096/svgDimensions.width));const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(svgDimensions.width*factor));canvas.height=Math.max(1,Math.round(svgDimensions.height*factor));canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);canvas.toBlob(blob=>{if(blob)download(blob,exportName()+'-fluid.png');URL.revokeObjectURL(src);toast(blob?'PNG exporté':'Impossible de créer le PNG')},'image/png');};img.onerror=()=>{URL.revokeObjectURL(src);toast('Impossible de créer le PNG');};img.src=src;});
+document.addEventListener('fluid:apply-drawing',event=>{
+ const data=event.detail;
+ if(!data||typeof data.svg!=='string'||!Number.isFinite(data.width)||!Number.isFinite(data.height))return;
+ state.freehand={svg:data.svg,width:data.width,height:data.height};
+ requestRender();
+ toast('Dessin SVG ajouté à l’aperçu');
+});
 const wordFromUrl=new URLSearchParams(location.search).get('mot')||new URLSearchParams(location.search).get('word');
 if(wordFromUrl){state.word=wordFromUrl.slice(0,22);$('word').value=state.word;}
 const fontFromUrl=new URLSearchParams(location.search).get('police');
 if(VALID_FONTS.has(fontFromUrl)){state.font=fontFromUrl;$('font').value=fontFromUrl;}
 requestRender();window.addEventListener('resize',maintainLetterProportions);
 </script>
+<script src="signature-studio.js?v=1"></script>
 </body>
 </html>
