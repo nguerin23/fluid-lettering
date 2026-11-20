@@ -204,27 +204,46 @@
       if(trace.dot)return {dot:trace.dot,length:0};
       const measure=document.createElementNS(svgNS,'path');
       measure.setAttribute('d',trace.d);
-      return {measure,length:measure.getTotalLength()};
+      return {measure,d:trace.d,length:measure.getTotalLength()};
     });
     const total=items.reduce((sum,item)=>sum+Math.max(1,item.length),0);
     const step=Math.max(1.5,Math.min(4,strokeWidth()/7));
+    const defs=[],parts=[];
+    if(items.length>1){
+      // Soft shadow only on older painted strokes: clean outer contours.
+      const blur=Math.max(.35,strokeWidth()*.038);
+      const offX=Math.max(.2,strokeWidth()*.025);
+      const offY=Math.max(.35,strokeWidth()*.045);
+      defs.push(`<filter id="fluid-hand-cross-shadow" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceAlpha" stdDeviation="${fmt(blur)}" result="soft"/><feOffset in="soft" dx="${fmt(offX)}" dy="${fmt(offY)}" result="shift"/><feFlood flood-color="#182c37" flood-opacity=".13" result="shade"/><feComposite in="shade" in2="shift" operator="in"/></filter>`);
+    }
     let covered=0;
-    const parts=[];
-    for(const item of items){
-      if(item.dot) {
-        parts.push(`<circle cx="${fmt(item.dot.x)}" cy="${fmt(item.dot.y)}" r="${fmt(strokeWidth()/2)}" fill="${progressColor(covered/Math.max(1,total))}"/>`);
-        covered+=1;
-        continue;
+    for(let index=0;index<items.length;index++){
+      const item=items[index],shapeId='fluid-hand-shape-'+index,local=[];
+      const shape=item.dot
+        ? `<circle id="${shapeId}" cx="${fmt(item.dot.x)}" cy="${fmt(item.dot.y)}" r="${fmt(strokeWidth()/2)}" fill="white"/>`
+        : `<path id="${shapeId}" d="${item.d}" fill="none" stroke="white" stroke-width="${fmt(strokeWidth())}" stroke-linecap="round" stroke-linejoin="round"/>`;
+      defs.push(shape);
+      if(index>0){
+        const priorId='fluid-hand-previous-'+index;
+        const previous=Array.from({length:index},(_,j)=>`<use href="#fluid-hand-shape-${j}"/>`).join('');
+        defs.push(`<mask id="${priorId}" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="0" y="0" width="${fmt(surfaceWidth)}" height="${fmt(surfaceHeight)}">${previous}</mask>`);
+        // Painted on prior ink only, immediately underneath the newer stroke.
+        parts.push(`<g mask="url(#${priorId})"><use href="#${shapeId}" filter="url(#fluid-hand-cross-shadow)"/></g>`);
       }
-      for(let p=0;p<item.length;p+=step){
-        const end=Math.min(item.length,p+step);
-        const a=item.measure.getPointAtLength(p),b=item.measure.getPointAtLength(end);
-        const color=progressColor((covered+(p+end)/2)/Math.max(1,total));
-        parts.push(`<path d="M ${fmt(a.x)} ${fmt(a.y)} L ${fmt(b.x)} ${fmt(b.y)}" fill="none" stroke="${color}" stroke-width="${fmt(strokeWidth())}" stroke-linecap="round" stroke-linejoin="round"/>`);
+      if(item.dot){
+        local.push(`<circle cx="${fmt(item.dot.x)}" cy="${fmt(item.dot.y)}" r="${fmt(strokeWidth()/2)}" fill="${progressColor(covered/Math.max(1,total))}"/>`);
+      }else{
+        for(let p=0;p<item.length;p+=step){
+          const next=Math.min(item.length,p+step);
+          const a=item.measure.getPointAtLength(p),b=item.measure.getPointAtLength(next);
+          const color=progressColor((covered+(p+next)/2)/Math.max(1,total));
+          local.push(`<path d="M ${fmt(a.x)} ${fmt(a.y)} L ${fmt(b.x)} ${fmt(b.y)}" fill="none" stroke="${color}" stroke-width="${fmt(strokeWidth())}" stroke-linecap="round" stroke-linejoin="round"/>`);
+        }
       }
+      parts.push(`<g>${local.join('')}</g>`);
       covered+=Math.max(1,item.length);
     }
-    return parts;
+    return {defs:defs.join(''),layers:parts.join('')};
   }
 
   function scheduleDraw() {
@@ -234,7 +253,8 @@
   function draw() {
     const { paths, traces } = inkShapes();
     maskPaths.innerHTML = paths.join('');
-    $('drawingFlowPaths').innerHTML = colorAlongLines(traces).join('');
+    const rendered=colorAlongLines(traces);
+    $('drawingFlowPaths').innerHTML = '<defs>'+rendered.defs+'</defs>'+rendered.layers;
     fill.setAttribute('visibility','hidden');
     emptyLabel.hidden = paths.length > 0;
     undo.disabled = strokeList.length === 0;
@@ -314,7 +334,7 @@
     const w = Math.max(1, Math.ceil(x1 - x0));
     const h = Math.max(1, Math.ceil(y1 - y0));
     const coloredPaths=colorAlongLines(traces);
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="${fmt(x0)} ${fmt(y0)} ${w} ${h}" role="img" aria-label="Dessin à main levée"><title>Dessin à main levée — Fluid</title><desc>Dégradé progressant en suivant la longueur exacte du tracé.</desc><g>${coloredPaths.join('')}</g></svg>`;
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="${fmt(x0)} ${fmt(y0)} ${w} ${h}" role="img" aria-label="Dessin à main levée"><title>Dessin à main levée — Fluid</title><desc>Dégradé suivant les traits avec ombre subtile aux croisements.</desc><defs>${coloredPaths.defs}</defs><g>${coloredPaths.layers}</g></svg>`;
     return { svg, width:w, height:h };
   }
 
