@@ -211,10 +211,10 @@
     const defs=[],parts=[];
     if(items.length>1){
       // Soft shadow only on older painted strokes: clean outer contours.
-      const blur=Math.max(.35,strokeWidth()*.038);
-      const offX=Math.max(.2,strokeWidth()*.025);
-      const offY=Math.max(.35,strokeWidth()*.045);
-      defs.push(`<filter id="fluid-hand-cross-shadow" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceAlpha" stdDeviation="${fmt(blur)}" result="soft"/><feOffset in="soft" dx="${fmt(offX)}" dy="${fmt(offY)}" result="shift"/><feFlood flood-color="#182c37" flood-opacity=".13" result="shade"/><feComposite in="shade" in2="shift" operator="in"/></filter>`);
+      const blur=Math.max(.35,strokeWidth()*.052);
+      const offX=Math.max(.2,strokeWidth()*.034);
+      const offY=Math.max(.35,strokeWidth()*.075);
+      defs.push(`<filter id="fluid-hand-cross-shadow" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceAlpha" stdDeviation="${fmt(blur)}" result="soft"/><feOffset in="soft" dx="${fmt(offX)}" dy="${fmt(offY)}" result="shift"/><feFlood flood-color="#182c37" flood-opacity=".28" result="shade"/><feComposite in="shade" in2="shift" operator="in"/></filter>`);
     }
     let covered=0;
     for(let index=0;index<items.length;index++){

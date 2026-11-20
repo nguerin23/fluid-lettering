@@ -81,24 +81,14 @@
     </div></div>
     <div class="editor">
       <div class="control word"><label for="word">Ton mot</label><input id="word" type="text" maxlength="22" autocomplete="off" spellcheck="false" value="bonjour" placeholder="Écris ici…"><p class="note">22 caractères maximum, accents inclus. Exemple : <button id="exampleMake" class="text-link" type="button">Make</button>.</p></div>
-      <div class="control"><label for="font">Police d’écriture</label><select id="font" aria-label="Choisir une police">
-          <option value="parisienne">Parisienne</option>
-          <option value="fabfelt">Fabfelt Script</option>
-          <option value="farewell">Farewell</option>
-          <option value="league-script">League Script</option>
-          <option value="cetary">Cetary</option>
-          <option value="alucky">Alucky</option>
-          <option value="my-ugly-handwritting">My Ugly Handwritting</option>
+      <div class="control"><label for="font">Police d’écriture</label><select id="font" aria-label="Police d’écriture">
           <option value="pacifico" selected>Pacifico</option>
-          <option value="gruenewald-va">Gruenewald VA</option>
-          <option value="banteng-story">Banteng Story</option>
-          <option value="stevilla">Stevilla Script</option>
-        </select><p class="note">Les polices se chargent à la demande.</p></div>
+        </select><p class="note">Une seule écriture disponible : Pacifico.</p></div>
       <div class="control"><div class="control-head"><label for="thickness">Épaisseur</label><output id="thicknessValue" for="thickness">255</output></div><input id="thickness" type="range" min="12" max="320" step="1" value="255"><div class="range-ends"><span>Fin</span><span>Ultra épais</span></div></div>
       <div class="control"><div class="control-head"><label for="spacing">Espacement</label><output id="spacingValue" for="spacing">-115</output></div><input id="spacing" type="range" min="-200" max="180" step="1" value="-115"><div class="range-ends"><span>−200 · superposition</span><span>+180 · espacé</span></div><p class="note">Passe en négatif pour rapprocher les lettres. L’épaisseur renforce le contour original.</p></div>
     </div>
   </section>
-  <footer class="bottom-note"><span>FLUID · 11 polices · tracés vectoriels éditables</span><span><a href="FONT-LICENSES.md" target="_blank" rel="noopener">Crédits et licences des polices</a></span></footer>
+  <footer class="bottom-note"><span>FLUID · Pacifico · tracés vectoriels éditables</span><span><a href="FONT-LICENSES.md" target="_blank" rel="noopener">Crédits et licences des polices</a></span></footer>
 </main>
 
 <dialog id="drawingDialog" class="draw-dialog" aria-labelledby="drawingTitle" aria-describedby="drawingDescription">
@@ -107,7 +97,7 @@
       <div>
         <span class="draw-kicker">Atelier de dessin vectoriel</span>
         <h2 id="drawingTitle">Écris à main levée.</h2>
-        <p id="drawingDescription" class="draw-description">Dessine avec la souris, le doigt ou un stylet. Les croisements sont fusionnés visuellement : aucune surépaisseur ni rupture du dégradé.</p>
+        <p id="drawingDescription" class="draw-description">Dessine avec la souris, le doigt ou un stylet. Une ombre légère souligne les croisements, sans interrompre le dégradé.</p>
       </div>
       <button id="drawingClose" class="draw-cross" type="button" aria-label="Fermer la fenêtre de dessin">×</button>
     </div>
@@ -157,7 +147,6 @@
   </div>
 </dialog>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
-<script src="parisienne-outlines.js?v=2"></script>
 <script>
 'use strict';
 const $=id=>document.getElementById(id);
@@ -167,17 +156,12 @@ let currentSvg='',svgDimensions={width:1000,height:600},lastGeneratedWord='bonjo
 function escapeXML(s){return String(s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]));}
 /* Font outline packs are loaded on first selection and cached. */
 
-const VALID_FONTS=new Set(Array.from($('font').options,o=>o.value));
+const VALID_FONTS=new Set(['pacifico']);
 const fontCache=new Map();
 function getFontData(fontId){
  if(!VALID_FONTS.has(fontId))return Promise.reject(new Error('Police inconnue'));
  if(!fontCache.has(fontId)){
   const loading=(async()=>{
-   if(fontId==='parisienne'){
-    const f=window.FLUID_PARISIENNE_DATA;
-    if(!f)throw new Error('Parisienne indisponible');
-    return {unitsPerEm:f.unitsPerEm,glyphs:f.glyphs,kerning:{},ligatures:{}};
-   }
    const response=await fetch('./font-packs/'+encodeURIComponent(fontId)+'.json?v=1');
    if(!response.ok)throw new Error('Chargement échoué : HTTP '+response.status);
    const pack=await response.json();
@@ -321,9 +305,9 @@ const FLUID_FLOW=(()=>{
   let traveled=0;const defs=[],layers=[];
   // SourceAlpha only: a narrow, translucent shadow falls on earlier strokes
   // beneath the next letter; no shadow around the outside of the word.
-  const offset=Math.max(1.2,thickening*.018);
-  const blur=Math.max(1,thickening*.014);
-  defs.push('<filter id="fluid-cross-shadow" x="-12%" y="-12%" width="124%" height="124%" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceAlpha" stdDeviation="'+f(blur)+'" result="soft"/><feOffset in="soft" dx="'+f(offset*.4)+'" dy="'+f(offset)+'" result="shift"/><feFlood flood-color="#182c37" flood-opacity="0.13" result="shade"/><feComposite in="shade" in2="shift" operator="in"/></filter>');
+  const offset=Math.max(1.2,thickening*.027);
+  const blur=Math.max(1,thickening*.019);
+  defs.push('<filter id="fluid-cross-shadow" x="-12%" y="-12%" width="124%" height="124%" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceAlpha" stdDeviation="'+f(blur)+'" result="soft"/><feOffset in="soft" dx="'+f(offset*.4)+'" dy="'+f(offset)+'" result="shift"/><feFlood flood-color="#182c37" flood-opacity="0.28" result="shade"/><feComposite in="shade" in2="shift" operator="in"/></filter>');
   for(let n=0;n<glyphs.length;n++){
    const g=glyphs[n],flow=flows[n],data=new Uint8ClampedArray(flow.w*flow.h*4);
    for(let i=0;i<flow.progress.length;i++){
@@ -513,6 +497,6 @@ const fontFromUrl=new URLSearchParams(location.search).get('police');
 if(VALID_FONTS.has(fontFromUrl)){state.font=fontFromUrl;$('font').value=fontFromUrl;}
 requestRender();window.addEventListener('resize',maintainLetterProportions);
 </script>
-<script src="signature-studio.js?v=2"></script>
+<script src="signature-studio.js?v=3"></script>
 </body>
 </html>
