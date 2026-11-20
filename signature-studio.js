@@ -271,7 +271,7 @@
     const y1 = maxY + padding;
     const w = Math.max(1, Math.ceil(x1 - x0));
     const h = Math.max(1, Math.ceil(y1 - y0));
-    const colors = ['#6150f7', '#5e7bed', '#53b4cf', '#56dba2', '#55fa78'];
+    const colors = ['#4bf75b', '#59d78c', '#65b4b2', '#6995d3', '#7162f6'];
     const stops = colors.map((color, i) => `<stop offset="${i * 25}%" stop-color="${color}"/>`).join('');
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="${fmt(x0)} ${fmt(y0)} ${w} ${h}" role="img" aria-label="Dessin à main levée"><title>Dessin à main levée — Fluid</title><defs><linearGradient id="fluid-hand-gradient" gradientUnits="userSpaceOnUse" x1="${fmt(x0)}" y1="0" x2="${fmt(x0 + w)}" y2="0">${stops}</linearGradient><mask id="fluid-hand-mask" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="${fmt(x0)}" y="${fmt(y0)}" width="${w}" height="${h}"><g>${paths.join('')}</g></mask></defs><rect x="${fmt(x0)}" y="${fmt(y0)}" width="${w}" height="${h}" fill="url(#fluid-hand-gradient)" mask="url(#fluid-hand-mask)"/></svg>`;
     return { svg, width:w, height:h };
