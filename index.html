@@ -307,7 +307,7 @@ const FLUID_FLOW=(()=>{
   // beneath the next letter; no shadow around the outside of the word.
   const offset=Math.max(1.2,thickening*.027);
   const blur=Math.max(1,thickening*.019);
-  defs.push('<filter id="fluid-cross-shadow" x="-12%" y="-12%" width="124%" height="124%" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceAlpha" stdDeviation="'+f(blur)+'" result="soft"/><feOffset in="soft" dx="'+f(offset*.4)+'" dy="'+f(offset)+'" result="shift"/><feFlood flood-color="#182c37" flood-opacity="0.28" result="shade"/><feComposite in="shade" in2="shift" operator="in"/></filter>');
+  defs.push('<filter id="fluid-cross-shadow" x="-12%" y="-12%" width="124%" height="124%" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceAlpha" stdDeviation="'+f(blur)+'" result="soft"/><feOffset in="soft" dx="'+f(offset*.4)+'" dy="'+f(offset)+'" result="shift"/><feFlood flood-color="#182c37" flood-opacity="0.50" result="shade"/><feComposite in="shade" in2="shift" operator="in"/></filter>');
   for(let n=0;n<glyphs.length;n++){
    const g=glyphs[n],flow=flows[n],data=new Uint8ClampedArray(flow.w*flow.h*4);
    for(let i=0;i<flow.progress.length;i++){
