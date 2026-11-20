@@ -2,7 +2,7 @@
 
 **Site interactif :** https://nguerin23.github.io/fluid-lettering/
 
-Ce dépôt héberge désormais la **charte graphique expérimentale de Plénée-Jugon**, avec 16 rubriques. Le moteur original **Fluid Lettering** est conservé comme atelier intégré à la rubrique **16 / Fluid Lettering**.
+Ce dépôt héberge la **charte graphique expérimentale de Plénée-Jugon**, simplifiée à **5 onglets**, ainsi que le générateur Fluid Lettering intégré à son cinquième onglet.
 
 ## Identité visuelle — inspiration Nuuday 2025
 
@@ -29,13 +29,34 @@ Les dégradés de l'atelier Fluid et des traits manuscrits SVG ont également é
 
 Nuuday a une fonte sur mesure appelée **Nuu Type**. Cette fonte propriétaire n'a pas été incluse dans les fichiers accessibles pour le site. Outfit et Manrope sont des alternatives web courantes, choisies pour une proximité d'ambiance et non pour prétendre reproduire la police originale. Ces deux fontes sont servies via Google Fonts avec des polices système de secours.
 
-Les 16 rubriques de la charte expérimentale restent accessibles et la charte de Plénée-Jugon demeure un **prototype non officiel**.
+La navigation présente désormais **5 rubriques uniquement**. Les anciennes rubriques sont masquées dans l'interface pour préserver la compatibilité des composants existants. La charte de Plénée-Jugon demeure un **prototype non officiel**.
 
-## Navigation
+## Navigation — 5 onglets
 
-- Accueil : `index.html` — interface complète de la charte graphique (identité, logo, couleurs, typographies, pictogrammes, règles, motion et atelier de lettering).
-- Atelier Fluid : `fluid-lettering.html` — version autonome, également accessible dans la charte via `#section-16`.
-- Logo concept : `logo-plenee-jugon-concept.svg` — visuel vectoriel conceptuel.
+1. **Logo** (`#section-2`) : signature typographique, monogramme pixelisé, version claire et inversée, téléchargement du concept SVG.
+2. **Typographies** (`#section-4`) : inspiration du PDF Nuuday 2025, Outfit pour les titres et Manrope pour les textes.
+3. **Couleurs** (`#section-3`) : nuancier de six bleus inspirés de Nuuday, valeurs HEX, RVB et CMJN indicatifs.
+4. **Publications Facebook** (`#section-facebook`) : outil interactif avec quatre modèles au format vertical 4:5.
+5. **Générateur Fluid** (`#section-16`) : atelier Pacifico, lissage et dessin à main levée, export SVG/PNG.
+
+L'ouverture de `index.html` affiche directement l'onglet **Logo**. La navigation et la pagination sont limitées aux cinq rubriques ; les anciens liens d'accueil sont redirigés vers le logo.
+
+## Modèles Facebook 4:5
+
+- **Annonce** — communication institutionnelle.
+- **Événement** — dates, manifestations et rendez-vous.
+- **En images** — photo facultative ajoutée depuis l'ordinateur / téléphone.
+- **Info pratique** — services, consignes et alertes.
+
+Les cinq champs textuels sont modifiables. **Télécharger le PNG 4:5** produit un fichier **1080 × 1350 px** avec une mise en page en bleus et des textes composés en Outfit / Manrope. Le rendu est dessiné localement avec Canvas : aucun contenu n'est téléversé.
+
+Les fichiers dédiés sont `facebook-posts.js` (rendu Canvas, personnalisation, export PNG) et `facebook-posts.css` (interface responsive).
+
+## Fichiers
+
+- `index.html` — charte interactive, cinq onglets, nuancier, logo, typo et module Facebook.
+- `fluid-lettering.html` — éditeur de lettering autonome, également embarqué dans le cinquième onglet.
+- `logo-plenee-jugon-concept.svg` — monogramme conceptuel vectoriel (non officiel).
 
 ## Fluid Lettering
 
