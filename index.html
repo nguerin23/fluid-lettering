@@ -131,9 +131,9 @@
     </div>
     <div class="draw-controls">
       <div class="draw-control">
-        <div class="draw-control-header"><label for="drawingSmooth">Lisser</label><output id="drawingSmoothValue" for="drawingSmooth">45 %</output></div>
-        <input id="drawingSmooth" type="range" min="0" max="100" step="1" value="45">
-        <div class="draw-ends"><span>Tracé brut</span><span>Très lisse</span></div>
+        <div class="draw-control-header"><label for="drawingSmooth">Lisser</label><output id="drawingSmoothValue" for="drawingSmooth">120 %</output></div>
+        <input id="drawingSmooth" type="range" min="0" max="400" step="1" value="120">
+        <div class="draw-ends"><span>Brut · 0 %</span><span>Ultra-lisse · 400 %</span></div>
       </div>
       <div class="draw-control">
         <div class="draw-control-header"><label for="drawingWidth">Épaisseur du trait</label><output id="drawingWidthValue" for="drawingWidth">18 px</output></div>
@@ -141,7 +141,7 @@
         <div class="draw-ends"><span>1 px · fin</span><span>90 px · épais</span></div>
       </div>
     </div>
-    <p class="draw-tip">Modifie les curseurs même après avoir dessiné. Le SVG conserve les chemins centraux et réunit les traits dans un masque pour éviter les superpositions visibles.</p>
+    <p class="draw-tip">Pousse « Lisser » jusqu’à 400 % pour obtenir des courbes extrêmement fluides. Un lissage extrême peut arrondir les petites boucles. Les chemins centraux SVG restent modifiables et les superpositions sont fusionnées visuellement.</p>
     <div class="draw-footer">
       <div class="draw-button-group">
         <button id="drawingUndo" type="button" class="btn" disabled>↶ Annuler le trait</button>
