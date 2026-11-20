@@ -22,6 +22,17 @@
   const imageField = $('fbImage');
   const removeImage = $('fbRemovePhoto');
   let current = 'annonce', uploaded = null, queued = 0;
+  // Official supplied logo, recolored in monochrome (same-origin SVG images).
+  const logoImages={navy:new Image(),white:new Image()};
+  for(const [tone,file] of [
+    ['navy','logo-plenee-jugon-monochrome-bleu-nuit.svg'],
+    ['white','logo-plenee-jugon-monochrome-blanc.svg']
+  ]) {
+    logoImages[tone].addEventListener('load',()=>schedule());
+    logoImages[tone].addEventListener('error',()=>{status.textContent='Le logo n’a pas pu être chargé.';});
+    logoImages[tone].src=file;
+  }
+
 
   function setFont(size,weight='500',family='Outfit') {
     ctx.font = weight+' '+size+'px '+family+', Arial, sans-serif';
@@ -75,16 +86,17 @@
     ctx.strokeStyle=color;ctx.lineWidth=thickness;ctx.lineCap='round';ctx.stroke();
   }
   function wordmark(x,y,color,small=false){
-    ctx.save();
-    const unit=small?13:16;
-    for(let row=0;row<3;row++) for(let col=0;col<3;col++) {
-      if((row===0&&col===2)||(row===2&&col===0))continue;
-      rect(x+col*(unit+3),y+row*(unit+3),unit,unit,(row+col)%3===0?AZURE:color);
+    const img=logoImages[color===WHITE?'white':'navy'];
+    const w=small?235:350, h=w*88/246;
+    if(img.complete && img.naturalWidth>0) {
+      ctx.drawImage(img,x,y,w,h);
+    }else{
+      // Visible text fallback until the official vector image is loaded.
+      setFont(32,'600','Outfit');
+      ctx.textBaseline='top';
+      ctx.fillStyle=color;
+      ctx.fillText('Plénée-Jugon',x,y+8);
     }
-    ctx.fillStyle=color;
-    setFont(small?26:31,'600','Outfit');ctx.textBaseline='top';
-    ctx.fillText('PLÉNÉE — JUGON',x+(unit+3)*3+14,y+(small?5:9));
-    ctx.restore();
   }
   function eyebrow(value,x,y,color=AZURE){
     setFont(25,'700','Manrope');ctx.fillStyle=color;ctx.textBaseline='top';
