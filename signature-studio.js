@@ -34,7 +34,6 @@
   const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
   const fmt = x => Number(x.toFixed(2)).toString();
   const strokeWidth = () => Number(widthInput.value);
-  const smoothFactor = () => Number(smooth.value) / 100;
 
   function resizeSurface() {
     if (!dialog.open) return;
@@ -69,36 +68,97 @@
     if (dx * dx + dy * dy >= .75 * .75) active.push(point);
   }
 
-  function smoothPoints(points) {
-    const strength = smoothFactor();
-    const pts = points.map(p => ({ x: p.x * surfaceWidth, y: p.y * surfaceHeight }));
-    if (strength < .01 || pts.length < 3) return pts;
-    // Moyenne locale progressive : les extrémités restent fixes.
-    const span = Math.max(1, Math.round(strength * 5));
-    return pts.map((p, i) => {
-      if (i === 0 || i === pts.length - 1) return p;
-      let weight = 0, x = 0, y = 0;
-      for (let j = Math.max(0, i - span); j <= Math.min(pts.length - 1, i + span); j++) {
-        const w = span + 1 - Math.abs(j - i);
-        x += pts[j].x * w;
-        y += pts[j].y * w;
-        weight += w;
+  // Lissage indépendant de la fréquence des événements tactiles / souris :
+  // rééchantillonnage à distance constante, plusieurs passes de filtre spatial
+  // puis simplification des points de contrôle. À 400 %, le filtrage est extrême.
+  function resampleByDistance(points) {
+    if (points.length < 3) return points;
+    let length = 0;
+    for (let i = 1; i < points.length; i++) {
+      length += Math.hypot(points[i].x - points[i-1].x, points[i].y - points[i-1].y);
+    }
+    if (length < 2) return points;
+    const step = Math.max(2.4, length / 1400);
+    const result = [points[0]];
+    let walked = 0, target = step;
+    for (let i = 1; i < points.length && result.length < 1400; i++) {
+      const a = points[i-1], b = points[i];
+      const segment = Math.hypot(b.x - a.x, b.y - a.y);
+      if (segment < 0.0001) continue;
+      while (target < walked + segment && result.length < 1399) {
+        const t = (target - walked) / segment;
+        result.push({x:a.x + (b.x-a.x)*t, y:a.y + (b.y-a.y)*t});
+        target += step;
       }
-      const k = strength * .87;
-      return { x: p.x * (1 - k) + x / weight * k, y: p.y * (1 - k) + y / weight * k };
-    });
+      walked += segment;
+    }
+    const last = points[points.length-1];
+    if (Math.hypot(last.x-result[result.length-1].x, last.y-result[result.length-1].y)>0.001) result.push(last);
+    return result;
+  }
+
+  // Douglas-Peucker : moins de nœuds SVG lorsque le lissage devient très fort.
+  // L'algorithme garde toujours les deux extrémités du geste.
+  function simplifyPoints(points, tolerance) {
+    if (points.length < 3 || tolerance <= 0) return points;
+    const keep = new Uint8Array(points.length);
+    keep[0] = keep[points.length-1] = 1;
+    const stack = [[0, points.length-1]];
+    const threshold = tolerance*tolerance;
+    while (stack.length) {
+      const [start,end] = stack.pop();
+      const a=points[start],b=points[end];
+      const vx=b.x-a.x,vy=b.y-a.y, len2=vx*vx+vy*vy;
+      let best=threshold,index=-1;
+      for (let i=start+1;i<end;i++) {
+        const p=points[i];
+        const t=len2>0?clamp(((p.x-a.x)*vx+(p.y-a.y)*vy)/len2,0,1):0;
+        const dx=p.x-(a.x+t*vx),dy=p.y-(a.y+t*vy);
+        const d2=dx*dx+dy*dy;
+        if (d2>best){best=d2;index=i;}
+      }
+      if (index!==-1){keep[index]=1;stack.push([start,index],[index,end]);}
+    }
+    return points.filter((_,i)=>keep[i]);
+  }
+
+  function smoothPoints(points) {
+    const level = clamp(Number(smooth.value),0,400);
+    const originals = points.map(p => ({x:p.x*surfaceWidth, y:p.y*surfaceHeight}));
+    if (level===0 || originals.length<3) return originals;
+    let result=resampleByDistance(originals);
+    const strength=level/400;
+    const passes=1+Math.round(7*Math.pow(strength,1.4));
+    const radiusPx=1+42*Math.pow(strength,1.65);
+    const sampleStep=Math.max(2.4,result.reduce((sum,p,i)=>i?sum+Math.hypot(p.x-result[i-1].x,p.y-result[i-1].y):0,0)/Math.max(1,result.length-1));
+    const radius=Math.max(1,Math.round(radiusPx/sampleStep));
+    const blend=Math.min(1,level/80);
+    const first=result[0],last=result[result.length-1];
+    for (let pass=0;pass<passes;pass++) {
+      const sx=new Float64Array(result.length+1),sy=new Float64Array(result.length+1);
+      for (let i=0;i<result.length;i++){sx[i+1]=sx[i]+result[i].x;sy[i+1]=sy[i]+result[i].y;}
+      result=result.map((p,i)=>{
+        if (i===0) return first;
+        if (i===result.length-1) return last;
+        const left=Math.max(0,i-radius),right=Math.min(result.length,i+radius+1),num=right-left;
+        return {x:p.x*(1-blend)+(sx[right]-sx[left])/num*blend,
+                y:p.y*(1-blend)+(sy[right]-sy[left])/num*blend};
+      });
+    }
+    const tolerance=0.15+13*Math.pow(strength,2.15);
+    return simplifyPoints(result,tolerance);
   }
 
   function pathFromPoints(pts) {
     if (!pts.length) return '';
     let path = `M ${fmt(pts[0].x)} ${fmt(pts[0].y)}`;
     if (pts.length === 1) return path;
-    if (smoothFactor() < .01 || pts.length < 3) {
+    if (Number(smooth.value) === 0 || pts.length < 3) {
       for (let i = 1; i < pts.length; i++) path += ` L ${fmt(pts[i].x)} ${fmt(pts[i].y)}`;
       return path;
     }
     // Courbe de Catmull-Rom convertie en Bézier cubique.
-    const tension = smoothFactor() / 6;
+    const tension = Math.min(1, Number(smooth.value) / 100) / 6;
     for (let i = 0; i < pts.length - 1; i++) {
       const p0 = pts[Math.max(0, i - 1)];
       const p1 = pts[i];
