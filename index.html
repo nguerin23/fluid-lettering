@@ -74,7 +74,7 @@
   <section class="card" aria-label="Éditeur de lettering">
     <div class="canvas-top"><span class="label-title">Ton lettrage</span><span id="liveStatus" class="live" aria-live="polite">Aperçu en direct</span></div>
     <div class="stage" id="stage"><div id="preview" role="img" aria-label="Lettrage vectoriel"><span class="empty">Chargement du tracé…</span></div></div>
-    <div class="stage-bottom"><span class="hint"><span id="fontHint">Police Parisienne · dégradé continu · SVG vectoriel</span></span><div class="actions">
+    <div class="stage-bottom"><span class="hint"><span id="fontHint">Police Pacifico · dégradé suivant les courbes · SVG vectoriel</span></span><div class="actions">
       <button id="openDrawing" class="btn" type="button" aria-haspopup="dialog" aria-controls="drawingDialog">✎ Dessiner</button>
       <button id="downloadPNG" class="btn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>PNG</button>
       <button id="downloadSVG" class="btn primary" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>SVG</button>
@@ -89,7 +89,7 @@
           <option value="cetary">Cetary</option>
           <option value="alucky">Alucky</option>
           <option value="my-ugly-handwritting">My Ugly Handwritting</option>
-          <option value="pacifico">Pacifico</option>
+          <option value="pacifico" selected>Pacifico</option>
           <option value="gruenewald-va">Gruenewald VA</option>
           <option value="banteng-story">Banteng Story</option>
           <option value="stevilla">Stevilla Script</option>
@@ -162,7 +162,7 @@
 'use strict';
 const $=id=>document.getElementById(id);
 const palettes={jello:['#4bf75b','#59d78c','#65b4b2','#6995d3','#7162f6']};
-const state={word:'bonjour',font:'parisienne',freehand:null,thickness:255,fusion:-115,slant:0,palette:'jello',transparent:true,seed:11};
+const state={word:'bonjour',font:'pacifico',freehand:null,thickness:255,fusion:-115,slant:0,palette:'jello',transparent:true,seed:11};
 let currentSvg='',svgDimensions={width:1000,height:600},lastGeneratedWord='bonjour',pendingFrame=0,toastTimer=0,renderRevision=0;
 function escapeXML(s){return String(s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]));}
 /* Font outline packs are loaded on first selection and cached. */
@@ -458,7 +458,7 @@ async function render(revision){
  try{
    const url=new URL(location.href);
    if(word)url.searchParams.set('mot',word);else url.searchParams.delete('mot');
-   if(fontId==='parisienne')url.searchParams.delete('police');else url.searchParams.set('police',fontId);
+   if(fontId==='pacifico')url.searchParams.delete('police');else url.searchParams.set('police',fontId);
    history.replaceState(null,'',url.toString());
  }catch(e){}
 }
@@ -474,7 +474,7 @@ $('word').addEventListener('input',e=>{state.freehand=null;state.word=e.target.v
 $('exampleMake').addEventListener('click',()=>{
  state.freehand=null;
  state.word='Make';$('word').value='Make';
- state.font='parisienne';$('font').value='parisienne';
+ state.font='pacifico';$('font').value='pacifico';
  state.thickness=255;$('thickness').value='255';$('thicknessValue').textContent='255';
  state.fusion=-115;$('spacing').value='-115';$('spacingValue').textContent='-115';
  requestRender();
