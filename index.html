@@ -319,6 +319,11 @@ const FLUID_FLOW=(()=>{
    for(let k=0;k<3;k++)lut[i*3+k]=Math.round(rgb[j][k]*(1-t)+rgb[j+1][k]*t);
   }
   let traveled=0;const defs=[],layers=[];
+  // SourceAlpha only: a narrow, translucent shadow falls on earlier strokes
+  // beneath the next letter; no shadow around the outside of the word.
+  const offset=Math.max(1.2,thickening*.018);
+  const blur=Math.max(1,thickening*.014);
+  defs.push('<filter id="fluid-cross-shadow" x="-12%" y="-12%" width="124%" height="124%" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceAlpha" stdDeviation="'+f(blur)+'" result="soft"/><feOffset in="soft" dx="'+f(offset*.4)+'" dy="'+f(offset)+'" result="shift"/><feFlood flood-color="#182c37" flood-opacity="0.13" result="shade"/><feComposite in="shade" in2="shift" operator="in"/></filter>');
   for(let n=0;n<glyphs.length;n++){
    const g=glyphs[n],flow=flows[n],data=new Uint8ClampedArray(flow.w*flow.h*4);
    for(let i=0;i<flow.progress.length;i++){
@@ -329,7 +334,18 @@ const FLUID_FLOW=(()=>{
    canvas.width=flow.w;canvas.height=flow.h;
    canvas.getContext('2d').putImageData(new ImageData(data,flow.w,flow.h),0,0);
    const mid='fluid-follow-mask-'+n;
-   defs.push('<mask id="'+mid+'" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="'+f(box.left)+'" y="'+f(box.top)+'" width="'+f(box.width)+'" height="'+f(box.height)+'"><g transform="scale(1,-1)"><g transform="translate('+f(g.x)+' 0)"><path d="'+g.d+'" fill="white" stroke="white" stroke-width="'+f(thickening)+'" stroke-linecap="round" stroke-linejoin="round" paint-order="stroke fill" fill-rule="nonzero"/></g></g></mask>');
+   const shapeId='fluid-cross-shape-'+n;
+   const bounds='x="'+f(box.left)+'" y="'+f(box.top)+'" width="'+f(box.width)+'" height="'+f(box.height)+'"';
+   // Reuse vector silhouettes so the prior-ink mask stays small and precise.
+   defs.push('<g id="'+shapeId+'" transform="scale(1,-1)"><g transform="translate('+f(g.x)+' 0)"><path d="'+g.d+'" fill="white" stroke="white" stroke-width="'+f(thickening)+'" stroke-linecap="round" stroke-linejoin="round" paint-order="stroke fill" fill-rule="nonzero"/></g></g>');
+   defs.push('<mask id="'+mid+'" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" '+bounds+'><use href="#'+shapeId+'"/></mask>');
+   if(n>0){
+    const underneath='fluid-previous-ink-'+n;
+    const uses=Array.from({length:n},(_,j)=>'<use href="#fluid-cross-shape-'+j+'"/>').join('');
+    defs.push('<mask id="'+underneath+'" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" '+bounds+'>'+uses+'</mask>');
+    // Draw only the shadow landing on already painted glyphs.
+    layers.push('<g mask="url(#'+underneath+')"><use href="#'+shapeId+'" filter="url(#fluid-cross-shadow)"/></g>');
+   }
    const x=g.x+g.bounds.x-flow.pad/flow.scale;
    const y=-(g.bounds.y+g.bounds.height)-flow.pad/flow.scale;
    layers.push('<image x="'+f(x)+'" y="'+f(y)+'" width="'+f(flow.w/flow.scale)+'" height="'+f(flow.h/flow.scale)+'" preserveAspectRatio="none" href="'+canvas.toDataURL('image/png')+'" mask="url(#'+mid+')"/>');
