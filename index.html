@@ -192,6 +192,153 @@ function getFontData(fontId){
  }
  return fontCache.get(fontId);
 }
+
+/* Dégradé curviligne : trajectoire approximative calculée sur l'axe médian
+   de chaque glyphe (les polices livrent des contours, pas des traits de plume).
+   Le masque de la lettre reste un authentique tracé SVG vectoriel. */
+const FLUID_FLOW=(()=>{
+ const cache=new Map();
+ const dx=[1,-1,0,0,1,-1,1,-1],dy=[0,0,1,-1,1,1,-1,-1];
+ const clip=(n,a,b)=>Math.min(b,Math.max(a,n));
+ const f=n=>Number(n.toFixed(2));
+ function centerline(g,units){
+  const cacheKey=units+'|'+g.key;
+  if(cache.has(cacheKey))return cache.get(cacheKey);
+  const b=g.bounds,scale=Math.min(.29*2048/units,245/Math.max(b.width,b.height,1));
+  const pad=Math.ceil(245*units/2048*scale)+6;
+  const w=Math.max(8,Math.ceil(b.width*scale)+2*pad);
+  const h=Math.max(8,Math.ceil(b.height*scale)+2*pad);
+  const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+  const ctx=canvas.getContext('2d',{willReadFrequently:true});
+  if(!ctx||typeof Path2D==='undefined')throw Error('Impossible de suivre le tracé');
+  ctx.setTransform(scale,0,0,-scale,pad-b.x*scale,pad+(b.y+b.height)*scale);
+  ctx.fillStyle='#fff';ctx.fill(new Path2D(g.d));
+  const rgba=ctx.getImageData(0,0,w,h).data;
+  const ink=new Uint8Array(w*h),original=[];
+  for(let y=1;y<h-1;y++)for(let x=1;x<w-1;x++){
+   const i=y*w+x; if(rgba[4*i+3]>110){ink[i]=1;original.push(i);}
+  }
+  // Amincissement de Zhang–Suen : le trait devient une ligne centrale.
+  for(let iteration=0;iteration<85;iteration++){
+   let changed=0;
+   for(let phase=0;phase<2;phase++){
+    const remove=[];
+    for(const i of original){
+     if(!ink[i])continue;
+     const n=[ink[i-w],ink[i-w+1],ink[i+1],ink[i+w+1],
+              ink[i+w],ink[i+w-1],ink[i-1],ink[i-w-1]];
+     const count=n[0]+n[1]+n[2]+n[3]+n[4]+n[5]+n[6]+n[7];
+     if(count<2||count>6)continue;
+     let turns=0;for(let k=0;k<8;k++)if(!n[k]&&n[(k+1)%8])turns++;
+     if(turns!==1)continue;
+     if(phase===0?(n[0]&&n[2]&&n[4])||(n[2]&&n[4]&&n[6])
+                 :(n[0]&&n[2]&&n[6])||(n[0]&&n[4]&&n[6]))continue;
+     remove.push(i);
+    }
+    for(const i of remove)ink[i]=0;
+    changed+=remove.length;
+   }
+   if(!changed)break;
+  }
+  const skeleton=original.filter(i=>ink[i]);
+  const seen=new Uint8Array(w*h),queue=new Int32Array(w*h);
+  const groups=[];
+  // Décompose les points, boucles et lettres non attachées.
+  for(const first of skeleton){
+   if(seen[first])continue;
+   seen[first]=1;queue[0]=first;let head=0,tail=1;
+   const items=[];let start=first,minX=w,minY=h;
+   while(head<tail){
+    const i=queue[head++],y=(i/w)|0,x=i-y*w;
+    items.push(i);
+    if(x<minX||(x===minX&&y<minY)){minX=x;minY=y;start=i;}
+    for(let d=0;d<8;d++){
+     const xx=x+dx[d],yy=y+dy[d];if(xx<1||yy<1||xx>=w-1||yy>=h-1)continue;
+     const j=yy*w+xx;if(ink[j]&&!seen[j]){seen[j]=1;queue[tail++]=j;}
+    }
+   }
+   groups.push({items,start,minX});
+  }
+  groups.sort((a,b)=>a.minX-b.minX);
+  const progress=new Float32Array(w*h),dist=new Int32Array(w*h);
+  let length=0;
+  for(const group of groups){
+   for(const i of group.items)dist[i]=-1;
+   queue[0]=group.start;let head=0,tail=1,max=0;dist[group.start]=0;
+   while(head<tail){
+    const i=queue[head++],y=(i/w)|0,x=i-y*w;
+    max=Math.max(max,dist[i]);
+    for(let d=0;d<8;d++){
+     const xx=x+dx[d],yy=y+dy[d];if(xx<1||yy<1||xx>=w-1||yy>=h-1)continue;
+     const j=yy*w+xx;if(ink[j]&&dist[j]<0){dist[j]=dist[i]+1;queue[tail++]=j;}
+    }
+   }
+   for(const i of group.items)progress[i]=length+Math.max(0,dist[i]);
+   length+=Math.max(max,2)+5;
+  }
+  // La même couleur est propagée perpendiculairement au trait.
+  const marked=new Uint8Array(w*h);let head=0,tail=0;
+  for(const i of skeleton){marked[i]=1;queue[tail++]=i;}
+  while(head<tail){
+   const i=queue[head++],y=(i/w)|0,x=i-y*w;
+   for(let d=0;d<8;d++){
+    const xx=x+dx[d],yy=y+dy[d];if(xx<0||yy<0||xx>=w||yy>=h)continue;
+    const j=yy*w+xx;if(!marked[j]){
+     marked[j]=1;progress[j]=progress[i];queue[tail++]=j;
+    }
+   }
+  }
+  if(!skeleton.length){
+   length=w;for(let y=0;y<h;y++)for(let x=0;x<w;x++)progress[y*w+x]=x;
+  }
+  // Lisse les jonctions et les embranchements.
+  for(let pass=0;pass<4;pass++){
+   const next=new Float32Array(w*h);
+   for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+    const i=y*w+x;let sum=progress[i]*4,n=4;
+    if(x>0){sum+=progress[i-1];n++;}
+    if(x<w-1){sum+=progress[i+1];n++;}
+    if(y>0){sum+=progress[i-w];n++;}
+    if(y<h-1){sum+=progress[i+w];n++;}
+    next[i]=sum/n;
+   }
+   progress.set(next);
+  }
+  const result={w,h,pad,scale,progress,length:Math.max(1,length)};
+  cache.set(cacheKey,result);
+  return result;
+ }
+ function render(glyphs,colors,thickening,box,units){
+  const flows=glyphs.map(g=>centerline(g,units));
+  const full=flows.reduce((sum,g)=>sum+g.length,0);
+  const rgb=colors.map(h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)));
+  const lut=new Uint8Array(4096*3);
+  for(let i=0;i<4096;i++){
+   const q=i/4095*(rgb.length-1),j=Math.min(rgb.length-2,Math.floor(q)),t=q-j;
+   for(let k=0;k<3;k++)lut[i*3+k]=Math.round(rgb[j][k]*(1-t)+rgb[j+1][k]*t);
+  }
+  let traveled=0;const defs=[],layers=[];
+  for(let n=0;n<glyphs.length;n++){
+   const g=glyphs[n],flow=flows[n],data=new Uint8ClampedArray(flow.w*flow.h*4);
+   for(let i=0;i<flow.progress.length;i++){
+    const p=Math.round(clip((traveled+flow.progress[i])/Math.max(1,full),0,1)*4095)*3;
+    data[i*4]=lut[p];data[i*4+1]=lut[p+1];data[i*4+2]=lut[p+2];data[i*4+3]=255;
+   }
+   const canvas=document.createElement('canvas');
+   canvas.width=flow.w;canvas.height=flow.h;
+   canvas.getContext('2d').putImageData(new ImageData(data,flow.w,flow.h),0,0);
+   const mid='fluid-follow-mask-'+n;
+   defs.push('<mask id="'+mid+'" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="'+f(box.left)+'" y="'+f(box.top)+'" width="'+f(box.width)+'" height="'+f(box.height)+'"><g transform="scale(1,-1)"><g transform="translate('+f(g.x)+' 0)"><path d="'+g.d+'" fill="white" stroke="white" stroke-width="'+f(thickening)+'" stroke-linecap="round" stroke-linejoin="round" paint-order="stroke fill" fill-rule="nonzero"/></g></g></mask>');
+   const x=g.x+g.bounds.x-flow.pad/flow.scale;
+   const y=-(g.bounds.y+g.bounds.height)-flow.pad/flow.scale;
+   layers.push('<image x="'+f(x)+'" y="'+f(y)+'" width="'+f(flow.w/flow.scale)+'" height="'+f(flow.h/flow.scale)+'" preserveAspectRatio="none" href="'+canvas.toDataURL('image/png')+'" mask="url(#'+mid+')"/>');
+   traveled+=flow.length;
+  }
+  return {defs:defs.join(''),layers:layers.join('')};
+ }
+ return {render};
+})();
+
 function getHandwrittenSVG(font){
   const fontName=$('font').selectedOptions[0].textContent;
   const unitScale=font.unitsPerEm/2048;
@@ -213,7 +360,7 @@ function getHandwrittenSVG(font){
     const w=Array.isArray(glyph)?glyph[0]:glyph.w;
     const d=Array.isArray(glyph)?glyph[1]:glyph.d;
     if(previous&&font.kerning[previous+token])cursor+=font.kerning[previous+token];
-    if(d)glyphs.push({d:d,x:cursor});
+    if(d)glyphs.push({d:d,x:cursor,key:state.font+':'+token});
     cursor+=w+state.fusion*unitScale;
     previous=token;
     i+=count;
@@ -230,6 +377,7 @@ function getHandwrittenSVG(font){
       path.setAttribute('d',glyph.d);
       measure.appendChild(path);
       const bounds=path.getBBox();
+      glyph.bounds={x:bounds.x,y:bounds.y,width:bounds.width,height:bounds.height};
       minX=Math.min(minX,bounds.x+glyph.x);
       maxX=Math.max(maxX,bounds.x+bounds.width+glyph.x);
       minY=Math.min(minY,bounds.y);
@@ -245,10 +393,16 @@ function getHandwrittenSVG(font){
   const colors=palettes[state.palette];
   const span=Math.max(1,maxX-minX);
   const stops=colors.map((color,i)=>`<stop offset="${fmt(100*i/(colors.length-1))}%" stop-color="${color}"/>`).join('');
-  // Chaque glyphe est peint en blanc dans UN masque : pas de coutures ni
-  // de surépaisseur aux croisements et un seul dégradé sur le mot entier.
-  const ink=glyphs.map(g=>`<g transform="translate(${fmt(g.x)} 0)"><path d="${g.d}" fill="white" stroke="white" stroke-width="${fmt(thickening)}" stroke-linecap="round" stroke-linejoin="round" paint-order="stroke fill" fill-rule="nonzero"/></g>`).join('');
-  return `<svg xmlns="${NS}" width="${Math.ceil(width)}" height="${Math.ceil(height)}" viewBox="${fmt(left)} ${fmt(top)} ${fmt(width)} ${fmt(height)}" role="img" aria-label="${escapeXML(word)} en ${escapeXML(fontName)}"><title>${escapeXML(word)} — ${escapeXML(fontName)}</title><desc>Lettrage manuscrit épais aux lettres superposées, dégradé vert turquoise bleu violet continu.</desc><defs><linearGradient id="fluid-word-gradient" gradientUnits="userSpaceOnUse" x1="${fmt(minX)}" y1="0" x2="${fmt(minX+span)}" y2="0">${stops}</linearGradient><mask id="fluid-word-mask" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" mask-type="alpha" x="${fmt(left)}" y="${fmt(top)}" width="${fmt(width)}" height="${fmt(height)}"><g transform="scale(1,-1)">${ink}</g></mask></defs><rect x="${fmt(left)}" y="${fmt(top)}" width="${fmt(width)}" height="${fmt(height)}" fill="url(#fluid-word-gradient)" mask="url(#fluid-word-mask)"/></svg>`;
+  // Le dégradé suit désormais la distance parcourue le long de la
+  // ligne centrale de chaque caractère, pas la coordonnée X du mot.
+  try{
+    const ink=FLUID_FLOW.render(glyphs,colors,thickening,{left,top,width,height},font.unitsPerEm);
+    return '<svg xmlns="'+NS+'" width="'+Math.ceil(width)+'" height="'+Math.ceil(height)+'" viewBox="'+fmt(left)+' '+fmt(top)+' '+fmt(width)+' '+fmt(height)+'" role="img" aria-label="'+escapeXML(word)+' en '+escapeXML(fontName)+'"><title>'+escapeXML(word)+' — '+escapeXML(fontName)+'</title><desc>Dégradé de couleur suivant le parcours incurvé de chaque trait.</desc><defs>'+ink.defs+'</defs>'+ink.layers+'</svg>';
+  }catch(error){
+    console.warn('Mode courbe indisponible : retour au dégradé linéaire',error);
+    const ink=glyphs.map(g=>'<g transform="translate('+fmt(g.x)+' 0)"><path d="'+g.d+'" fill="white" stroke="white" stroke-width="'+fmt(thickening)+'" stroke-linecap="round" stroke-linejoin="round" paint-order="stroke fill"/></g>').join('');
+    return '<svg xmlns="'+NS+'" width="'+Math.ceil(width)+'" height="'+Math.ceil(height)+'" viewBox="'+fmt(left)+' '+fmt(top)+' '+fmt(width)+' '+fmt(height)+'"><defs><linearGradient id="fluid-fallback" gradientUnits="userSpaceOnUse" x1="'+fmt(minX)+'" x2="'+fmt(maxX)+'">'+stops+'</linearGradient><mask id="fluid-ink"><g transform="scale(1,-1)">'+ink+'</g></mask></defs><rect x="'+fmt(left)+'" y="'+fmt(top)+'" width="'+fmt(width)+'" height="'+fmt(height)+'" fill="url(#fluid-fallback)" mask="url(#fluid-ink)"/></svg>';
+  }
 }
 
 function maintainLetterProportions(){
