@@ -2,7 +2,7 @@
 
 **Site :** https://nguerin23.github.io/fluid-lettering/
 
-Fluid est un éditeur de lettrage manuscrit avec 11 polices au choix, un dégradé horizontal continu et des exports SVG/PNG.
+Fluid est un éditeur de lettrage manuscrit avec 11 polices au choix **et un studio de dessin libre au doigt, à la souris ou au stylet**, un dégradé horizontal continu et des exports SVG/PNG.
 
 ## Polices disponibles
 
@@ -31,6 +31,25 @@ Les **10 nouvelles polices** ont été construites à partir des archives fourni
 - Données de contours vectoriels encodées dans `font-packs/*.json` (zlib + base64). Chargement **à la demande**, mise en cache pour éviter de ralentir le chargement initial.
 - Les courbes Bézier sont conservées (quadratiques ou cubiques suivant le fichier source), et le moteur inclut une prise en charge de base de l'espacement typographique et des ligatures courantes disponibles dans les fichiers.
 - Il s'agit de **contours de lettres**, pas de courbes centrales « single-line » ; une animation authentique de stylo n'est pas proposée.
+
+## Dessin à main levée
+
+Cliquer sur **« ✎ Dessiner »** sous l'aperçu pour ouvrir une fenêtre de dessin intégrée :
+
+- Dessiner librement plusieurs traits avec la souris, un stylet ou un écran tactile (événements Pointer Events, capture du pointeur et points coalescés).
+- **Lisser** : curseur de 0 à 100 % ; filtre local contre les tremblements puis interpolation de Catmull-Rom vers des courbes SVG Bézier cubiques.
+- **Épaisseur** : curseur de 1 à 90 px, appliqué immédiatement aux traits existants.
+- **Annuler le trait** : retire le dernier coup de crayon ; **Tout effacer** repart de zéro.
+- **Exporter SVG** : télécharge un document vectoriel autonome composé de chemins centraux.
+- **Utiliser ce dessin** : injecte le dessin dans l'aperçu principal ; les boutons SVG/PNG habituels fonctionnent alors avec le dessin manuel.
+- Tout changement ultérieur de texte, police, épaisseur typographique ou espacement ramène au mode « police ».
+
+**Croisements et superpositions** : les traits sont dessinés en blanc dans un *masque SVG unique*. Un seul rectangle reçoit le dégradé horizontal et ce masque. Cela évite les aplats plus foncés ou les ruptures de couleur aux endroits où un trait repasse sur lui-même, y compris entre plusieurs traits. Il s'agit d'une **fusion visuelle** par masque, non d'une opération booléenne qui convertirait toute la forme en un unique contour SVG fermé. Les chemins centraux restent accessibles dans le masque. Le dessin n'est pas enregistré dans l'URL ou le stockage local : exporter le SVG pour le conserver.
+
+### Fichiers du studio
+
+- `signature-studio.js` — acquisition des points, lissage, chemins SVG, masque, commandes et export.
+- `signature-studio.css` — fenêtre et disposition responsive.
 
 ## Structure
 
