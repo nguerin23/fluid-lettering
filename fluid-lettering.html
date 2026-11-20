@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f8f5">
+<meta name="description" content="Fluid Lettering : atelier de lettrage Pacifico, dégradé suivant le tracé et export SVG/PNG.">
+<title>Fluid — Atelier de lettering</title>
+<link rel="stylesheet" href="signature-studio.css?v=1">
+<style>
+  :root { color-scheme:light; --ink:#1c2923;--muted:#73817a;--line:#e4e9e5;--paper:#f7f8f5;--purple:#6150f7; }
+  * {box-sizing:border-box}
+  html {font:16px/1.5 Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--paper);color:var(--ink)}
+  body {margin:0;min-width:320px}
+  button,input {font:inherit}
+  button {cursor:pointer}
+  button:focus-visible,input:focus-visible,select:focus-visible {outline:3px solid #8a7df6;outline-offset:3px}
+  .wrap {max-width:1180px;margin:0 auto;padding:0 27px}
+  header {border-bottom:1px solid var(--line);background:#ffffffa8}
+  .head {min-height:78px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+  .brand {font-weight:850;font-size:27px;letter-spacing:-1.9px;text-decoration:none;color:var(--ink);display:flex;align-items:center;gap:9px}
+  .brand-mark {display:grid;place-items:center;width:30px;height:30px;border-radius:8px;font-size:19px;line-height:1;color:#fff;background:linear-gradient(145deg,#6452fa,#4bdab6,#57f979);font-weight:850}
+  .head-note {font-size:11px;letter-spacing:1.8px;color:#87958c;font-weight:750;text-transform:uppercase}
+  main {padding-top:45px;padding-bottom:50px}
+  .heading {display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:24px}
+  .eyebrow {color:#7864e7;text-transform:uppercase;font-size:11px;letter-spacing:2px;font-weight:820}
+  h1 {font-size:clamp(30px,4.5vw,52px);line-height:1.06;letter-spacing:-2.3px;margin:9px 0 0;font-weight:850}
+  .subtitle {max-width:270px;font-size:13px;line-height:1.6;color:var(--muted);margin:0 0 4px}
+  .card {border-radius:19px;background:#fff;border:1px solid var(--line);overflow:hidden}
+  .canvas-top {height:54px;padding:0 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:15px;align-items:center}
+  .label-title {font-size:12px;font-weight:850}
+  .live {font-size:11px;font-weight:780;color:#34875f;letter-spacing:.5px;display:flex;align-items:center;gap:8px}
+  .live::before {content:'';background:#46db8c;width:7px;height:7px;border-radius:50%}
+  .stage {height:365px;display:flex;align-items:center;justify-content:flex-start;padding:28px 32px 36px;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;scrollbar-color:#b8b3de #fafafa;overscroll-behavior-x:contain;background:#fff}
+  #preview {flex:0 0 auto;margin-inline:auto;width:max-content;line-height:0}
+  #preview svg {display:block;max-width:none;max-height:none;overflow:visible}
+  .empty {color:#9ca9a0;font-size:16px;line-height:1.4}
+  .text-link {border:0;background:transparent;color:#6252ef;padding:0;font:inherit;font-weight:850;text-decoration:underline;text-underline-offset:3px}
+  .stage-bottom {border-top:1px solid var(--line);padding:17px 21px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .hint {font-size:11px;color:var(--muted);font-weight:650}
+  .actions {display:flex;gap:9px}
+  .btn {border:1px solid #dae3dc;background:#fff;color:#203128;border-radius:9px;font-size:12px;font-weight:850;padding:11px 17px;display:inline-flex;align-items:center;gap:9px;min-height:41px}
+  .btn.primary {border-color:#202823;background:#202823;color:#fff}
+  .btn:hover {background:#f6f8f5}
+  .btn.primary:hover {background:#3e4942}
+  .btn:disabled {opacity:.45;cursor:not-allowed}
+  .btn svg {width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .editor {padding:25px 25px 26px;display:grid;grid-template-columns:minmax(185px,1.35fr) minmax(175px,1.1fr) minmax(145px,1fr) minmax(145px,1fr);gap:20px;align-items:start}
+  .control {min-width:0}
+  .control label,.control-head label {font-size:12px;font-weight:820}
+  .control-head {display:flex;justify-content:space-between;gap:12px;align-items:baseline;margin-bottom:14px}
+  output {font-size:12px;font-variant-numeric:tabular-nums;color:#5e4fdb;font-weight:850}
+  input[type=text] {margin-top:10px;min-width:0;width:100%;border:1.5px solid #d9e0d9;border-radius:10px;height:53px;padding:0 15px;background:#fafbf9;font-size:20px;font-weight:720;letter-spacing:-.5px;color:var(--ink)}
+  input[type=text]:focus {border-color:#7c6af4;background:#fff}
+  select {margin-top:10px;min-width:0;width:100%;border:1.5px solid #d9e0d9;border-radius:10px;height:53px;padding:0 12px;background:#fafbf9;color:var(--ink);font-size:14px;font-weight:740;cursor:pointer}
+  select:focus {border-color:#7c6af4;background:#fff}
+  input[type=range] {width:100%;accent-color:#6654f5;cursor:pointer;margin:2px 0 7px;height:23px;touch-action:pan-y}
+  .range-ends {display:flex;justify-content:space-between;color:#9ca7a0;font-size:10px;font-weight:680;font-variant-numeric:tabular-nums}
+  .note {font-size:11px;color:#88978c;margin:10px 0 0}
+  .note strong {color:#4d5d53}
+  .error {color:#c03838;font-size:12px;font-weight:700;min-height:18px;margin:0}
+  .bottom-note {display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:23px;color:#8c9a91;font-size:11px;flex-wrap:wrap}
+  .bottom-note a {color:inherit;text-decoration:underline;text-underline-offset:2px}
+  .toast {position:fixed;left:50%;bottom:24px;transform:translate(-50%,12px);opacity:0;pointer-events:none;background:#213029;color:#fff;padding:12px 17px;border-radius:10px;font-size:12px;font-weight:750;transition:.17s;z-index:3;white-space:nowrap}
+  .toast.show {transform:translate(-50%,0);opacity:1}
+  @media(max-width:820px){.editor{grid-template-columns:1fr 1fr}.control.word{grid-column:1/-1}.heading{align-items:start;flex-direction:column;gap:10px}.subtitle{max-width:570px}.stage{height:320px}}
+  @media(max-width:520px){.wrap{padding:0 16px}.head{min-height:64px}.brand{font-size:25px}.head-note{font-size:9px;letter-spacing:1px}main{padding-top:29px;padding-bottom:26px}h1{letter-spacing:-1.4px}.stage{height:235px;padding:14px 16px 20px}.editor{grid-template-columns:1fr;gap:21px;padding:21px 18px}.control.word{grid-column:auto}.canvas-top{padding:0 16px}.stage-bottom{padding:15px;gap:15px}.actions{width:100%}.btn{flex:1;justify-content:center}.hint{font-size:10px}.bottom-note{margin-top:17px}}
+</style>
+</head>
+<body>
+<header><div class="wrap head"><div class="brand"><span class="brand-mark">f</span>fluid<span style="color:#6c58f6">.</span></div><span class="head-note">Vector lettering studio</span></div></header>
+<main class="wrap">
+  <div class="heading"><div><div class="eyebrow">Atelier typographique</div><h1>Un mot, des courbes.</h1></div><p class="subtitle">Choisis une police ou dessine à main levée : le dégradé suit désormais la courbe de chaque trait, avec exports SVG/PNG.</p></div>
+  <section class="card" aria-label="Éditeur de lettering">
+    <div class="canvas-top"><span class="label-title">Ton lettrage</span><span id="liveStatus" class="live" aria-live="polite">Aperçu en direct</span></div>
+    <div class="stage" id="stage"><div id="preview" role="img" aria-label="Lettrage vectoriel"><span class="empty">Chargement du tracé…</span></div></div>
+    <div class="stage-bottom"><span class="hint"><span id="fontHint">Police Pacifico · dégradé suivant les courbes · SVG vectoriel</span></span><div class="actions">
+      <button id="openDrawing" class="btn" type="button" aria-haspopup="dialog" aria-controls="drawingDialog">✎ Dessiner</button>
+      <button id="downloadPNG" class="btn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>PNG</button>
+      <button id="downloadSVG" class="btn primary" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>SVG</button>
+    </div></div>
+    <div class="editor">
+      <div class="control word"><label for="word">Ton mot</label><input id="word" type="text" maxlength="22" autocomplete="off" spellcheck="false" value="bonjour" placeholder="Écris ici…"><p class="note">22 caractères maximum, accents inclus. Exemple : <button id="exampleMake" class="text-link" type="button">Make</button>.</p></div>
+      <div class="control"><label for="font">Police d’écriture</label><select id="font" aria-label="Police d’écriture">
+          <option value="pacifico" selected>Pacifico</option>
+        </select><p class="note">Une seule écriture disponible : Pacifico.</p></div>
+      <div class="control"><div class="control-head"><label for="thickness">Épaisseur</label><output id="thicknessValue" for="thickness">255</output></div><input id="thickness" type="range" min="12" max="320" step="1" value="255"><div class="range-ends"><span>Fin</span><span>Ultra épais</span></div></div>
+      <div class="control"><div class="control-head"><label for="spacing">Espacement</label><output id="spacingValue" for="spacing">-115</output></div><input id="spacing" type="range" min="-200" max="180" step="1" value="-115"><div class="range-ends"><span>−200 · superposition</span><span>+180 · espacé</span></div><p class="note">Passe en négatif pour rapprocher les lettres. L’épaisseur renforce le contour original.</p></div>
+    </div>
+  </section>
+  <footer class="bottom-note"><span>FLUID · Pacifico · tracés vectoriels éditables</span><span><a href="FONT-LICENSES.md" target="_blank" rel="noopener">Crédits et licences des polices</a></span></footer>
+</main>
+
+<dialog id="drawingDialog" class="draw-dialog" aria-labelledby="drawingTitle" aria-describedby="drawingDescription">
+  <div class="draw-shell">
+    <div class="draw-header">
+      <div>
+        <span class="draw-kicker">Atelier de dessin vectoriel</span>
+        <h2 id="drawingTitle">Écris à main levée.</h2>
+        <p id="drawingDescription" class="draw-description">Dessine avec la souris, le doigt ou un stylet. Une ombre légère souligne les croisements, sans interrompre le dégradé.</p>
+      </div>
+      <button id="drawingClose" class="draw-cross" type="button" aria-label="Fermer la fenêtre de dessin">×</button>
+    </div>
+    <div class="draw-paper">
+      <svg id="drawingPad" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 350" preserveAspectRatio="none" role="application" aria-label="Zone de dessin à main levée">
+        <defs>
+          <linearGradient id="drawingGradient" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="800" y2="0">
+            <stop offset="0%" stop-color="#4bf75b"/>
+            <stop offset="25%" stop-color="#59d78c"/>
+            <stop offset="50%" stop-color="#65b4b2"/>
+            <stop offset="75%" stop-color="#6995d3"/>
+            <stop offset="100%" stop-color="#7162f6"/>
+          </linearGradient>
+          <mask id="drawingInkMask" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="0" y="0" width="800" height="350">
+            <g id="drawingMaskPaths"></g>
+          </mask>
+        </defs>
+        <rect id="drawingInkFill" width="800" height="350" fill="url(#drawingGradient)" mask="url(#drawingInkMask)" pointer-events="none"/>
+        <g id="drawingFlowPaths" pointer-events="none"></g>
+        <rect width="100%" height="100%" fill="transparent" pointer-events="all"/>
+      </svg>
+      <span id="drawingEmpty" class="draw-empty">Trace ton premier trait ici ✍</span>
+    </div>
+    <div class="draw-controls">
+      <div class="draw-control">
+        <div class="draw-control-header"><label for="drawingSmooth">Lisser</label><output id="drawingSmoothValue" for="drawingSmooth">120 %</output></div>
+        <input id="drawingSmooth" type="range" min="0" max="400" step="1" value="120">
+        <div class="draw-ends"><span>Brut · 0 %</span><span>Ultra-lisse · 400 %</span></div>
+      </div>
+      <div class="draw-control">
+        <div class="draw-control-header"><label for="drawingWidth">Épaisseur du trait</label><output id="drawingWidthValue" for="drawingWidth">18 px</output></div>
+        <input id="drawingWidth" type="range" min="1" max="90" step="1" value="18">
+        <div class="draw-ends"><span>1 px · fin</span><span>90 px · épais</span></div>
+      </div>
+    </div>
+    <p class="draw-tip">Pousse « Lisser » jusqu’à 400 % pour obtenir des courbes extrêmement fluides. Un lissage extrême peut arrondir les petites boucles. Les chemins centraux SVG restent modifiables et les superpositions sont fusionnées visuellement.</p>
+    <div class="draw-footer">
+      <div class="draw-button-group">
+        <button id="drawingUndo" type="button" class="btn" disabled>↶ Annuler le trait</button>
+        <button id="drawingErase" type="button" class="btn" disabled>Tout effacer</button>
+      </div>
+      <div class="draw-button-group">
+        <button id="drawingSave" type="button" class="btn" disabled>Exporter SVG</button>
+        <button id="drawingApply" type="button" class="btn primary" disabled>Utiliser ce dessin</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const palettes={jello:['#4bf75b','#59d78c','#65b4b2','#6995d3','#7162f6']};
+const state={word:'bonjour',font:'pacifico',freehand:null,thickness:255,fusion:-115,slant:0,palette:'jello',transparent:true,seed:11};
+let currentSvg='',svgDimensions={width:1000,height:600},lastGeneratedWord='bonjour',pendingFrame=0,toastTimer=0,renderRevision=0;
+function escapeXML(s){return String(s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]));}
+/* Font outline packs are loaded on first selection and cached. */
+
+const VALID_FONTS=new Set(['pacifico']);
+const fontCache=new Map();
+function getFontData(fontId){
+ if(!VALID_FONTS.has(fontId))return Promise.reject(new Error('Police inconnue'));
+ if(!fontCache.has(fontId)){
+  const loading=(async()=>{
+   const response=await fetch('./font-packs/'+encodeURIComponent(fontId)+'.json?v=1');
+   if(!response.ok)throw new Error('Chargement échoué : HTTP '+response.status);
+   const pack=await response.json();
+   if(!pack||typeof pack.z!=='string')throw new Error('Données de police incorrectes');
+   if(typeof DecompressionStream==='undefined')throw new Error('Navigateur incompatible avec le format de police');
+   const bytes=Uint8Array.from(atob(pack.z),c=>c.charCodeAt(0));
+   const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate'));
+   const data=await new Response(stream).json();
+   if(!data.u||!data.g)throw new Error('Tracés invalides');
+   return {unitsPerEm:data.u,glyphs:data.g,kerning:data.k||{},ligatures:data.l||{}};
+  })().catch(e=>{fontCache.delete(fontId);throw e;});
+  fontCache.set(fontId,loading);
+ }
+ return fontCache.get(fontId);
+}
+
+/* Dégradé curviligne : trajectoire approximative calculée sur l'axe médian
+   de chaque glyphe (les polices livrent des contours, pas des traits de plume).
+   Le masque de la lettre reste un authentique tracé SVG vectoriel. */
+const FLUID_FLOW=(()=>{
+ const cache=new Map();
+ const dx=[1,-1,0,0,1,-1,1,-1],dy=[0,0,1,-1,1,1,-1,-1];
+ const clip=(n,a,b)=>Math.min(b,Math.max(a,n));
+ const f=n=>Number(n.toFixed(2));
+ function centerline(g,units){
+  const cacheKey=units+'|'+g.key;
+  if(cache.has(cacheKey))return cache.get(cacheKey);
+  const b=g.bounds,scale=Math.min(.29*2048/units,245/Math.max(b.width,b.height,1));
+  const pad=Math.ceil(245*units/2048*scale)+6;
+  const w=Math.max(8,Math.ceil(b.width*scale)+2*pad);
+  const h=Math.max(8,Math.ceil(b.height*scale)+2*pad);
+  const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+  const ctx=canvas.getContext('2d',{willReadFrequently:true});
+  if(!ctx||typeof Path2D==='undefined')throw Error('Impossible de suivre le tracé');
+  ctx.setTransform(scale,0,0,-scale,pad-b.x*scale,pad+(b.y+b.height)*scale);
+  ctx.fillStyle='#fff';ctx.fill(new Path2D(g.d));
+  const rgba=ctx.getImageData(0,0,w,h).data;
+  const ink=new Uint8Array(w*h),original=[];
+  for(let y=1;y<h-1;y++)for(let x=1;x<w-1;x++){
+   const i=y*w+x; if(rgba[4*i+3]>110){ink[i]=1;original.push(i);}
+  }
+  // Amincissement de Zhang–Suen : le trait devient une ligne centrale.
+  for(let iteration=0;iteration<85;iteration++){
+   let changed=0;
+   for(let phase=0;phase<2;phase++){
+    const remove=[];
+    for(const i of original){
+     if(!ink[i])continue;
+     const n=[ink[i-w],ink[i-w+1],ink[i+1],ink[i+w+1],
+              ink[i+w],ink[i+w-1],ink[i-1],ink[i-w-1]];
+     const count=n[0]+n[1]+n[2]+n[3]+n[4]+n[5]+n[6]+n[7];
+     if(count<2||count>6)continue;
+     let turns=0;for(let k=0;k<8;k++)if(!n[k]&&n[(k+1)%8])turns++;
+     if(turns!==1)continue;
+     if(phase===0?(n[0]&&n[2]&&n[4])||(n[2]&&n[4]&&n[6])
+                 :(n[0]&&n[2]&&n[6])||(n[0]&&n[4]&&n[6]))continue;
+     remove.push(i);
+    }
+    for(const i of remove)ink[i]=0;
+    changed+=remove.length;
+   }
+   if(!changed)break;
+  }
+  const skeleton=original.filter(i=>ink[i]);
+  const seen=new Uint8Array(w*h),queue=new Int32Array(w*h);
+  const groups=[];
+  // Décompose les points, boucles et lettres non attachées.
+  for(const first of skeleton){
+   if(seen[first])continue;
+   seen[first]=1;queue[0]=first;let head=0,tail=1;
+   const items=[];let start=first,minX=w,minY=h;
+   while(head<tail){
+    const i=queue[head++],y=(i/w)|0,x=i-y*w;
+    items.push(i);
+    if(x<minX||(x===minX&&y<minY)){minX=x;minY=y;start=i;}
+    for(let d=0;d<8;d++){
+     const xx=x+dx[d],yy=y+dy[d];if(xx<1||yy<1||xx>=w-1||yy>=h-1)continue;
+     const j=yy*w+xx;if(ink[j]&&!seen[j]){seen[j]=1;queue[tail++]=j;}
+    }
+   }
+   groups.push({items,start,minX});
+  }
+  groups.sort((a,b)=>a.minX-b.minX);
+  const progress=new Float32Array(w*h),dist=new Int32Array(w*h);
+  let length=0;
+  for(const group of groups){
+   for(const i of group.items)dist[i]=-1;
+   queue[0]=group.start;let head=0,tail=1,max=0;dist[group.start]=0;
+   while(head<tail){
+    const i=queue[head++],y=(i/w)|0,x=i-y*w;
+    max=Math.max(max,dist[i]);
+    for(let d=0;d<8;d++){
+     const xx=x+dx[d],yy=y+dy[d];if(xx<1||yy<1||xx>=w-1||yy>=h-1)continue;
+     const j=yy*w+xx;if(ink[j]&&dist[j]<0){dist[j]=dist[i]+1;queue[tail++]=j;}
+    }
+   }
+   for(const i of group.items)progress[i]=length+Math.max(0,dist[i]);
+   length+=Math.max(max,2)+5;
+  }
+  // La même couleur est propagée perpendiculairement au trait.
+  const marked=new Uint8Array(w*h);let head=0,tail=0;
+  for(const i of skeleton){marked[i]=1;queue[tail++]=i;}
+  while(head<tail){
+   const i=queue[head++],y=(i/w)|0,x=i-y*w;
+   for(let d=0;d<8;d++){
+    const xx=x+dx[d],yy=y+dy[d];if(xx<0||yy<0||xx>=w||yy>=h)continue;
+    const j=yy*w+xx;if(!marked[j]){
+     marked[j]=1;progress[j]=progress[i];queue[tail++]=j;
+    }
+   }
+  }
+  if(!skeleton.length){
+   length=w;for(let y=0;y<h;y++)for(let x=0;x<w;x++)progress[y*w+x]=x;
+  }
+  // Lisse les jonctions et les embranchements.
+  for(let pass=0;pass<4;pass++){
+   const next=new Float32Array(w*h);
+   for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+    const i=y*w+x;let sum=progress[i]*4,n=4;
+    if(x>0){sum+=progress[i-1];n++;}
+    if(x<w-1){sum+=progress[i+1];n++;}
+    if(y>0){sum+=progress[i-w];n++;}
+    if(y<h-1){sum+=progress[i+w];n++;}
+    next[i]=sum/n;
+   }
+   progress.set(next);
+  }
+  const result={w,h,pad,scale,progress,length:Math.max(1,length)};
+  cache.set(cacheKey,result);
+  return result;
+ }
+ function render(glyphs,colors,thickening,box,units){
+  const flows=glyphs.map(g=>centerline(g,units));
+  const full=flows.reduce((sum,g)=>sum+g.length,0);
+  const rgb=colors.map(h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)));
+  const lut=new Uint8Array(4096*3);
+  for(let i=0;i<4096;i++){
+   const q=i/4095*(rgb.length-1),j=Math.min(rgb.length-2,Math.floor(q)),t=q-j;
+   for(let k=0;k<3;k++)lut[i*3+k]=Math.round(rgb[j][k]*(1-t)+rgb[j+1][k]*t);
+  }
+  let traveled=0;const defs=[],layers=[];
+  // SourceAlpha only: a narrow, translucent shadow falls on earlier strokes
+  // beneath the next letter; no shadow around the outside of the word.
+  const offset=Math.max(1.2,thickening*.027);
+  const blur=Math.max(1,thickening*.019);
+  defs.push('<filter id="fluid-cross-shadow" x="-12%" y="-12%" width="124%" height="124%" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceAlpha" stdDeviation="'+f(blur)+'" result="soft"/><feOffset in="soft" dx="'+f(offset*.4)+'" dy="'+f(offset)+'" result="shift"/><feFlood flood-color="#182c37" flood-opacity="0.50" result="shade"/><feComposite in="shade" in2="shift" operator="in"/></filter>');
+  for(let n=0;n<glyphs.length;n++){
+   const g=glyphs[n],flow=flows[n],data=new Uint8ClampedArray(flow.w*flow.h*4);
+   for(let i=0;i<flow.progress.length;i++){
+    const p=Math.round(clip((traveled+flow.progress[i])/Math.max(1,full),0,1)*4095)*3;
+    data[i*4]=lut[p];data[i*4+1]=lut[p+1];data[i*4+2]=lut[p+2];data[i*4+3]=255;
+   }
+   const canvas=document.createElement('canvas');
+   canvas.width=flow.w;canvas.height=flow.h;
+   canvas.getContext('2d').putImageData(new ImageData(data,flow.w,flow.h),0,0);
+   const mid='fluid-follow-mask-'+n;
+   const shapeId='fluid-cross-shape-'+n;
+   const bounds='x="'+f(box.left)+'" y="'+f(box.top)+'" width="'+f(box.width)+'" height="'+f(box.height)+'"';
+   // Reuse vector silhouettes so the prior-ink mask stays small and precise.
+   defs.push('<g id="'+shapeId+'" transform="scale(1,-1)"><g transform="translate('+f(g.x)+' 0)"><path d="'+g.d+'" fill="white" stroke="white" stroke-width="'+f(thickening)+'" stroke-linecap="round" stroke-linejoin="round" paint-order="stroke fill" fill-rule="nonzero"/></g></g>');
+   defs.push('<mask id="'+mid+'" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" '+bounds+'><use href="#'+shapeId+'"/></mask>');
+   if(n>0){
+    const underneath='fluid-previous-ink-'+n;
+    const uses=Array.from({length:n},(_,j)=>'<use href="#fluid-cross-shape-'+j+'"/>').join('');
+    defs.push('<mask id="'+underneath+'" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" '+bounds+'>'+uses+'</mask>');
+    // Draw only the shadow landing on already painted glyphs.
+    layers.push('<g mask="url(#'+underneath+')"><use href="#'+shapeId+'" filter="url(#fluid-cross-shadow)"/></g>');
+   }
+   const x=g.x+g.bounds.x-flow.pad/flow.scale;
+   const y=-(g.bounds.y+g.bounds.height)-flow.pad/flow.scale;
+   layers.push('<image x="'+f(x)+'" y="'+f(y)+'" width="'+f(flow.w/flow.scale)+'" height="'+f(flow.h/flow.scale)+'" preserveAspectRatio="none" href="'+canvas.toDataURL('image/png')+'" mask="url(#'+mid+')"/>');
+   traveled+=flow.length;
+  }
+  return {defs:defs.join(''),layers:layers.join('')};
+ }
+ return {render};
+})();
+
+function getHandwrittenSVG(font){
+  const fontName=$('font').selectedOptions[0].textContent;
+  const unitScale=font.unitsPerEm/2048;
+  const word=state.word.trim().slice(0,22);
+  if(!word)return '';
+  const fmt=n=>Number(n).toFixed(2);
+
+  const source=Array.from(word.normalize('NFC'));
+  const glyphs=[];
+  let cursor=0,previous='';
+  for(let i=0;i<source.length;){
+    let glyph=null,token=source[i],count=1;
+    for(let n=Math.min(4,source.length-i);n>=2;n--){
+      const key=source.slice(i,i+n).join('');
+      if(font.ligatures[key]){glyph=font.ligatures[key];token=key;count=n;break;}
+    }
+    if(!glyph)glyph=font.glyphs[token]||font.glyphs['?'];
+    if(!glyph){cursor+=font.unitsPerEm*.4;previous='';i++;continue;}
+    const w=Array.isArray(glyph)?glyph[0]:glyph.w;
+    const d=Array.isArray(glyph)?glyph[1]:glyph.d;
+    if(previous&&font.kerning[previous+token])cursor+=font.kerning[previous+token];
+    if(d)glyphs.push({d:d,x:cursor,key:state.font+':'+token});
+    cursor+=w+state.fusion*unitScale;
+    previous=token;
+    i+=count;
+  }
+  if(!glyphs.length)return '';
+  const NS='http://www.w3.org/2000/svg';
+  const measure=document.createElementNS(NS,'svg');
+  measure.style.cssText='position:absolute;left:-99999px;top:-99999px;width:1px;height:1px;opacity:0;pointer-events:none';
+  document.body.appendChild(measure);
+  let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
+  try{
+    for(const glyph of glyphs){
+      const path=document.createElementNS(NS,'path');
+      path.setAttribute('d',glyph.d);
+      measure.appendChild(path);
+      const bounds=path.getBBox();
+      glyph.bounds={x:bounds.x,y:bounds.y,width:bounds.width,height:bounds.height};
+      minX=Math.min(minX,bounds.x+glyph.x);
+      maxX=Math.max(maxX,bounds.x+bounds.width+glyph.x);
+      minY=Math.min(minY,bounds.y);
+      maxY=Math.max(maxY,bounds.y+bounds.height);
+    }
+  }finally{measure.remove();}
+  if(!Number.isFinite(minX)||!Number.isFinite(maxX))return '';
+  const thickening=Math.max(0,(state.thickness-12)*1.45)*unitScale;
+  const padding=Math.max(65*unitScale,thickening/2+65*unitScale);
+  const left=minX-padding,top=-maxY-padding;
+  const width=Math.max(180*unitScale,maxX-minX+2*padding),height=Math.max(200*unitScale,maxY-minY+2*padding);
+  svgDimensions={width:Math.ceil(width),height:Math.ceil(height)};
+  const colors=palettes[state.palette];
+  const span=Math.max(1,maxX-minX);
+  const stops=colors.map((color,i)=>`<stop offset="${fmt(100*i/(colors.length-1))}%" stop-color="${color}"/>`).join('');
+  // Le dégradé suit désormais la distance parcourue le long de la
+  // ligne centrale de chaque caractère, pas la coordonnée X du mot.
+  try{
+    const ink=FLUID_FLOW.render(glyphs,colors,thickening,{left,top,width,height},font.unitsPerEm);
+    return '<svg xmlns="'+NS+'" width="'+Math.ceil(width)+'" height="'+Math.ceil(height)+'" viewBox="'+fmt(left)+' '+fmt(top)+' '+fmt(width)+' '+fmt(height)+'" role="img" aria-label="'+escapeXML(word)+' en '+escapeXML(fontName)+'"><title>'+escapeXML(word)+' — '+escapeXML(fontName)+'</title><desc>Dégradé de couleur suivant le parcours incurvé de chaque trait.</desc><defs>'+ink.defs+'</defs>'+ink.layers+'</svg>';
+  }catch(error){
+    console.warn('Mode courbe indisponible : retour au dégradé linéaire',error);
+    const ink=glyphs.map(g=>'<g transform="translate('+fmt(g.x)+' 0)"><path d="'+g.d+'" fill="white" stroke="white" stroke-width="'+fmt(thickening)+'" stroke-linecap="round" stroke-linejoin="round" paint-order="stroke fill"/></g>').join('');
+    return '<svg xmlns="'+NS+'" width="'+Math.ceil(width)+'" height="'+Math.ceil(height)+'" viewBox="'+fmt(left)+' '+fmt(top)+' '+fmt(width)+' '+fmt(height)+'"><defs><linearGradient id="fluid-fallback" gradientUnits="userSpaceOnUse" x1="'+fmt(minX)+'" x2="'+fmt(maxX)+'">'+stops+'</linearGradient><mask id="fluid-ink"><g transform="scale(1,-1)">'+ink+'</g></mask></defs><rect x="'+fmt(left)+'" y="'+fmt(top)+'" width="'+fmt(width)+'" height="'+fmt(height)+'" fill="url(#fluid-fallback)" mask="url(#fluid-ink)"/></svg>';
+  }
+}
+
+function maintainLetterProportions(){
+ const svg=$('preview').querySelector('svg');if(!svg)return;
+ const vb=svg.viewBox.baseVal;if(!vb||!vb.width||!vb.height)return;
+ const targetHeight=matchMedia('(max-width:520px)').matches?188:290;
+ const displayWidth=Math.max(1,Math.ceil(targetHeight*vb.width/vb.height));
+ svg.style.height=targetHeight+'px';svg.style.width=displayWidth+'px';
+ $('preview').style.width=displayWidth+'px';
+}
+
+async function render(revision){
+ const word=state.word.trim(),fontId=state.font,isFreehand=Boolean(state.freehand);
+ lastGeneratedWord=isFreehand?'dessin-main-levee':word;
+ currentSvg='';
+ $('downloadSVG').disabled=true;$('downloadPNG').disabled=true;
+ $('fontHint').textContent=isFreehand?'Dessin à main levée · tracés monolignes · masque de fusion SVG':'Police '+$('font').selectedOptions[0].textContent+' · dégradé continu · SVG vectoriel';
+ $('liveStatus').textContent=isFreehand?'Aperçu en direct':word?'Chargement…':'Aperçu en direct';
+ $('liveStatus').style.color='#34875f';
+ if(isFreehand){
+   currentSvg=state.freehand.svg;
+   svgDimensions={width:state.freehand.width,height:state.freehand.height};
+   $('preview').innerHTML=currentSvg;
+   maintainLetterProportions();
+   $('downloadSVG').disabled=false;
+   $('downloadPNG').disabled=false;
+ }else if(!word){
+   $('preview').style.width='auto';
+   $('preview').innerHTML='<span class="empty">Écris un mot pour commencer</span>';
+ }else{
+   try{
+     const font=await getFontData(fontId);
+     if(revision!==renderRevision)return;
+     const svg=getHandwrittenSVG(font);
+     if(!svg)throw new Error('Aucun tracé disponible pour ce texte.');
+     currentSvg=svg;
+     $('preview').innerHTML=svg;
+     maintainLetterProportions();
+     $('downloadSVG').disabled=false;$('downloadPNG').disabled=false;
+     $('liveStatus').textContent='Aperçu en direct';
+   }catch(e){
+     if(revision!==renderRevision)return;
+     console.error(e);
+     $('preview').style.width='auto';
+     $('preview').innerHTML='<span class="empty">Police indisponible. Choisis-en une autre.</span>';
+     $('liveStatus').textContent='Erreur de rendu';
+     $('liveStatus').style.color='#c03838';
+   }
+ }
+ if(revision!==renderRevision)return;
+ $('preview').setAttribute('aria-label',isFreehand?'Dessin SVG à main levée':word?'Lettrage du mot '+word:'Aucun mot');
+ try{
+   const url=new URL(location.href);
+   if(word)url.searchParams.set('mot',word);else url.searchParams.delete('mot');
+   if(fontId==='pacifico')url.searchParams.delete('police');else url.searchParams.set('police',fontId);
+   history.replaceState(null,'',url.toString());
+ }catch(e){}
+}
+function requestRender(){
+ ++renderRevision;
+ if(pendingFrame)return;
+ pendingFrame=requestAnimationFrame(()=>{pendingFrame=0;render(renderRevision);});
+}
+function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2200);}
+function download(blob,name){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+function exportName(){return (lastGeneratedWord||'lettering').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9_-]/g,'-').replace(/-+/g,'-').toLowerCase();}
+$('word').addEventListener('input',e=>{state.freehand=null;state.word=e.target.value.slice(0,22);requestRender();});
+$('exampleMake').addEventListener('click',()=>{
+ state.freehand=null;
+ state.word='Make';$('word').value='Make';
+ state.font='pacifico';$('font').value='pacifico';
+ state.thickness=255;$('thickness').value='255';$('thicknessValue').textContent='255';
+ state.fusion=-115;$('spacing').value='-115';$('spacingValue').textContent='-115';
+ requestRender();
+});
+$('font').addEventListener('change',e=>{if(VALID_FONTS.has(e.target.value)){state.freehand=null;state.font=e.target.value;requestRender();}});
+$('thickness').addEventListener('input',e=>{state.freehand=null;state.thickness=Number(e.target.value);$('thicknessValue').textContent=state.thickness;requestRender();});
+$('spacing').addEventListener('input',e=>{state.freehand=null;state.fusion=Number(e.target.value);$('spacingValue').textContent=(state.fusion>0?'+':'')+state.fusion;requestRender();});
+$('downloadSVG').addEventListener('click',()=>{if(!currentSvg)return;download(new Blob([currentSvg],{type:'image/svg+xml;charset=utf-8'}),exportName()+'-fluid.svg');toast('SVG vectoriel exporté');});
+$('downloadPNG').addEventListener('click',()=>{if(!currentSvg)return;const img=new Image(),src=URL.createObjectURL(new Blob([currentSvg],{type:'image/svg+xml;charset=utf-8'}));img.onload=()=>{const factor=Math.min(3,Math.max(1,4096/svgDimensions.width));const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(svgDimensions.width*factor));canvas.height=Math.max(1,Math.round(svgDimensions.height*factor));canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);canvas.toBlob(blob=>{if(blob)download(blob,exportName()+'-fluid.png');URL.revokeObjectURL(src);toast(blob?'PNG exporté':'Impossible de créer le PNG')},'image/png');};img.onerror=()=>{URL.revokeObjectURL(src);toast('Impossible de créer le PNG');};img.src=src;});
+document.addEventListener('fluid:apply-drawing',event=>{
+ const data=event.detail;
+ if(!data||typeof data.svg!=='string'||!Number.isFinite(data.width)||!Number.isFinite(data.height))return;
+ state.freehand={svg:data.svg,width:data.width,height:data.height};
+ requestRender();
+ toast('Dessin SVG ajouté à l’aperçu');
+});
+const wordFromUrl=new URLSearchParams(location.search).get('mot')||new URLSearchParams(location.search).get('word');
+if(wordFromUrl){state.word=wordFromUrl.slice(0,22);$('word').value=state.word;}
+const fontFromUrl=new URLSearchParams(location.search).get('police');
+if(VALID_FONTS.has(fontFromUrl)){state.font=fontFromUrl;$('font').value=fontFromUrl;}
+requestRender();window.addEventListener('resize',maintainLetterProportions);
+</script>
+<script src="signature-studio.js?v=3"></script>
+
+<script>
+/* Keep the embedded Fluid Lettering canvas naturally sized inside the brand guide. */
+(()=>{
+ if(window.parent===window)return;
+ let last=0;
+ const measure=()=>{
+   const height=Math.ceil(document.body.getBoundingClientRect().height);
+   if(height<=0||Math.abs(height-last)<3)return;
+   last=height;
+   window.parent.postMessage({kind:'fluid-lettering:resize',height},window.location.origin==='null'?'*':window.location.origin);
+ };
+ window.addEventListener('load',measure);
+ window.addEventListener('resize',measure);
+ if('ResizeObserver' in window)new ResizeObserver(measure).observe(document.body);
+ requestAnimationFrame(measure);
+})();
+</script>
+</body>
+</html>
