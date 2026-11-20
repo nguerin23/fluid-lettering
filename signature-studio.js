@@ -172,19 +172,59 @@
   }
 
   function inkShapes() {
-    const paths = [];
-    const points = [];
+    const paths = [], points = [], traces = [];
     for (const stroke of active ? strokeList.concat([active]) : strokeList) {
       if (!stroke.length) continue;
       const pts = smoothPoints(stroke);
       points.push(...pts);
       if (pts.length === 1) {
         paths.push(`<circle cx="${fmt(pts[0].x)}" cy="${fmt(pts[0].y)}" r="${fmt(strokeWidth() / 2)}" fill="white"/>`);
+        traces.push({dot:pts[0]});
       } else {
-        paths.push(`<path d="${pathFromPoints(pts)}" fill="none" stroke="white" stroke-width="${fmt(strokeWidth())}" stroke-linecap="round" stroke-linejoin="round"/>`);
+        const d=pathFromPoints(pts);
+        paths.push(`<path d="${d}" fill="none" stroke="white" stroke-width="${fmt(strokeWidth())}" stroke-linecap="round" stroke-linejoin="round"/>`);
+        traces.push({d});
       }
     }
-    return { paths, points };
+    return { paths, points, traces };
+  }
+
+  const colors=['#4bf75b','#59d78c','#65b4b2','#6995d3','#7162f6'];
+  const colorsRGB=colors.map(hex=>[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)));
+  function progressColor(t){
+    const val=clamp(t,0,1)*(colorsRGB.length-1);
+    const i=Math.min(colorsRGB.length-2,Math.floor(val)),fraction=val-i;
+    return '#'+[0,1,2].map(ch=>Math.round(colorsRGB[i][ch]*(1-fraction)+colorsRGB[i+1][ch]*fraction).toString(16).padStart(2,'0')).join('');
+  }
+  // Progression de couleur en fonction de la longueur cumulée du stylo,
+  // même dans une boucle ou un déplacement vertical.
+  function colorAlongLines(traces) {
+    const svgNS='http://www.w3.org/2000/svg';
+    const items=traces.map(trace=>{
+      if(trace.dot)return {dot:trace.dot,length:0};
+      const measure=document.createElementNS(svgNS,'path');
+      measure.setAttribute('d',trace.d);
+      return {measure,length:measure.getTotalLength()};
+    });
+    const total=items.reduce((sum,item)=>sum+Math.max(1,item.length),0);
+    const step=Math.max(1.5,Math.min(4,strokeWidth()/7));
+    let covered=0;
+    const parts=[];
+    for(const item of items){
+      if(item.dot) {
+        parts.push(`<circle cx="${fmt(item.dot.x)}" cy="${fmt(item.dot.y)}" r="${fmt(strokeWidth()/2)}" fill="${progressColor(covered/Math.max(1,total))}"/>`);
+        covered+=1;
+        continue;
+      }
+      for(let p=0;p<item.length;p+=step){
+        const end=Math.min(item.length,p+step);
+        const a=item.measure.getPointAtLength(p),b=item.measure.getPointAtLength(end);
+        const color=progressColor((covered+(p+end)/2)/Math.max(1,total));
+        parts.push(`<path d="M ${fmt(a.x)} ${fmt(a.y)} L ${fmt(b.x)} ${fmt(b.y)}" fill="none" stroke="${color}" stroke-width="${fmt(strokeWidth())}" stroke-linecap="round" stroke-linejoin="round"/>`);
+      }
+      covered+=Math.max(1,item.length);
+    }
+    return parts;
   }
 
   function scheduleDraw() {
@@ -192,8 +232,10 @@
   }
 
   function draw() {
-    const { paths } = inkShapes();
+    const { paths, traces } = inkShapes();
     maskPaths.innerHTML = paths.join('');
+    $('drawingFlowPaths').innerHTML = colorAlongLines(traces).join('');
+    fill.setAttribute('visibility','hidden');
     emptyLabel.hidden = paths.length > 0;
     undo.disabled = strokeList.length === 0;
     erase.disabled = strokeList.length === 0 && !active;
@@ -257,7 +299,7 @@
 
   function exportSVG() {
     if (active) finishPointer({pointerId, type:'pointercancel'});
-    const { paths, points } = inkShapes();
+    const { paths, points, traces } = inkShapes();
     if (!paths.length) return null;
     const padding = Math.max(25, strokeWidth() + 18);
     let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
@@ -271,9 +313,8 @@
     const y1 = maxY + padding;
     const w = Math.max(1, Math.ceil(x1 - x0));
     const h = Math.max(1, Math.ceil(y1 - y0));
-    const colors = ['#4bf75b', '#59d78c', '#65b4b2', '#6995d3', '#7162f6'];
-    const stops = colors.map((color, i) => `<stop offset="${i * 25}%" stop-color="${color}"/>`).join('');
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="${fmt(x0)} ${fmt(y0)} ${w} ${h}" role="img" aria-label="Dessin à main levée"><title>Dessin à main levée — Fluid</title><defs><linearGradient id="fluid-hand-gradient" gradientUnits="userSpaceOnUse" x1="${fmt(x0)}" y1="0" x2="${fmt(x0 + w)}" y2="0">${stops}</linearGradient><mask id="fluid-hand-mask" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="${fmt(x0)}" y="${fmt(y0)}" width="${w}" height="${h}"><g>${paths.join('')}</g></mask></defs><rect x="${fmt(x0)}" y="${fmt(y0)}" width="${w}" height="${h}" fill="url(#fluid-hand-gradient)" mask="url(#fluid-hand-mask)"/></svg>`;
+    const coloredPaths=colorAlongLines(traces);
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="${fmt(x0)} ${fmt(y0)} ${w} ${h}" role="img" aria-label="Dessin à main levée"><title>Dessin à main levée — Fluid</title><desc>Dégradé progressant en suivant la longueur exacte du tracé.</desc><g>${coloredPaths.join('')}</g></svg>`;
     return { svg, width:w, height:h };
   }
 
