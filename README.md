@@ -2,18 +2,18 @@
 
 **Site :** https://nguerin23.github.io/fluid-lettering/
 
-Fluid est un éditeur de lettrage manuscrit avec 11 polices au choix **et un studio de dessin libre au doigt, à la souris ou au stylet**, un dégradé horizontal continu et des exports SVG/PNG.
+Fluid est un éditeur de lettrage manuscrit avec 11 polices au choix **et un studio de dessin libre au doigt, à la souris ou au stylet**, un dégradé suivant les courbes, de légères ombres aux croisements et des exports SVG/PNG.
 
 ## Polices disponibles
 
-- Parisienne (par défaut)
+- Parisienne
 - Fabfelt Script
 - Farewell
 - League Script
 - Cetary
 - Alucky
 - My Ugly Handwritting
-- Pacifico
+- Pacifico (par défaut)
 - Gruenewald VA
 - Banteng Story
 - Stevilla Script
@@ -24,7 +24,7 @@ Les **10 nouvelles polices** ont été construites à partir des archives fourni
 
 - Texte initial : **bonjour**, avec 22 caractères maximum.
 - Choix de police dans le sélecteur et possibilité de partager l'URL avec le paramètre `?mot=...&police=...`.
-- Bouton exemple **Make** à côté du champ de texte : charge « Make », Parisienne, épaisseur 255 et espacement −115. Le même style s'applique ensuite à n'importe quel autre mot.
+- Bouton exemple **Make** à côté du champ de texte : charge « Make », Pacifico, épaisseur 255 et espacement −115. Le même style s'applique ensuite à n'importe quel autre mot.
 - Ajustement de l'épaisseur du contour (valeur par défaut **255**, maximum **320**) et de l'espacement (valeur par défaut **−115**, avec superposition volontaire des lettres).
 - Épaisseur normalisée selon les unités typographiques de chaque police.
 - Dégradé continu **vert → turquoise → bleu → violet**, calculé selon la distance parcourue sur une **ligne centrale estimée** pour chaque lettre, et non selon une ligne horizontale. Les boucles et montées/descentes font évoluer la couleur localement.
@@ -32,6 +32,7 @@ Les **10 nouvelles polices** ont été construites à partir des archives fourni
 - Export **SVG** autonome (masques de contour vectoriels et couleurs embarquées) et **PNG** haute résolution, sans police à installer sur l'appareil.
 - Données de contours vectoriels encodées dans `font-packs/*.json` (zlib + base64). Chargement **à la demande**, mise en cache pour éviter de ralentir le chargement initial.
 - Les courbes Bézier sont conservées (quadratiques ou cubiques suivant le fichier source), et le moteur inclut une prise en charge de base de l'espacement typographique et des ligatures courantes disponibles dans les fichiers.
+- Un léger effet de profondeur est appliqué uniquement là où une lettre recouvre l'encre des lettres précédentes, à l'aide de masques SVG et d'une ombre très diffuse (opacité 13 %). Aucun halo ne borde le mot sur le fond vierge.
 - La ligne centrale est reconstituée à partir du contour par squelettisation ; le parcours est une approximation géométrique, **pas l'ordre authentique des coups de plume de l'auteur de la police**.
 - Il s'agit de **contours de lettres**, pas de courbes centrales « single-line » ; une animation authentique de stylo n'est pas proposée.
 
@@ -47,7 +48,7 @@ Cliquer sur **« ✎ Dessiner »** sous l'aperçu pour ouvrir une fenêtre de de
 - **Utiliser ce dessin** : injecte le dessin dans l'aperçu principal ; les boutons SVG/PNG habituels fonctionnent alors avec le dessin manuel.
 - Tout changement ultérieur de texte, police, épaisseur typographique ou espacement ramène au mode « police ».
 
-**Croisements et superpositions** : les traits sont dessinés en blanc dans un *masque SVG unique*. Le dégradé suit maintenant la **longueur cumulée du trait dessiné**. Les segments reçoivent une couleur qui change avec l'avancée de la plume, même lorsqu'elle monte, descend ou fait une boucle. Aux croisements, le dernier segment visible recouvre le précédent sans assombrissement. Il s'agit d'une **fusion visuelle** par masque, non d'une opération booléenne qui convertirait toute la forme en un unique contour SVG fermé. Les chemins centraux restent accessibles dans le SVG exporté. Le dessin n'est pas enregistré dans l'URL ou le stockage local : exporter le SVG pour le conserver.
+**Croisements et superpositions** : les tracés centraux sont conservés avec leurs masques SVG réutilisables. Le dégradé suit maintenant la **longueur cumulée du trait dessiné**. Les segments reçoivent une couleur qui change avec l'avancée de la plume, même lorsqu'elle monte, descend ou fait une boucle. Aux croisements entre coups de stylo, le trait supérieur laisse une ombre très légère sur le trait inférieur, sans halo sur le papier blanc et sans assombrir tout le tracé. Il s'agit d'une **fusion visuelle** par masque, non d'une opération booléenne qui convertirait toute la forme en un unique contour SVG fermé. Les chemins centraux restent accessibles dans le SVG exporté. Le dessin n'est pas enregistré dans l'URL ou le stockage local : exporter le SVG pour le conserver.
 
 ### Fichiers du studio
 
