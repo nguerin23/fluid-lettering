@@ -189,7 +189,7 @@
     return { paths, points, traces };
   }
 
-  const colors=['#4bf75b','#59d78c','#65b4b2','#6995d3','#7162f6'];
+  const colors=['#070B66','#1838C5','#3152F4','#6387FA','#9AB7FF'];
   const colorsRGB=colors.map(hex=>[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)));
   function progressColor(t){
     const val=clamp(t,0,1)*(colorsRGB.length-1);
@@ -214,7 +214,7 @@
       const blur=Math.max(.35,strokeWidth()*.052);
       const offX=Math.max(.2,strokeWidth()*.034);
       const offY=Math.max(.35,strokeWidth()*.075);
-      defs.push(`<filter id="fluid-hand-cross-shadow" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceAlpha" stdDeviation="${fmt(blur)}" result="soft"/><feOffset in="soft" dx="${fmt(offX)}" dy="${fmt(offY)}" result="shift"/><feFlood flood-color="#182c37" flood-opacity=".50" result="shade"/><feComposite in="shade" in2="shift" operator="in"/></filter>`);
+      defs.push(`<filter id="fluid-hand-cross-shadow" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceAlpha" stdDeviation="${fmt(blur)}" result="soft"/><feOffset in="soft" dx="${fmt(offX)}" dy="${fmt(offY)}" result="shift"/><feFlood flood-color="#070B66" flood-opacity=".50" result="shade"/><feComposite in="shade" in2="shift" operator="in"/></filter>`);
     }
     let covered=0;
     for(let index=0;index<items.length;index++){
