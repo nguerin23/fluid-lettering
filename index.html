@@ -76,11 +76,18 @@ h2,h3{font-family:var(--display)}
 .footer{border-top:1px solid var(--line);padding:26px 28px;max-width:1120px;margin:0 auto;font:500 12px var(--body);color:#7180A8;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 @media(max-width:800px){.header-inner{padding:14px 18px;display:block;min-height:0}.nav{margin-top:12px;padding-bottom:3px}.nav a{padding:11px 12px}.wrap{padding:0 18px}main{padding-top:38px}.logo-grid,.font-grid{grid-template-columns:1fr}.logo-card{min-height:255px}.color-grid{grid-template-columns:repeat(2,1fr)}.fluid-frame{min-height:850px}.logo-lockup strong{font-size:51px}}
 @media(max-width:470px){h1{font-size:43px}.page-head p:not(.kicker){font-size:15px}.logo-lockup svg{width:80px;height:80px}.logo-lockup strong{font-size:37px}.font-card{min-height:230px}.font-card .font-name{font-size:46px}.swatch{padding:9px}.color-block{height:88px}.swatch-name{font-size:13px}.swatch-hex{font-size:12px}.footer{padding:24px 18px}}
+
+/* Official supplied logo: exact vector letterforms and all five pictograms. */
+.wordmark img{display:block;width:178px;height:auto;max-height:64px;object-fit:contain}
+.logo-lockup{padding:26px 4px;min-width:0}
+.logo-lockup img{width:min(100%,450px);height:auto;max-height:245px;object-fit:contain}
+@media(max-width:800px){.wordmark img{width:152px}.logo-lockup img{max-width:420px}}
+@media(max-width:470px){.wordmark img{width:140px}.logo-lockup{padding:15px 0}}
 </style>
 </head>
 <body>
 <header class="header"><div class="header-inner">
-<a href="#section-2" class="wordmark" aria-label="Plénée-Jugon, revenir au logo">Plénée<span>—</span>Jugon</a>
+<a href="#section-2" class="wordmark" aria-label="Plénée-Jugon, revenir au logo"><img src="logo-plenee-jugon-monochrome-bleu-nuit.svg" alt="Plénée-Jugon" width="180" height="64"></a>
 <nav class="nav" aria-label="Rubriques de la charte">
 <a href="#section-2" data-view="section-2">Logo</a>
 <a href="#section-4" data-view="section-4">Typographies</a>
@@ -91,13 +98,20 @@ h2,h3{font-family:var(--display)}
 </div></header>
 <main class="wrap" id="main">
 <section id="section-2" aria-labelledby="heading-logo">
-<div class="page-head"><p class="kicker">01 / 05</p><h1 id="heading-logo">Logo</h1><p>Une signature, deux versions.</p></div>
+<div class="page-head"><p class="kicker">01 / 05</p><h1 id="heading-logo">Logo</h1><p>Le logo de la commune, décliné en une seule couleur.</p></div>
 <div class="logo-grid">
-<div class="logo-card"><p class="card-label">Sur fond clair</p><div class="logo-lockup"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Monogramme PJ bleu"><g fill="#070B66"><path d="M10 10h48v12H10zM10 22h12v49H10zM22 59h36v12H22zM46 22h12v37H46z"/><path d="M70 10h40v12H70zM98 22h12v53H98zM70 63h28v12H70zM70 50h12v13H70zM70 75h12v24H70zM82 87h16v12H82z"/></g><g fill="#3152F4"><rect x="10" y="88" width="12" height="12"/><rect x="22" y="88" width="12" height="12"/><rect x="34" y="88" width="12" height="12"/><rect x="46" y="88" width="12" height="12"/><rect x="46" y="76" width="12" height="12"/></g></svg><strong>PLÉNÉE<br>JUGON<i>.</i></strong></div></div>
-<div class="logo-card dark"><p class="card-label">Sur fond bleu nuit</p><div class="logo-lockup"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Monogramme PJ blanc"><g fill="#FFFFFF"><path d="M10 10h48v12H10zM10 22h12v49H10zM22 59h36v12H22zM46 22h12v37H46z"/><path d="M70 10h40v12H70zM98 22h12v53H98zM70 63h28v12H70zM70 50h12v13H70zM70 75h12v24H70zM82 87h16v12H82z"/></g><g fill="#94ACFF"><rect x="10" y="88" width="12" height="12"/><rect x="22" y="88" width="12" height="12"/><rect x="34" y="88" width="12" height="12"/><rect x="46" y="88" width="12" height="12"/><rect x="46" y="76" width="12" height="12"/></g></svg><strong>PLÉNÉE<br>JUGON<i>.</i></strong></div></div>
+  <div class="logo-card"><p class="card-label">Bleu nuit · fond clair</p>
+    <div class="logo-lockup"><img src="logo-plenee-jugon-monochrome-bleu-nuit.svg" width="492" height="176" alt="Logo officiel Plénée-Jugon, avec ses cinq pictogrammes, en bleu nuit"></div>
+  </div>
+  <div class="logo-card dark"><p class="card-label">Blanc · fond bleu nuit</p>
+    <div class="logo-lockup"><img src="logo-plenee-jugon-monochrome-blanc.svg" width="492" height="176" alt="Logo officiel Plénée-Jugon, avec ses cinq pictogrammes, en blanc"></div>
+  </div>
 </div>
-<div class="logo-actions"><a class="btn primary" href="logo-plenee-jugon-concept.svg" download="logo-plenee-jugon-concept.svg">↓ Télécharger le symbole SVG</a></div>
-<p class="muted">Logo conceptuel — proposition non officielle.</p>
+<div class="logo-actions">
+<a class="btn primary" href="logo-plenee-jugon-monochrome-bleu-nuit.svg" download="logo-plenee-jugon-monochrome-bleu-nuit.svg">↓ SVG bleu nuit</a>
+<a class="btn btn-secondary" href="logo-plenee-jugon-monochrome-blanc.svg" download="logo-plenee-jugon-monochrome-blanc.svg">↓ SVG blanc</a>
+</div>
+<p class="muted">Logo vectoriel issu du PDF fourni · version monochrome de travail. La charte reste un prototype non officiel.</p>
 </section>
 <section id="section-4" aria-labelledby="heading-typo" hidden>
 <div class="page-head"><p class="kicker">02 / 05</p><h1 id="heading-typo">Typographies</h1><p>Deux polices simples et lisibles, dans l’esprit géométrique et arrondi du rapport Nuuday.</p></div>
