@@ -182,7 +182,7 @@ const items=[
 const nav=document.getElementById('nav'),mobileTabs=document.getElementById('mobileTabs'),side=document.getElementById('sidebar'),menu=document.getElementById('menuButton');
 items.forEach((item,i)=>{
  const a=document.createElement('a');a.href='#'+item.id;a.innerHTML='<span>'+String(i+1).padStart(2,'0')+'</span>'+item.name;a.dataset.view=item.id;nav.append(a);
- const b=document.createElement('a');b.href='#'+item.id;b.innerHTML='<span>'+String(i).padStart(2,'0')+'</span>'+item.short;b.dataset.view=item.id;b.setAttribute('role','tab');b.setAttribute('aria-controls',item.id);b.id='tab-'+item.id;mobileTabs.append(b);
+ const b=document.createElement('a');b.href='#'+item.id;b.innerHTML='<span>'+String(i+1).padStart(2,'0')+'</span>'+item.short;b.dataset.view=item.id;b.setAttribute('role','tab');b.setAttribute('aria-controls',item.id);b.id='tab-'+item.id;mobileTabs.append(b);
 });
 function closeMenu(){side.classList.remove('open');menu.setAttribute('aria-expanded','false');}
 menu.addEventListener('click',()=>{const open=side.classList.toggle('open');menu.setAttribute('aria-expanded',String(open));});
