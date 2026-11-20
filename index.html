@@ -125,6 +125,44 @@ a:focus-visible,button:focus-visible{outline-color:var(--cobalt)}
 <div class="motion-warning"><strong>À ÉVITER</strong><span>× Effets 3D décoratifs</span><span>× Parallaxe permanente</span><span>× Clignotements rapides</span><span>× Texte en déplacement continu</span></div>
 </section>
 
+<section aria-label="Publications Facebook" aria-labelledby="tab-section-facebook" class="chapter facebook-chapter" hidden id="section-facebook" role="tabpanel" tabindex="0">
+  <div class="chapter-head">
+    <span>04 / PUBLICATIONS FACEBOOK</span><h2>Vos publications.<br/><i>Au format 4:5.</i></h2>
+    <p>Quatre modèles pour communiquer : annonce municipale, événement, retour en images et information pratique. Personnalisez les textes et exportez un PNG <strong>1080 × 1350 px</strong>.</p>
+  </div>
+  <div class="fb-workbench">
+    <div class="fb-editor">
+      <p class="fb-section-label">01 — Choisir un modèle</p>
+      <div class="fb-template-grid" role="group" aria-label="Types de publications Facebook">
+        <button class="fb-template" data-fb-template="annonce" type="button" aria-pressed="true"><span class="fb-mini">▦</span><strong>Annonce</strong><small>Information municipale</small></button>
+        <button class="fb-template" data-fb-template="agenda" type="button" aria-pressed="false"><span class="fb-mini">◷</span><strong>Événement</strong><small>Agenda et invitations</small></button>
+        <button class="fb-template" data-fb-template="images" type="button" aria-pressed="false"><span class="fb-mini">▣</span><strong>En images</strong><small>Photo et retour</small></button>
+        <button class="fb-template" data-fb-template="pratique" type="button" aria-pressed="false"><span class="fb-mini">ⓘ</span><strong>Info pratique</strong><small>Services et consignes</small></button>
+      </div>
+      <p class="fb-section-label">02 — Personnaliser le contenu</p>
+      <div class="fb-fields">
+        <label class="fb-field" for="fbEyebrow">Rubrique<input id="fbEyebrow" type="text" maxlength="42" value="INFORMATION MUNICIPALE"/></label>
+        <label class="fb-field" for="fbHeadline">Titre de la publication<textarea id="fbHeadline" rows="3" maxlength="100">Plénée-Jugon
+se transforme.</textarea></label>
+        <label class="fb-field" for="fbSubtitle">Texte complémentaire<textarea id="fbSubtitle" rows="3" maxlength="180">Retrouvez les informations et les projets qui font vivre notre commune.</textarea></label>
+        <label class="fb-field" for="fbDate">Date / repère<input id="fbDate" type="text" maxlength="42" value="À LA UNE"/></label>
+        <label class="fb-field" for="fbFooter">Signature / pied de visuel<input id="fbFooter" type="text" maxlength="55" value="PLÉNÉE-JUGON · ACTUALITÉS"/></label>
+        <div class="fb-file">
+          <div><label for="fbImage">Photo facultative</label><small>Modèle « En images » · JPEG, PNG ou WebP · max. 12 Mo</small></div>
+          <input id="fbImage" type="file" accept="image/jpeg,image/png,image/webp" aria-label="Choisir une photo"/>
+          <button id="fbRemovePhoto" type="button" class="fb-file-remove">Retirer la photo</button>
+        </div>
+      </div>
+      <p class="fb-description">Les textes et photos restent sur votre appareil. Le fichier est généré directement dans votre navigateur.</p>
+    </div>
+    <div class="fb-preview-box">
+      <div class="fb-preview-bar"><span>APERÇU FACEBOOK · VERTICAL 4:5</span><span id="fbStatus" role="status" aria-live="polite">Aperçu en cours…</span></div>
+      <div class="fb-canvas-frame"><canvas id="fbCanvas" width="1080" height="1350" role="img" aria-label="Aperçu de la publication Facebook 4:5"></canvas></div>
+      <div class="fb-actions"><button id="fbReset" type="button">↶ Réinitialiser</button><button id="fbExport" class="fb-export" type="button">↓ Télécharger le PNG 4:5</button></div>
+      <p class="fb-caption-note">1080 × 1350 px · 4:5 · Déclinaisons en bleu inspirées du PDF Nuuday. Maquette de charte non officielle.</p>
+    </div>
+  </div>
+</section>
 <section aria-label="Fluid Lettering" aria-labelledby="tab-section-16" class="chapter fluid-chapter" hidden id="section-16" role="tabpanel" tabindex="0">
   <div class="chapter-head"><span>05 / GÉNÉRATEUR FLUID</span><h2>Fluid<br/><i>Lettering.</i></h2><p>Créez des lettres manuscrites en mouvement. Le dégradé bleu suit les courbes du tracé Pacifico ; les superpositions gagnent en profondeur grâce à une ombre subtile. Dessin libre et export SVG / PNG inclus.</p></div>
   <div class="fluid-intro"><p><strong>ATELIER INTERACTIF / PACIFICO</strong><br/>Retrouvez tous les réglages originaux : texte, épaisseur, espacement, animation du tracé, dessin à main levée et exports. L'atelier est intégré à la charte sans modifier son moteur de rendu.</p><a class="fluid-open" href="./fluid-lettering.html" target="_blank" rel="noopener">OUVRIR EN PLEIN ÉCRAN ↗</a></div>
