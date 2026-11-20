@@ -24,9 +24,10 @@ Les **10 nouvelles polices** ont été construites à partir des archives fourni
 
 - Texte initial : **bonjour**, avec 22 caractères maximum.
 - Choix de police dans le sélecteur et possibilité de partager l'URL avec le paramètre `?mot=...&police=...`.
-- Ajustement de l'épaisseur du contour (valeur par défaut **150**, maximum **320**) et de l'espacement.
+- Bouton exemple **Make** à côté du champ de texte : charge « Make », Parisienne, épaisseur 255 et espacement −115. Le même style s'applique ensuite à n'importe quel autre mot.
+- Ajustement de l'épaisseur du contour (valeur par défaut **255**, maximum **320**) et de l'espacement (valeur par défaut **−115**, avec superposition volontaire des lettres).
 - Épaisseur normalisée selon les unités typographiques de chaque police.
-- Dégradé continu violet → bleu → turquoise → vert, même lorsque plusieurs lettres se chevauchent.
+- Dégradé continu **vert → turquoise → bleu → violet** sur **un masque SVG unique** pour tout le mot, sans rupture ni assombrissement lorsque les lettres se chevauchent.
 - Export **SVG** autonome et **PNG** haute résolution, sans police à installer sur l'appareil.
 - Données de contours vectoriels encodées dans `font-packs/*.json` (zlib + base64). Chargement **à la demande**, mise en cache pour éviter de ralentir le chargement initial.
 - Les courbes Bézier sont conservées (quadratiques ou cubiques suivant le fichier source), et le moteur inclut une prise en charge de base de l'espacement typographique et des ligatures courantes disponibles dans les fichiers.
@@ -44,7 +45,7 @@ Cliquer sur **« ✎ Dessiner »** sous l'aperçu pour ouvrir une fenêtre de de
 - **Utiliser ce dessin** : injecte le dessin dans l'aperçu principal ; les boutons SVG/PNG habituels fonctionnent alors avec le dessin manuel.
 - Tout changement ultérieur de texte, police, épaisseur typographique ou espacement ramène au mode « police ».
 
-**Croisements et superpositions** : les traits sont dessinés en blanc dans un *masque SVG unique*. Un seul rectangle reçoit le dégradé horizontal et ce masque. Cela évite les aplats plus foncés ou les ruptures de couleur aux endroits où un trait repasse sur lui-même, y compris entre plusieurs traits. Il s'agit d'une **fusion visuelle** par masque, non d'une opération booléenne qui convertirait toute la forme en un unique contour SVG fermé. Les chemins centraux restent accessibles dans le masque. Le dessin n'est pas enregistré dans l'URL ou le stockage local : exporter le SVG pour le conserver.
+**Croisements et superpositions** : les traits sont dessinés en blanc dans un *masque SVG unique*. Un seul rectangle reçoit le dégradé horizontal (vert → violet) et ce masque. Cela évite les aplats plus foncés ou les ruptures de couleur aux endroits où un trait repasse sur lui-même, y compris entre plusieurs traits. Il s'agit d'une **fusion visuelle** par masque, non d'une opération booléenne qui convertirait toute la forme en un unique contour SVG fermé. Les chemins centraux restent accessibles dans le masque. Le dessin n'est pas enregistré dans l'URL ou le stockage local : exporter le SVG pour le conserver.
 
 ### Fichiers du studio
 
