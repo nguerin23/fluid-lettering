@@ -27,10 +27,12 @@ Les **10 nouvelles polices** ont été construites à partir des archives fourni
 - Bouton exemple **Make** à côté du champ de texte : charge « Make », Parisienne, épaisseur 255 et espacement −115. Le même style s'applique ensuite à n'importe quel autre mot.
 - Ajustement de l'épaisseur du contour (valeur par défaut **255**, maximum **320**) et de l'espacement (valeur par défaut **−115**, avec superposition volontaire des lettres).
 - Épaisseur normalisée selon les unités typographiques de chaque police.
-- Dégradé continu **vert → turquoise → bleu → violet** sur **un masque SVG unique** pour tout le mot, sans rupture ni assombrissement lorsque les lettres se chevauchent.
-- Export **SVG** autonome et **PNG** haute résolution, sans police à installer sur l'appareil.
+- Dégradé continu **vert → turquoise → bleu → violet**, calculé selon la distance parcourue sur une **ligne centrale estimée** pour chaque lettre, et non selon une ligne horizontale. Les boucles et montées/descentes font évoluer la couleur localement.
+- Le contour de chaque lettre est conservé comme **masque SVG vectoriel** ; la carte de couleurs curvilignes est intégrée dans le SVG sous forme d'une petite image PNG embarquée. Le fichier SVG est autonome, mais sa couleur intérieure n'est pas un dégradé SVG 100 % vectoriel.
+- Export **SVG** autonome (masques de contour vectoriels et couleurs embarquées) et **PNG** haute résolution, sans police à installer sur l'appareil.
 - Données de contours vectoriels encodées dans `font-packs/*.json` (zlib + base64). Chargement **à la demande**, mise en cache pour éviter de ralentir le chargement initial.
 - Les courbes Bézier sont conservées (quadratiques ou cubiques suivant le fichier source), et le moteur inclut une prise en charge de base de l'espacement typographique et des ligatures courantes disponibles dans les fichiers.
+- La ligne centrale est reconstituée à partir du contour par squelettisation ; le parcours est une approximation géométrique, **pas l'ordre authentique des coups de plume de l'auteur de la police**.
 - Il s'agit de **contours de lettres**, pas de courbes centrales « single-line » ; une animation authentique de stylo n'est pas proposée.
 
 ## Dessin à main levée
@@ -45,7 +47,7 @@ Cliquer sur **« ✎ Dessiner »** sous l'aperçu pour ouvrir une fenêtre de de
 - **Utiliser ce dessin** : injecte le dessin dans l'aperçu principal ; les boutons SVG/PNG habituels fonctionnent alors avec le dessin manuel.
 - Tout changement ultérieur de texte, police, épaisseur typographique ou espacement ramène au mode « police ».
 
-**Croisements et superpositions** : les traits sont dessinés en blanc dans un *masque SVG unique*. Un seul rectangle reçoit le dégradé horizontal (vert → violet) et ce masque. Cela évite les aplats plus foncés ou les ruptures de couleur aux endroits où un trait repasse sur lui-même, y compris entre plusieurs traits. Il s'agit d'une **fusion visuelle** par masque, non d'une opération booléenne qui convertirait toute la forme en un unique contour SVG fermé. Les chemins centraux restent accessibles dans le masque. Le dessin n'est pas enregistré dans l'URL ou le stockage local : exporter le SVG pour le conserver.
+**Croisements et superpositions** : les traits sont dessinés en blanc dans un *masque SVG unique*. Le dégradé suit maintenant la **longueur cumulée du trait dessiné**. Les segments reçoivent une couleur qui change avec l'avancée de la plume, même lorsqu'elle monte, descend ou fait une boucle. Aux croisements, le dernier segment visible recouvre le précédent sans assombrissement. Il s'agit d'une **fusion visuelle** par masque, non d'une opération booléenne qui convertirait toute la forme en un unique contour SVG fermé. Les chemins centraux restent accessibles dans le SVG exporté. Le dessin n'est pas enregistré dans l'URL ou le stockage local : exporter le SVG pour le conserver.
 
 ### Fichiers du studio
 
