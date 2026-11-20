@@ -37,7 +37,7 @@ Les **10 nouvelles polices** ont été construites à partir des archives fourni
 Cliquer sur **« ✎ Dessiner »** sous l'aperçu pour ouvrir une fenêtre de dessin intégrée :
 
 - Dessiner librement plusieurs traits avec la souris, un stylet ou un écran tactile (événements Pointer Events, capture du pointeur et points coalescés).
-- **Lisser** : curseur de 0 à 100 % ; filtre local contre les tremblements puis interpolation de Catmull-Rom vers des courbes SVG Bézier cubiques.
+- **Lisser** : curseur de **0 à 400 %** (défaut **120 %**). Rééchantillonnage à distance constante, de 1 à 8 passes de lissage spatial, puis simplification des points de contrôle (Douglas-Peucker) et interpolation de Catmull-Rom vers des courbes SVG Bézier cubiques. À **400 %**, le geste peut être fortement simplifié et les petites boucles arrondies ; revenir vers 100–200 % pour conserver davantage de détails.
 - **Épaisseur** : curseur de 1 à 90 px, appliqué immédiatement aux traits existants.
 - **Annuler le trait** : retire le dernier coup de crayon ; **Tout effacer** repart de zéro.
 - **Exporter SVG** : télécharge un document vectoriel autonome composé de chemins centraux.
