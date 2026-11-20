@@ -1,502 +1,184 @@
 <!doctype html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#f7f8f5">
-<meta name="description" content="Fluid : éditeur de lettering avec 11 polices cursives et export vectoriel SVG/PNG.">
-<title>Fluid — Atelier de lettering</title>
-<link rel="stylesheet" href="signature-studio.css?v=1">
-<style>
-  :root { color-scheme:light; --ink:#1c2923;--muted:#73817a;--line:#e4e9e5;--paper:#f7f8f5;--purple:#6150f7; }
-  * {box-sizing:border-box}
-  html {font:16px/1.5 Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--paper);color:var(--ink)}
-  body {margin:0;min-width:320px}
-  button,input {font:inherit}
-  button {cursor:pointer}
-  button:focus-visible,input:focus-visible,select:focus-visible {outline:3px solid #8a7df6;outline-offset:3px}
-  .wrap {max-width:1180px;margin:0 auto;padding:0 27px}
-  header {border-bottom:1px solid var(--line);background:#ffffffa8}
-  .head {min-height:78px;display:flex;align-items:center;justify-content:space-between;gap:18px}
-  .brand {font-weight:850;font-size:27px;letter-spacing:-1.9px;text-decoration:none;color:var(--ink);display:flex;align-items:center;gap:9px}
-  .brand-mark {display:grid;place-items:center;width:30px;height:30px;border-radius:8px;font-size:19px;line-height:1;color:#fff;background:linear-gradient(145deg,#6452fa,#4bdab6,#57f979);font-weight:850}
-  .head-note {font-size:11px;letter-spacing:1.8px;color:#87958c;font-weight:750;text-transform:uppercase}
-  main {padding-top:45px;padding-bottom:50px}
-  .heading {display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:24px}
-  .eyebrow {color:#7864e7;text-transform:uppercase;font-size:11px;letter-spacing:2px;font-weight:820}
-  h1 {font-size:clamp(30px,4.5vw,52px);line-height:1.06;letter-spacing:-2.3px;margin:9px 0 0;font-weight:850}
-  .subtitle {max-width:270px;font-size:13px;line-height:1.6;color:var(--muted);margin:0 0 4px}
-  .card {border-radius:19px;background:#fff;border:1px solid var(--line);overflow:hidden}
-  .canvas-top {height:54px;padding:0 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:15px;align-items:center}
-  .label-title {font-size:12px;font-weight:850}
-  .live {font-size:11px;font-weight:780;color:#34875f;letter-spacing:.5px;display:flex;align-items:center;gap:8px}
-  .live::before {content:'';background:#46db8c;width:7px;height:7px;border-radius:50%}
-  .stage {height:365px;display:flex;align-items:center;justify-content:flex-start;padding:28px 32px 36px;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;scrollbar-color:#b8b3de #fafafa;overscroll-behavior-x:contain;background:#fff}
-  #preview {flex:0 0 auto;margin-inline:auto;width:max-content;line-height:0}
-  #preview svg {display:block;max-width:none;max-height:none;overflow:visible}
-  .empty {color:#9ca9a0;font-size:16px;line-height:1.4}
-  .text-link {border:0;background:transparent;color:#6252ef;padding:0;font:inherit;font-weight:850;text-decoration:underline;text-underline-offset:3px}
-  .stage-bottom {border-top:1px solid var(--line);padding:17px 21px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-  .hint {font-size:11px;color:var(--muted);font-weight:650}
-  .actions {display:flex;gap:9px}
-  .btn {border:1px solid #dae3dc;background:#fff;color:#203128;border-radius:9px;font-size:12px;font-weight:850;padding:11px 17px;display:inline-flex;align-items:center;gap:9px;min-height:41px}
-  .btn.primary {border-color:#202823;background:#202823;color:#fff}
-  .btn:hover {background:#f6f8f5}
-  .btn.primary:hover {background:#3e4942}
-  .btn:disabled {opacity:.45;cursor:not-allowed}
-  .btn svg {width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-  .editor {padding:25px 25px 26px;display:grid;grid-template-columns:minmax(185px,1.35fr) minmax(175px,1.1fr) minmax(145px,1fr) minmax(145px,1fr);gap:20px;align-items:start}
-  .control {min-width:0}
-  .control label,.control-head label {font-size:12px;font-weight:820}
-  .control-head {display:flex;justify-content:space-between;gap:12px;align-items:baseline;margin-bottom:14px}
-  output {font-size:12px;font-variant-numeric:tabular-nums;color:#5e4fdb;font-weight:850}
-  input[type=text] {margin-top:10px;min-width:0;width:100%;border:1.5px solid #d9e0d9;border-radius:10px;height:53px;padding:0 15px;background:#fafbf9;font-size:20px;font-weight:720;letter-spacing:-.5px;color:var(--ink)}
-  input[type=text]:focus {border-color:#7c6af4;background:#fff}
-  select {margin-top:10px;min-width:0;width:100%;border:1.5px solid #d9e0d9;border-radius:10px;height:53px;padding:0 12px;background:#fafbf9;color:var(--ink);font-size:14px;font-weight:740;cursor:pointer}
-  select:focus {border-color:#7c6af4;background:#fff}
-  input[type=range] {width:100%;accent-color:#6654f5;cursor:pointer;margin:2px 0 7px;height:23px;touch-action:pan-y}
-  .range-ends {display:flex;justify-content:space-between;color:#9ca7a0;font-size:10px;font-weight:680;font-variant-numeric:tabular-nums}
-  .note {font-size:11px;color:#88978c;margin:10px 0 0}
-  .note strong {color:#4d5d53}
-  .error {color:#c03838;font-size:12px;font-weight:700;min-height:18px;margin:0}
-  .bottom-note {display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:23px;color:#8c9a91;font-size:11px;flex-wrap:wrap}
-  .bottom-note a {color:inherit;text-decoration:underline;text-underline-offset:2px}
-  .toast {position:fixed;left:50%;bottom:24px;transform:translate(-50%,12px);opacity:0;pointer-events:none;background:#213029;color:#fff;padding:12px 17px;border-radius:10px;font-size:12px;font-weight:750;transition:.17s;z-index:3;white-space:nowrap}
-  .toast.show {transform:translate(-50%,0);opacity:1}
-  @media(max-width:820px){.editor{grid-template-columns:1fr 1fr}.control.word{grid-column:1/-1}.heading{align-items:start;flex-direction:column;gap:10px}.subtitle{max-width:570px}.stage{height:320px}}
-  @media(max-width:520px){.wrap{padding:0 16px}.head{min-height:64px}.brand{font-size:25px}.head-note{font-size:9px;letter-spacing:1px}main{padding-top:29px;padding-bottom:26px}h1{letter-spacing:-1.4px}.stage{height:235px;padding:14px 16px 20px}.editor{grid-template-columns:1fr;gap:21px;padding:21px 18px}.control.word{grid-column:auto}.canvas-top{padding:0 16px}.stage-bottom{padding:15px;gap:15px}.actions{width:100%}.btn{flex:1;justify-content:center}.hint{font-size:10px}.bottom-note{margin-top:17px}}
-</style>
-</head>
-<body>
-<header><div class="wrap head"><div class="brand"><span class="brand-mark">f</span>fluid<span style="color:#6c58f6">.</span></div><span class="head-note">Vector lettering studio</span></div></header>
-<main class="wrap">
-  <div class="heading"><div><div class="eyebrow">Atelier typographique</div><h1>Un mot, des courbes.</h1></div><p class="subtitle">Choisis une police ou dessine à main levée : le dégradé suit désormais la courbe de chaque trait, avec exports SVG/PNG.</p></div>
-  <section class="card" aria-label="Éditeur de lettering">
-    <div class="canvas-top"><span class="label-title">Ton lettrage</span><span id="liveStatus" class="live" aria-live="polite">Aperçu en direct</span></div>
-    <div class="stage" id="stage"><div id="preview" role="img" aria-label="Lettrage vectoriel"><span class="empty">Chargement du tracé…</span></div></div>
-    <div class="stage-bottom"><span class="hint"><span id="fontHint">Police Pacifico · dégradé suivant les courbes · SVG vectoriel</span></span><div class="actions">
-      <button id="openDrawing" class="btn" type="button" aria-haspopup="dialog" aria-controls="drawingDialog">✎ Dessiner</button>
-      <button id="downloadPNG" class="btn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>PNG</button>
-      <button id="downloadSVG" class="btn primary" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>SVG</button>
-    </div></div>
-    <div class="editor">
-      <div class="control word"><label for="word">Ton mot</label><input id="word" type="text" maxlength="22" autocomplete="off" spellcheck="false" value="bonjour" placeholder="Écris ici…"><p class="note">22 caractères maximum, accents inclus. Exemple : <button id="exampleMake" class="text-link" type="button">Make</button>.</p></div>
-      <div class="control"><label for="font">Police d’écriture</label><select id="font" aria-label="Police d’écriture">
-          <option value="pacifico" selected>Pacifico</option>
-        </select><p class="note">Une seule écriture disponible : Pacifico.</p></div>
-      <div class="control"><div class="control-head"><label for="thickness">Épaisseur</label><output id="thicknessValue" for="thickness">255</output></div><input id="thickness" type="range" min="12" max="320" step="1" value="255"><div class="range-ends"><span>Fin</span><span>Ultra épais</span></div></div>
-      <div class="control"><div class="control-head"><label for="spacing">Espacement</label><output id="spacingValue" for="spacing">-115</output></div><input id="spacing" type="range" min="-200" max="180" step="1" value="-115"><div class="range-ends"><span>−200 · superposition</span><span>+180 · espacé</span></div><p class="note">Passe en négatif pour rapprocher les lettres. L’épaisseur renforce le contour original.</p></div>
-    </div>
-  </section>
-  <footer class="bottom-note"><span>FLUID · Pacifico · tracés vectoriels éditables</span><span><a href="FONT-LICENSES.md" target="_blank" rel="noopener">Crédits et licences des polices</a></span></footer>
-</main>
+<html lang="fr"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><meta content="#f6f3e9" name="theme-color"/><meta content="Charte graphique interactive de Plénée-Jugon : 16 rubriques, identité, logo, couleurs, pictogrammes et motion." name="description"/><title>Plénée-Jugon | Charte graphique interactive — 16 rubriques</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><style id="embedded-styles">:root{--ink:#182520;--paper:#f6f3e9;--white:#fffefa;--orange:#f25a36;--yellow:#f3c853;--sage:#d9e6c7;--blue:#65a89b;--line:#d4d5c9;--display:'Space Grotesk',Arial,sans-serif;--body:'DM Sans',Arial,sans-serif}*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:90px}body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;-webkit-font-smoothing:antialiased}button,a{font:inherit}button{cursor:pointer}a{color:inherit;text-decoration:none}a:focus-visible,button:focus-visible,.map-point:focus-visible{outline:3px solid var(--orange);outline-offset:4px}::selection{background:var(--orange);color:var(--white)}.topbar{height:70px;position:sticky;top:0;background:var(--paper);border-bottom:1px solid var(--ink);display:flex;align-items:center;justify-content:space-between;gap:18px;padding:0 3%;z-index:30}.wordmark{display:flex;align-items:center;gap:12px;font:700 18px var(--display);letter-spacing:-.8px;white-space:nowrap}.hyphen{color:var(--orange)}.pixel-logo{width:27px;height:27px;display:grid;grid-template-columns:repeat(3,1fr);gap:2px;transform:rotate(0)}.pixel-logo i{display:block;background:var(--ink)}.pixel-logo i:nth-child(2),.pixel-logo i:nth-child(4),.pixel-logo i:nth-child(9){background:var(--orange)}.pixel-logo i:nth-child(3),.pixel-logo i:nth-child(7){opacity:0}.edition{font:600 10px var(--display);letter-spacing:1.4px}.edition b{margin-left:20px;color:var(--orange)}.theme-button,.menu-button{border:1px solid var(--ink);background:none;padding:8px 12px;font-weight:800}.theme-button{font-size:18px}.menu-button{display:none;font:700 12px var(--display)}.shell{display:grid;grid-template-columns:244px minmax(0,1fr);max-width:1900px;margin:auto}.sidebar{height:calc(100vh - 70px);position:sticky;top:70px;border-right:1px solid var(--ink);display:flex;flex-direction:column;background:var(--paper)}.side-caption{padding:25px 18px 17px;margin:0;font:700 10px var(--display);letter-spacing:1.2px;border-bottom:1px solid var(--line)}.side-caption span{display:block;color:#6c736b;margin-top:7px;font-size:9px}.sidebar nav{overflow-y:auto;flex:1;padding:9px 0}.sidebar nav a{display:flex;align-items:center;padding:10px 13px 10px 18px;gap:12px;font-size:11px;font-weight:700;border-left:4px solid transparent;transition:background .2s}.sidebar nav a span{font:600 10px var(--display);color:#7b857a}.sidebar nav a:hover,.sidebar nav a.active{background:var(--sage);border-color:var(--orange)}.sidebar-bottom{border-top:1px solid var(--ink);padding:18px;font:800 10px var(--display);line-height:1.7}.sidebar-bottom small{color:#747e74;font-weight:500}.status-dot{display:inline-block;width:8px;height:8px;background:var(--orange);margin-right:6px}main{min-width:0;overflow:hidden}.hero{min-height:660px;display:grid;grid-template-columns:52% 48%;border-bottom:1px solid var(--ink)}.hero-copy{padding:clamp(35px,5vw,85px) clamp(24px,5vw,80px) 30px;display:flex;flex-direction:column;align-items:flex-start}.eyebrow,.micro,.chapter-head>span{font:700 11px var(--display);letter-spacing:1.6px}.live-square{display:inline-block;width:9px;height:9px;background:var(--orange);margin-right:8px}.hero h1{font:700 clamp(58px,6.5vw,118px)/.91 var(--display);letter-spacing:-.075em;margin:60px 0 25px;white-space:nowrap}.hero h1 span{color:var(--orange)}.hero h1 em{font-style:normal;color:var(--orange);text-decoration:underline;text-decoration-thickness:9px;text-underline-offset:9px}.hero-copy>p{font-size:17px;line-height:1.6;max-width:450px}.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:32px}.button{display:inline-flex;align-items:center;justify-content:space-between;gap:25px;padding:15px 18px;border:1px solid var(--ink);font:800 11px var(--display);letter-spacing:.3px;transition:transform .2s,background .2s}.button:hover{transform:translate(-2px,-2px)}.primary{background:var(--ink);color:var(--paper)}.ghost{background:transparent;color:var(--ink)}.light{background:var(--paper);color:var(--ink)}.button.disabled{opacity:.4;cursor:not-allowed}.hero-foot{display:flex;justify-content:space-between;gap:16px;width:100%;margin-top:auto;padding-top:40px;font:700 10px var(--display);letter-spacing:1px}.hero-art{background:var(--yellow);position:relative;min-height:660px;overflow:hidden;display:flex;align-items:center;justify-content:center}.art-grid{position:absolute;inset:0;background-image:linear-gradient(#18252012 1px,transparent 1px),linear-gradient(90deg,#18252012 1px,transparent 1px);background-size:40px 40px}.art-label,.art-bottom{position:absolute;left:32px;right:32px;display:flex;justify-content:space-between;font:700 10px var(--display);letter-spacing:1px}.art-label{top:32px}.art-bottom{bottom:32px;gap:12px}.main-symbol{width:min(82%,490px);filter:none;animation:float 7s ease-in-out infinite}.crosshair{position:absolute;font:300 40px var(--display)}.crosshair.one{right:8%;top:20%}.crosshair.two{left:8%;bottom:18%}@keyframes float{50%{transform:translateY(-8px)}}.ticker{background:var(--ink);color:var(--paper);white-space:nowrap;overflow:hidden;padding:16px 0;font:800 13px var(--display);letter-spacing:2px}.ticker div{width:max-content;animation:marquee 25s linear infinite}.ticker b{color:var(--orange);margin:0 38px}@keyframes marquee{to{transform:translateX(-45%)}}.chapter{padding:clamp(58px,7vw,115px) clamp(22px,5.5vw,100px);border-bottom:1px solid var(--ink);scroll-margin-top:70px}.chapter-head{display:grid;grid-template-columns:1fr 1fr;column-gap:35px;align-items:end;margin-bottom:52px}.chapter-head>span{grid-column:1/-1;color:var(--orange);border-bottom:1px solid var(--ink);padding-bottom:18px;margin-bottom:32px}.chapter-head h2{font:700 clamp(50px,6vw,100px)/.96 var(--display);letter-spacing:-.075em;margin:0}.chapter-head h2 i{font-style:normal;color:var(--orange)}.chapter-head>p{font-size:17px;line-height:1.7;max-width:470px;margin:0 0 7px;justify-self:end}.grid-three{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.value-tile{min-height:280px;display:flex;flex-direction:column;padding:26px;border:1px solid var(--ink)}.value-tile>span{font:700 10px var(--display)}.value-pict{font:700 100px var(--display);line-height:1.4;margin:auto}.value-tile h3,.value-tile p{margin:5px 0}.value-tile h3{font:700 25px var(--display);letter-spacing:-1px}.value-tile p{font-size:13px;line-height:1.5}.warm{background:var(--orange)}.olive{background:var(--sage)}.cream{background:var(--yellow)}.manifesto{background:var(--ink);color:var(--paper);padding:34px;margin-top:16px;display:grid;grid-template-columns:1fr 2fr 1fr;align-items:end;gap:25px}.manifesto small{align-self:start;font:700 10px var(--display)}.manifesto h3{font:700 clamp(35px,4vw,65px)/.99 var(--display);letter-spacing:-.06em;margin:25px 0 0}.manifesto h3 span{color:var(--orange)}.manifesto>div{font-size:13px;line-height:1.7}.logo-display{display:grid;grid-template-columns:1fr 1fr;min-height:350px;border:1px solid var(--ink)}.logo-light,.logo-dark{padding:26px;display:flex;flex-direction:column;justify-content:space-between}.logo-light{background:var(--white)}.logo-dark{background:var(--ink);color:var(--paper)}.brand-sign{display:flex;align-items:center;justify-content:center;gap:18px;margin:auto}.brand-sign strong{font:700 clamp(37px,4vw,70px)/.87 var(--display);letter-spacing:-.075em}.brand-dot{color:var(--orange)}.brand-monogram svg{width:95px;height:95px}.mini-btn{border:0;background:none;text-align:left;font:800 10px var(--display);padding:5px 0;align-self:start}.logo-dark .micro{color:var(--paper)}.top-gap{margin-top:18px}.grid-two{display:grid;grid-template-columns:1fr 1fr;gap:18px}.rule-panel,.info-box{border:1px solid var(--ink);padding:25px}.rule-panel h3{font:700 23px var(--display);margin:0 0 24px}.rule-panel p,.info-box p{font-size:13px;line-height:1.7}.construction{background-image:linear-gradient(#1825201f 1px,transparent 1px),linear-gradient(90deg,#1825201f 1px,transparent 1px);background-size:20px 20px;height:190px;display:flex;justify-content:center;align-items:center}.protection{border:2px dashed var(--orange);padding:25px}.small-logo{font:700 70px var(--display)}.small-logo span,.variation span{color:var(--orange)}.logo-variations{min-height:190px;display:flex;gap:8px;align-items:center}.variation{flex:1;background:var(--ink);color:var(--paper);height:105px;display:flex;justify-content:center;align-items:center;font:700 32px var(--display);letter-spacing:-2px}.variation.outlined{background:transparent;color:var(--ink);font-size:12px;border:1px solid var(--ink);letter-spacing:-.5px}.variation.orange{background:var(--orange);color:var(--ink)}.dont{border:1px solid var(--ink);padding:17px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-top:18px;font-size:12px}.dont strong{color:var(--orange)}.color-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.color-card{min-width:0;border:1px solid var(--ink);background:var(--white);text-align:left;padding:0;transition:transform .2s}.color-card:hover{transform:translateY(-5px)}.color-swatch{height:210px;display:flex;align-items:flex-end;padding:13px}.color-swatch span{font:700 40px var(--display)}.color-detail{padding:17px;font-size:11px;line-height:1.8}.color-detail strong{display:block;font:700 16px var(--display);margin-bottom:8px}.color-detail code{font:600 11px var(--display)}.info-box small,.type-feature small,.component-box small,.map-aside small{font:700 11px var(--display);letter-spacing:1px}.color-duos{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:25px}.color-duos span{padding:35px 12px;font:700 12px var(--display)}.note,.footnote{font-size:12px;color:#6a7369;line-height:1.7;margin-top:22px}.type-feature{display:grid;grid-template-columns:1.35fr 1fr;border:1px solid var(--ink)}.type-feature>div{padding:30px}.type-feature>div+div{border-left:1px solid var(--ink)}.type-feature h3{font:700 clamp(40px,5vw,76px)/1 var(--display);letter-spacing:-.075em;margin:50px 0}.type-feature h3 span{color:var(--orange)}.type-feature h4{font:600 30px/1.1 var(--body);margin:50px 0 23px}.type-feature p{line-height:1.7}.alphabet{font:500 15px/1.8 var(--display);border-top:1px solid var(--line);padding-top:20px}.alphabet.secondary{font-family:var(--body);margin-top:45px}.type-scale{border:1px solid var(--ink);border-top:0}.type-scale>div{display:grid;grid-template-columns:180px 1fr;align-items:center;gap:20px;padding:19px 26px;border-bottom:1px solid var(--line)}.type-scale>div:last-child{border:0}.type-scale b{font:700 11px var(--display)}.ts-xl{font:700 clamp(28px,4vw,55px)/1 var(--display)}.ts-lg{font:700 31px var(--display)}.ts-md{font:700 22px var(--display)}.ts-sm{font:400 16px var(--body)}.system-board{min-height:380px;display:grid;grid-template-columns:1.15fr 1fr;background:var(--ink);color:var(--paper)}.system-pixel{display:grid;grid-template-columns:repeat(12,1fr);grid-template-rows:repeat(8,1fr);padding:25px;gap:2px;min-height:380px}.system-pixel i{display:block;background:#24352d;transition:background .3s}.system-pixel i.on{background:var(--orange)}.system-pixel i.alt{background:var(--yellow)}.system-instructions{padding:50px 40px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center}.system-instructions>span{font:700 11px var(--display);letter-spacing:1px}.system-instructions h3{font:700 clamp(40px,4vw,66px)/.98 var(--display);letter-spacing:-.06em;margin:28px 0}.system-instructions p{max-width:320px;line-height:1.7}.system-instructions button{margin-top:20px}.module-row{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:24px}.module-row>div{border-top:1px solid var(--ink);padding-top:20px}.module-row h4{margin:16px 0 7px;font:700 15px var(--display)}.module-row p{margin:0;font-size:12px}.module-image{height:130px;background:var(--sage);display:flex;align-items:center;justify-content:center;gap:5px}.module-image i{display:block;width:28px;height:28px;background:var(--ink)}.module-image.step i:nth-child(2){transform:translateY(28px)}.module-image.step i:nth-child(3){transform:translateY(56px)}.module-image.step i:nth-child(4){transform:translateY(28px);background:var(--orange)}.module-image.line i{background:var(--orange)}.module-image.mixed i:nth-child(1){width:50px;height:50px}.module-image.mixed i:nth-child(2){background:var(--orange)}.module-image.mixed i:nth-child(3){height:80px}.module-image.mixed i:nth-child(4){background:var(--yellow);width:50px}.icon-gallery{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--ink);border-right:0;border-bottom:0}.icon-card{min-height:190px;display:flex;align-items:center;justify-content:center;flex-direction:column;border-right:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:15px;gap:10px}.icon-card svg{width:95px;height:95px}.icon-card span{font:700 11px var(--display);letter-spacing:.8px;text-align:center}.icon-card small{font:500 10px var(--display);color:#718075}.spec-strip{background:var(--ink);color:var(--paper);display:flex;flex-wrap:wrap;justify-content:space-between;gap:15px;padding:24px;font:600 10px var(--display)}.spec-strip b{color:var(--yellow);margin-left:5px}.layout-demo{display:grid;grid-template-columns:1fr 1fr;gap:16px}.layout-panel{background:var(--orange);min-height:490px;padding:30px;display:flex;flex-direction:column}.layout-tag,.layout-footer{font:700 12px var(--display)}.layout-title{font:700 clamp(56px,7vw,110px)/.9 var(--display);letter-spacing:-.09em;margin:auto 0}.layout-title span{color:var(--paper)}.layout-footer{display:flex;justify-content:space-between}.layout-guides{background:var(--white);border:1px solid var(--ink);padding:25px;display:flex;flex-direction:column}.guides-inner{flex:1;display:grid;grid-template-columns:repeat(12,1fr);gap:4px}.guides-inner b{background:#f0cdc2;opacity:.75;text-align:center;padding-top:10px;font:600 9px var(--display)}.layout-guides>span{font:700 11px var(--display);margin-top:20px}.photo-collage{display:grid;grid-template-columns:1.2fr .8fr;grid-template-rows:250px 180px;gap:14px}.photo-collage figure{margin:0;position:relative;background:#d1d6c8;overflow:hidden}.photo-collage img{width:100%;height:100%;object-fit:cover;display:block}.photo-large{grid-row:span 2}.photo-collage figcaption{position:absolute;bottom:0;left:0;right:0;padding:15px 20px;background:var(--paper);display:flex;justify-content:space-between;gap:15px;font-size:12px}.photo-collage figcaption b{font:700 11px var(--display)}.photo-typographic{background:var(--yellow);padding:23px;display:flex;justify-content:space-between;flex-direction:column}.photo-typographic>span{font:700 clamp(21px,2.5vw,36px)/.98 var(--display);letter-spacing:-1.5px}.photo-typographic b,.photo-typographic .accent{color:var(--orange)}.photo-typographic small{font:700 10px var(--display)}.map-section{display:grid;grid-template-columns:1.6fr .8fr;border:1px solid var(--ink)}.map-card{background:#e9eee2;min-width:0}.map-meta,.map-caption{padding:18px;display:flex;justify-content:space-between;gap:15px;font:700 10px var(--display)}.map-svg{display:block;width:100%;height:auto}.map-svg .map-point{cursor:pointer}.map-svg text{font:700 12px var(--display);fill:var(--ink)}.map-aside{padding:30px;border-left:1px solid var(--ink);display:flex;flex-direction:column}.map-aside h3{font:700 clamp(32px,3.4vw,55px)/.98 var(--display);letter-spacing:-.07em}.map-aside h3 span{color:var(--orange)}.map-aside p{line-height:1.7}.map-key{display:grid;gap:13px;margin:auto 0 30px}.map-key span{display:flex;align-items:center;gap:12px;font-size:12px}.map-key i{width:17px;height:17px;display:block;border:1px solid var(--ink)}.textlink{font:800 11px var(--display);text-decoration:underline;text-underline-offset:6px}.infographic{display:grid;grid-template-columns:repeat(4,1fr);margin-top:20px;gap:12px}.infographic>div{background:var(--sage);padding:20px;min-height:115px;display:flex;justify-content:space-between;flex-direction:column}.infographic strong{font:700 35px var(--display)}.infographic span{font:700 11px var(--display)}.print-showcase{display:grid;grid-template-columns:.9fr 1.1fr;gap:20px}.poster{background:var(--yellow);min-height:600px;padding:28px;display:flex;flex-direction:column;overflow:hidden}.poster-top,.poster-bottom{font:700 12px var(--display);display:flex;justify-content:space-between}.poster-head{font:700 clamp(68px,7.5vw,130px)/.83 var(--display);letter-spacing:-.1em;margin:50px 0 0}.poster-head span{color:var(--orange)}.poster-graphic{display:grid;grid-template-columns:repeat(3,55px);gap:0;transform:rotate(-20deg);margin:auto;align-self:center}.poster-graphic span{width:55px;height:55px;background:var(--ink)}.poster-graphic span:nth-child(2),.poster-graphic span:nth-child(4),.poster-graphic span:nth-child(9){background:var(--orange)}.poster-graphic span:nth-child(3),.poster-graphic span:nth-child(7){opacity:0}.print-stack{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:20px}.bulletin{background:var(--paper);border:1px solid var(--ink);min-height:430px;padding:15px;display:flex;flex-direction:column;box-shadow:8px 8px 0 #18252022;transform:rotate(-2deg)}.bulletin-head{font:700 26px var(--display);letter-spacing:-1.5px;line-height:1}.bulletin-head span{color:var(--orange)}.bulletin-head small{display:block;font:700 9px var(--display);letter-spacing:0;margin:10px 0}.bulletin img{height:170px;width:100%;object-fit:cover}.bulletin h4{font:700 34px/.95 var(--display);letter-spacing:-2px;margin:20px 0}.bulletin-bottom{font:700 8px var(--display);display:flex;justify-content:space-between;margin-top:auto}.stationery{background:var(--white);border:1px solid var(--ink);min-height:370px;padding:19px;display:flex;flex-direction:column;justify-content:space-between;font:600 10px/1.8 var(--body);transform:rotate(3deg)}.stationery-brand{font:700 38px var(--display)}.stationery-brand span{color:var(--orange)}.stationery-brand small{font-size:8px}.stationery-lines{display:grid;gap:11px}.stationery-lines i{height:1px;background:#a4a8a0}.stationery-lines i:nth-child(2){width:80%}.stationery-lines i:nth-child(3){width:60%}.use-cases{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}.use-cases span{border:1px solid var(--ink);padding:11px 14px;font:700 11px var(--display)}.digital-showcase{display:grid;grid-template-columns:1.5fr .68fr;gap:20px}.browser{border:1px solid var(--ink);min-width:0;background:var(--white)}.browser-bar{background:var(--ink);color:var(--paper);display:flex;justify-content:space-between;align-items:center;padding:11px 15px;font:600 10px var(--display)}.browser-content{padding:20px}.browser-nav{display:flex;justify-content:space-between;align-items:center;font:700 26px var(--display)}.browser-nav span,.social-head span{color:var(--orange)}.browser-nav small{font:700 10px var(--display)}.browser-hero{background:var(--sage);min-height:320px;padding:28px;margin-top:20px;display:flex;flex-direction:column;align-items:flex-start}.browser-hero small{font:700 10px var(--display)}.browser-hero h3{font:700 clamp(50px,5.2vw,90px)/.92 var(--display);letter-spacing:-.075em;margin:auto 0}.browser-hero h3 em{font-style:normal;color:var(--orange)}.browser-btn{background:var(--ink);color:var(--paper);padding:14px;font:700 10px var(--display)}.browser-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}.browser-tiles span{background:var(--yellow);padding:18px 10px;font:700 11px var(--display)}.browser-tiles span:nth-child(2){background:var(--orange)}.browser-tiles span:nth-child(3){background:var(--blue)}.social-mock{background:var(--orange);padding:20px;display:flex;flex-direction:column;min-height:430px}.social-head{font:700 30px var(--display);display:flex;justify-content:space-between}.social-head small{font:700 9px var(--display)}.social-main{font:700 clamp(48px,4.5vw,79px)/.9 var(--display);letter-spacing:-.08em;margin:auto 0}.social-main span{color:var(--paper)}.social-pattern{font-size:40px;letter-spacing:10px}.social-bottom{display:flex;justify-content:space-between;font:700 10px var(--display)}.component-box{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--ink);margin-top:20px}.component-box>div{padding:26px}.component-box>div+div{border-left:1px solid var(--ink)}.component-buttons{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}.component-box p{font-size:12px;line-height:1.7}.motion-visual{display:flex;align-items:center;gap:10px;min-height:72px}.motion-visual span{width:30px;height:30px;background:var(--orange);animation:pulse 2s ease-in-out infinite}.motion-visual span:nth-child(2){animation-delay:.15s}.motion-visual span:nth-child(3){animation-delay:.3s}.motion-visual span:nth-child(4){animation-delay:.45s}.motion-visual span:nth-child(5){animation-delay:.6s}@keyframes pulse{50%{transform:translateY(-12px);background:var(--yellow)}}.signage-showcase{display:grid;grid-template-columns:1.15fr .85fr;gap:24px}.big-sign{background:var(--ink);color:var(--paper);padding:30px;min-height:400px;display:flex;flex-direction:column}.sign-top,.sign-foot{display:flex;justify-content:space-between;align-items:center;font:700 14px var(--display)}.sign-top{font-size:35px}.sign-top span{color:var(--orange)}.sign-top small{font:700 10px var(--display)}.sign-text{font:700 clamp(50px,6vw,100px)/.93 var(--display);letter-spacing:-.06em;margin:auto 0}.sign-text span{color:var(--orange);padding-left:20px}.direction-sign{align-self:center;background:var(--yellow);padding:15px;width:100%}.direction-sign>div{padding:18px 13px;display:flex;justify-content:space-between;gap:15px;border-bottom:2px solid var(--ink);font:700 clamp(17px,2vw,27px) var(--display)}.direction-sign>div:last-child{border-bottom:0}.dos-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.do,.dont-do{border:1px solid var(--ink);padding:27px}.do{background:var(--sage)}.dont-do{background:#efddd4}.do>span,.dont-do>span{font:700 11px var(--display)}.do h3,.dont-do h3{font:700 27px var(--display);margin:35px 0 20px}.do-demo{background:var(--ink);color:var(--paper);padding:35px;font:700 55px/.9 var(--display);letter-spacing:-3px}.do-demo span{color:var(--orange)}.bad-demo{background:linear-gradient(100deg,#aa24dc,#e7e953);padding:50px 12px;text-align:center;font:italic 36px Georgia,serif;text-shadow:3px 3px 5px #fff;transform:skew(-4deg)}.do p,.dont-do p{font-size:13px;line-height:1.7}.accessibility{border:1px solid var(--ink);display:grid;grid-template-columns:1fr 1fr;margin-top:20px}.accessibility>div{padding:28px}.accessibility h3{font:700 32px var(--display)}.accessibility ul{border-left:1px solid var(--ink);margin:0;padding:24px 30px 24px 48px;font-size:13px;line-height:1.9}.download-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.download-card{min-height:180px;display:flex;align-items:flex-start;flex-direction:column;border:1px solid var(--ink);background:var(--white);padding:22px;text-align:left;transition:background .2s}.download-card:hover{background:var(--yellow)}.download-card>span{font-size:31px;margin-bottom:auto}.download-card strong{font:700 19px var(--display)}.download-card small{margin-top:10px;font-size:12px}.resources-note{background:var(--ink);color:var(--paper);display:grid;grid-template-columns:2fr 1fr;align-items:center;margin-top:20px;padding:35px}.resources-note b{font:700 12px var(--display)}.resources-note p{line-height:1.7;font-size:13px;max-width:530px}.resources-symbol{font:700 120px var(--display);text-align:center;letter-spacing:-10px}.resources-symbol span{color:var(--orange)}.footer{background:var(--orange);padding:50px clamp(22px,5.5vw,100px);display:grid;grid-template-columns:2fr 1fr;align-items:end;gap:40px}.footer-main{font:700 clamp(65px,11vw,175px)/.83 var(--display);letter-spacing:-.09em}.footer-main span{color:var(--paper)}.footer-side{font:700 12px/1.7 var(--display)}.footer-side a{text-decoration:underline;text-underline-offset:5px}.footer-side p{margin-top:35px;font:500 11px var(--body)}.toast{position:fixed;bottom:24px;right:24px;z-index:50;background:var(--ink);color:var(--paper);padding:15px 25px;font:700 12px var(--display);transform:translateY(120px);opacity:0;transition:.25s;pointer-events:none}.toast.show{transform:translateY(0);opacity:1}body.dark-view{--paper:#e3e5dc;--white:#f3f1e9}@media(max-width:1200px){.shell{grid-template-columns:215px minmax(0,1fr)}.hero h1{font-size:clamp(46px,6vw,90px)}.hero{min-height:570px}.hero-art{min-height:570px}.chapter{padding:65px 40px}.chapter-head h2{font-size:clamp(45px,5.5vw,75px)}.color-grid{grid-template-columns:repeat(3,1fr)}.color-swatch{height:150px}.print-stack{grid-template-columns:1fr}.bulletin,.stationery{transform:none}.poster{min-height:540px}}@media(max-width:850px){.topbar{height:62px}.edition{display:none}.menu-button{display:block;margin-left:auto}.shell{display:block}.sidebar{position:fixed;top:62px;left:0;bottom:0;width:min(320px,85vw);height:auto;z-index:22;transform:translateX(-105%);transition:transform .25s;border-right:1px solid var(--ink);box-shadow:15px 0 0 #18252018}.sidebar.open{transform:translateX(0)}.hero{grid-template-columns:1fr}.hero-copy{min-height:500px;padding:50px 28px 26px}.hero h1{font-size:clamp(57px,9vw,100px);margin:46px 0 24px}.hero-art{min-height:400px}.main-symbol{width:min(66%,330px)}.chapter{padding:65px 25px}.chapter-head{grid-template-columns:1fr;gap:25px}.chapter-head h2{font-size:clamp(55px,9vw,85px)}.chapter-head>p{justify-self:start}.manifesto{grid-template-columns:1fr 1fr}.manifesto small{grid-column:1/-1}.map-section{grid-template-columns:1fr}.map-aside{border-left:0;border-top:1px solid var(--ink)}.map-key{margin:25px 0}.digital-showcase{grid-template-columns:1fr}.social-mock{min-height:350px}.social-main{font-size:75px}.footer-main{font-size:clamp(75px,11vw,140px)}}@media(max-width:600px){.wordmark{font-size:15px}.topbar{padding:0 14px}.theme-button{padding:6px 10px}.hero-copy{min-height:470px}.hero h1{font-size:clamp(52px,11.5vw,76px)}.hero-art{min-height:330px}.art-label,.art-bottom{left:16px;right:16px;font-size:8px}.art-bottom{flex-wrap:wrap}.chapter{padding:60px 18px}.chapter-head{margin-bottom:35px}.chapter-head h2{font-size:clamp(48px,11vw,68px)}.chapter-head>p{font-size:15px}.grid-three,.grid-two,.logo-display,.type-feature,.layout-demo,.print-showcase,.component-box,.signage-showcase,.dos-grid,.accessibility,.resources-note,.footer,.system-board{grid-template-columns:1fr}.value-tile{min-height:220px}.value-pict{font-size:68px}.manifesto{grid-template-columns:1fr}.manifesto h3{font-size:42px}.logo-dark,.logo-light{min-height:270px}.brand-sign strong{font-size:47px}.brand-monogram svg{width:75px;height:75px}.color-grid{grid-template-columns:repeat(2,1fr)}.color-swatch{height:125px}.color-detail{padding:12px}.color-detail strong{font-size:13px}.color-detail code{font-size:10px}.type-feature>div+div,.component-box>div+div{border-left:0;border-top:1px solid var(--ink)}.type-feature h3{font-size:49px}.type-scale>div{grid-template-columns:95px 1fr;padding:17px 12px}.ts-xl{font-size:30px}.ts-lg{font-size:23px}.icon-gallery{grid-template-columns:repeat(2,1fr)}.icon-card{min-height:155px}.icon-card svg{width:76px;height:76px}.module-row{gap:7px}.module-image{height:100px}.module-image i{width:17px;height:17px}.module-row h4{font-size:11px}.module-row p{font-size:10px}.system-pixel{min-height:290px}.system-instructions{padding:30px}.photo-collage{grid-template-columns:1fr;grid-template-rows:auto}.photo-large{grid-row:auto;height:280px}.photo-small{height:230px}.photo-typographic{min-height:180px}.infographic{grid-template-columns:1fr 1fr}.poster{min-height:500px}.print-stack{grid-template-columns:1fr 1fr;gap:10px}.bulletin{min-height:320px}.bulletin-head{font-size:20px}.bulletin img{height:120px}.bulletin h4{font-size:25px}.stationery{min-height:270px}.stationery-brand{font-size:28px}.stationery-brand small{display:block}.browser-nav small{display:none}.browser-hero{min-height:250px}.browser-hero h3{font-size:49px}.browser-tiles span{font-size:9px}.social-main{font-size:58px}.sign-text{font-size:66px}.download-grid{grid-template-columns:1fr 1fr}.download-card{min-height:160px}.download-card strong{font-size:15px}.footer{gap:30px}.footer-main{font-size:90px}.resources-symbol{display:none}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}@media print{.topbar,.sidebar,.ticker,.hero-actions,.download-grid,.toast,.mini-btn,.theme-button,.menu-button{display:none!important}.shell{display:block}.chapter{break-inside:avoid;padding:30px 10px}.hero{min-height:400px}.hero-art{min-height:400px}body{print-color-adjust:exact;-webkit-print-color-adjust:exact}.chapter-head h2{font-size:56px}}
 
-<dialog id="drawingDialog" class="draw-dialog" aria-labelledby="drawingTitle" aria-describedby="drawingDescription">
-  <div class="draw-shell">
-    <div class="draw-header">
-      <div>
-        <span class="draw-kicker">Atelier de dessin vectoriel</span>
-        <h2 id="drawingTitle">Écris à main levée.</h2>
-        <p id="drawingDescription" class="draw-description">Dessine avec la souris, le doigt ou un stylet. Une ombre légère souligne les croisements, sans interrompre le dégradé.</p>
-      </div>
-      <button id="drawingClose" class="draw-cross" type="button" aria-label="Fermer la fenêtre de dessin">×</button>
-    </div>
-    <div class="draw-paper">
-      <svg id="drawingPad" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 350" preserveAspectRatio="none" role="application" aria-label="Zone de dessin à main levée">
-        <defs>
-          <linearGradient id="drawingGradient" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="800" y2="0">
-            <stop offset="0%" stop-color="#4bf75b"/>
-            <stop offset="25%" stop-color="#59d78c"/>
-            <stop offset="50%" stop-color="#65b4b2"/>
-            <stop offset="75%" stop-color="#6995d3"/>
-            <stop offset="100%" stop-color="#7162f6"/>
-          </linearGradient>
-          <mask id="drawingInkMask" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="0" y="0" width="800" height="350">
-            <g id="drawingMaskPaths"></g>
-          </mask>
-        </defs>
-        <rect id="drawingInkFill" width="800" height="350" fill="url(#drawingGradient)" mask="url(#drawingInkMask)" pointer-events="none"/>
-        <g id="drawingFlowPaths" pointer-events="none"></g>
-        <rect width="100%" height="100%" fill="transparent" pointer-events="all"/>
-      </svg>
-      <span id="drawingEmpty" class="draw-empty">Trace ton premier trait ici ✍</span>
-    </div>
-    <div class="draw-controls">
-      <div class="draw-control">
-        <div class="draw-control-header"><label for="drawingSmooth">Lisser</label><output id="drawingSmoothValue" for="drawingSmooth">120 %</output></div>
-        <input id="drawingSmooth" type="range" min="0" max="400" step="1" value="120">
-        <div class="draw-ends"><span>Brut · 0 %</span><span>Ultra-lisse · 400 %</span></div>
-      </div>
-      <div class="draw-control">
-        <div class="draw-control-header"><label for="drawingWidth">Épaisseur du trait</label><output id="drawingWidthValue" for="drawingWidth">18 px</output></div>
-        <input id="drawingWidth" type="range" min="1" max="90" step="1" value="18">
-        <div class="draw-ends"><span>1 px · fin</span><span>90 px · épais</span></div>
-      </div>
-    </div>
-    <p class="draw-tip">Pousse « Lisser » jusqu’à 400 % pour obtenir des courbes extrêmement fluides. Un lissage extrême peut arrondir les petites boucles. Les chemins centraux SVG restent modifiables et les superpositions sont fusionnées visuellement.</p>
-    <div class="draw-footer">
-      <div class="draw-button-group">
-        <button id="drawingUndo" type="button" class="btn" disabled>↶ Annuler le trait</button>
-        <button id="drawingErase" type="button" class="btn" disabled>Tout effacer</button>
-      </div>
-      <div class="draw-button-group">
-        <button id="drawingSave" type="button" class="btn" disabled>Exporter SVG</button>
-        <button id="drawingApply" type="button" class="btn primary" disabled>Utiliser ce dessin</button>
-      </div>
-    </div>
-  </div>
-</dialog>
-<div id="toast" class="toast" role="status" aria-live="polite"></div>
-<script>
+
+/* --- V02: self-contained navigable brand guide --- */
+[hidden]{display:none!important}
+:root{--headerH:70px;--tabsH:0px;--motion-factor:1}
+body{overflow-x:hidden}
+main{overflow:visible}
+.shell{align-items:start}
+.sidebar nav a{min-height:42px;letter-spacing:-.01em}
+.sidebar nav a.active{background:#f3c853;border-left-color:#182520}
+.motion-shortcut{border:1px solid var(--ink);font:800 11px var(--display);padding:10px 14px;white-space:nowrap;background:var(--yellow)}
+.mobile-tabs{display:none}
+.chapter{min-height:calc(100vh - 70px);animation:panel-in .32s ease both}
+.hero{animation:panel-in .32s ease both}
+@keyframes panel-in{from{opacity:.6;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.welcome-guide{padding:clamp(30px,4.5vw,75px);border-bottom:1px solid var(--ink)}
+.welcome-guide-heading{display:grid;grid-template-columns:1fr 1fr;gap:25px;align-items:end}
+.welcome-guide-heading small,.welcome-grid a>span{font:700 11px var(--display);letter-spacing:.1em}
+.welcome-guide-heading h2{font:700 clamp(45px,5vw,84px)/.98 var(--display);letter-spacing:-.07em;margin:14px 0 0}
+.welcome-guide-heading>p{max-width:470px;line-height:1.65;font-size:16px}
+.welcome-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:36px}
+.welcome-grid a{min-height:200px;border:1px solid var(--ink);display:flex;flex-direction:column;padding:16px;transition:background .18s,transform .18s;position:relative;overflow:hidden}
+.welcome-grid a:hover{background:var(--sage);transform:translateY(-3px)}
+.welcome-grid strong{font:700 clamp(14px,1.5vw,20px) var(--display);margin-top:12px}
+.welcome-pixel,.welcome-icon,.welcome-motion{font:700 75px/.9 var(--display);margin:auto 0 0;text-align:right}
+.welcome-icon{color:var(--orange)}.welcome-motion{transition:transform .3s}.welcome-grid a:hover .welcome-motion{transform:translate(10px,-10px)}
+.welcome-color{height:42px;margin:auto -16px -16px;background:linear-gradient(90deg,var(--orange) 0 30%,var(--yellow) 30% 55%,var(--sage) 55% 80%,var(--ink) 80%)}
+.chapter-pager{display:flex;gap:10px;align-items:center;justify-content:space-between;border-top:1px solid var(--ink);padding:25px clamp(20px,4vw,65px);background:var(--paper)}
+.chapter-pager a{border:1px solid var(--ink);padding:13px 15px;font:700 12px var(--display)}.chapter-pager a:hover{background:var(--yellow)}.chapter-pager>span{font:700 13px var(--display);text-align:center}
+.chapter-pager a[aria-disabled="true"]{opacity:.3;pointer-events:none}
+.motion-chapter .chapter-head{padding-bottom:40px}
+.motion-toolbar{display:flex;justify-content:space-between;align-items:center;gap:25px;border:1px solid var(--ink);padding:20px 24px;margin:0 clamp(20px,4vw,65px) 14px;background:var(--white)}
+.motion-toolbar strong{font:800 13px var(--display)}.motion-toolbar p{margin:6px 0 0;font-size:12px}
+.motion-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.motion-controls label{font-weight:700;font-size:12px}.motion-controls select{background:var(--paper);border:1px solid var(--ink);padding:10px;color:var(--ink);font:700 12px var(--display)}
+.motion-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:0 clamp(20px,4vw,65px)}
+.motion-card{border:1px solid var(--ink);background:var(--white);overflow:hidden}
+.motion-stage{height:270px;display:grid;place-items:center;position:relative;overflow:hidden;background:var(--sage);--dur:1s}
+.m-stage1{background:var(--yellow)}.m-stage2{background:var(--ink)}.m-stage3{background:var(--paper)}.m-stage4{background:var(--orange)}
+.motion-description{padding:23px;min-height:180px}.motion-description>span{font:800 10px var(--display);letter-spacing:.13em;color:#7a4a31}.motion-description h3{font:700 25px var(--display);letter-spacing:-.04em;margin:9px 0}.motion-description p{line-height:1.5;margin:0 0 12px;font-size:13px}.motion-description code{display:block;font-size:11px;padding-top:8px;border-top:1px solid var(--line);white-space:normal}
+.motion-pixels{display:grid;grid-template-columns:repeat(3,38px);grid-template-rows:repeat(3,38px);gap:5px;transform:rotate(-2deg)}
+.motion-pixels i{background:var(--ink);animation:pixel-assemble calc(.8s * var(--motion-factor)) cubic-bezier(.2,.8,.2,1) both infinite alternate;animation-delay:calc(var(--i,0) * 60ms * var(--motion-factor))}
+.motion-pixels i:nth-child(1){--i:0}.motion-pixels i:nth-child(2){--i:2;background:var(--orange)}.motion-pixels i:nth-child(3){--i:4}.motion-pixels i:nth-child(4){--i:1}.motion-pixels i:nth-child(5){--i:3;background:var(--paper)}.motion-pixels i:nth-child(6){--i:5}.motion-pixels i:nth-child(7){--i:2;background:var(--orange)}.motion-pixels i:nth-child(8){--i:6}.motion-pixels i:nth-child(9){--i:1}
+@keyframes pixel-assemble{0%{opacity:0;transform:translate(24px,32px) scale(.5)}65%{opacity:1}100%{transform:translate(0,0) scale(1);opacity:1}}
+.motion-reveal{font:800 clamp(45px,5vw,80px)/.9 var(--display);color:var(--paper);letter-spacing:-.075em}.motion-reveal>span{display:block;overflow:hidden;animation:reveal-up calc(1.3s * var(--motion-factor)) cubic-bezier(.2,.8,.2,1) infinite alternate}.motion-reveal>span:nth-child(2){animation-delay:calc(.15s * var(--motion-factor))}.motion-period{color:var(--orange)}
+@keyframes reveal-up{0%,14%{clip-path:inset(100% 0 0 0);transform:translateY(20px)}70%,100%{clip-path:inset(0 0 0 0);transform:translateY(0)}}
+.motion-line{position:absolute;width:62%;height:4px;background:var(--ink);transform-origin:left;left:19%;top:48%;animation:line-draw calc(1.2s * var(--motion-factor)) ease-in-out infinite alternate}
+.motion-dot{position:absolute;left:calc(81% - 12px);top:calc(48% - 10px);width:24px;height:24px;background:var(--orange);border:4px solid var(--ink);animation:dot-in calc(1.2s * var(--motion-factor)) ease-in-out infinite alternate}
+.motion-label{position:absolute;left:19%;bottom:12%;font:700 13px/1.3 var(--display);letter-spacing:.04em}
+@keyframes line-draw{from{transform:scaleX(0)}to{transform:scaleX(1)}}@keyframes dot-in{0%,65%{opacity:0;transform:scale(.1)}100%{opacity:1;transform:scale(1)}}
+.motion-poster{background:var(--paper);width:68%;height:76%;padding:16px;display:flex;flex-direction:column;overflow:hidden;position:relative;border:2px solid var(--ink)}.motion-poster small{font:800 11px var(--display);letter-spacing:.1em}.motion-poster strong{font:800 clamp(35px,4vw,65px)/.9 var(--display);letter-spacing:-.07em;margin:auto 0}.motion-poster strong span{color:var(--orange);animation:signal-pulse calc(1.8s * var(--motion-factor)) ease-in-out infinite}
+.motion-stripes{display:flex;gap:7px;position:absolute;bottom:0;left:0;right:0;height:16px}.motion-stripes i{background:var(--ink);flex:1}.motion-stripes i:nth-child(2),.motion-stripes i:nth-child(4){background:var(--orange)}
+@keyframes signal-pulse{0%,75%,100%{opacity:1;transform:translate(0,0)}35%{opacity:.55;transform:translate(3px,-3px)}}
+.motion-specs{margin:35px clamp(20px,4vw,65px) 0!important}.motion-duration{display:grid;gap:0}.motion-duration div{display:flex;align-items:baseline;gap:15px;border-bottom:1px solid var(--line);padding:12px 0}.motion-duration b{font:700 17px var(--display);min-width:120px}.motion-duration span{font-size:12px;line-height:1.5}.motion-rules{padding-left:20px;line-height:1.65;font-size:13px}.motion-rules li{margin:8px 0}
+.motion-demo-strip{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:35px clamp(20px,4vw,65px);border-top:1px solid var(--ink);padding-top:32px}.motion-demo-strip>div{padding:20px;border:1px solid var(--ink)}.motion-demo-strip small{display:block;font:800 11px var(--display);margin-bottom:20px}.motion-demo-strip p{font-size:12px;line-height:1.5}.motion-cta{background:var(--orange);border:1px solid var(--ink);padding:16px 18px;font:800 13px var(--display);display:flex;align-items:center;gap:25px;transition:transform .15s,background .15s}.motion-cta:hover,.motion-cta:focus-visible{transform:translate(-2px,-2px);background:var(--yellow)}.motion-cta span{font-size:20px}.loading-line{height:14px;border:1px solid var(--ink);width:100%;max-width:350px;padding:2px;margin:32px 0}.loading-line i{display:block;background:var(--orange);width:40%;height:100%;animation:load-progress calc(1.7s * var(--motion-factor)) ease-in-out infinite alternate}@keyframes load-progress{0%{width:5%}100%{width:100%}}
+.motion-warning{display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin:30px clamp(20px,4vw,65px) 60px;background:var(--ink);color:var(--paper);padding:22px}.motion-warning strong{color:var(--yellow);margin-right:10px}.motion-warning span{font-size:12px}
+.motion-paused .motion-stage *, .motion-paused .loading-line i{animation-play-state:paused!important}
+@media(max-width:1100px){.motion-grid{grid-template-columns:1fr 1fr}.motion-stage{height:220px}.welcome-grid{grid-template-columns:repeat(2,1fr)}.motion-toolbar{flex-direction:column;align-items:flex-start}}
+@media(max-width:780px){:root{--tabsH:59px}.topbar{height:62px;padding:0 14px}.edition{display:none}.motion-shortcut{display:none}.theme-button{font-size:16px}.menu-button{display:block}.shell{display:block}.sidebar{position:fixed!important;left:0;right:0;top:calc(62px + var(--tabsH));height:calc(100dvh - 62px - var(--tabsH));z-index:25;transform:translateX(-105%);transition:transform .25s;box-shadow:none;max-width:none!important;width:100%;border-right:0}.sidebar.open{transform:translateX(0)}.sidebar nav{padding-bottom:35px}.sidebar nav a{font-size:15px;padding:13px 20px;min-height:49px}.mobile-tabs{display:flex;position:sticky;top:62px;z-index:22;background:var(--paper);border-bottom:1px solid var(--ink);overflow-x:auto;white-space:nowrap;scrollbar-width:none;gap:0;scroll-padding-inline:20px}.mobile-tabs::-webkit-scrollbar{display:none}.mobile-tabs a{display:inline-flex;align-items:center;gap:7px;border-right:1px solid var(--line);border-bottom:4px solid transparent;padding:17px 13px 13px;min-height:58px;font:800 12px var(--display);flex:none}.mobile-tabs a.active{border-bottom-color:var(--orange);background:var(--yellow)}.mobile-tabs a>span{font-size:10px;opacity:.6}.hero{min-height:unset}.welcome-guide{padding:32px 18px}.welcome-guide-heading{grid-template-columns:1fr}.welcome-grid{gap:10px}.welcome-grid a{min-height:165px}.welcome-pixel,.welcome-icon,.welcome-motion{font-size:55px}.chapter{min-height:calc(100dvh - 125px)}.motion-toolbar,.motion-grid,.motion-specs,.motion-demo-strip,.motion-warning{margin-left:18px!important;margin-right:18px!important}.motion-grid{grid-template-columns:1fr 1fr;gap:10px}.motion-stage{height:190px}.motion-description{padding:15px}.motion-description h3{font-size:19px}.motion-poster{width:78%;height:72%}.motion-reveal{font-size:45px}.motion-pixels{grid-template-columns:repeat(3,30px);grid-template-rows:repeat(3,30px)}.motion-specs{margin-top:24px!important}.motion-warning{margin-bottom:34px!important}.chapter-pager{padding:20px 18px}.chapter-pager a{font-size:11px}}
+@media(max-width:520px){.wordmark{font-size:15px}.pixel-logo{width:22px;height:22px}.menu-button{padding:8px;font-size:11px}.theme-button{padding:7px}.motion-grid{grid-template-columns:1fr}.motion-stage{height:250px}.motion-description{min-height:auto;padding:20px}.motion-reveal{font-size:64px}.motion-pixels{grid-template-columns:repeat(3,38px);grid-template-rows:repeat(3,38px)}.motion-demo-strip{grid-template-columns:1fr}.motion-toolbar{padding:16px}.motion-controls{gap:7px}.motion-duration div{display:block}.motion-duration span{display:block;margin-top:5px}.chapter-pager>span{font-size:11px}.chapter-pager a{padding:11px 9px}.welcome-grid{grid-template-columns:1fr 1fr}.welcome-grid a{min-height:145px;padding:11px}.welcome-grid strong{font-size:14px}.welcome-grid a>span{font-size:9px}.welcome-color{margin:auto -11px -11px}}
+@media(prefers-reduced-motion:reduce){.chapter,.hero{animation:none!important}.motion-stage *, .loading-line i{animation:none!important}.motion-pixels i{opacity:1!important;transform:none!important}.motion-reveal>span{clip-path:none!important;transform:none!important}.motion-line{transform:none!important}.motion-dot{opacity:1!important}.loading-line i{width:70%!important}}
+@media print{.mobile-tabs,.motion-toolbar,.chapter-pager{display:none!important}.chapter[hidden]{display:block!important}.hero[hidden]{display:grid!important}.welcome-guide{display:block!important}.motion-stage *{animation:none!important}.chapter{break-inside:auto;page-break-before:always}}
+
+/* Fluid Lettering — intégré à la charte, avec un document isolé pour préserver le moteur SVG. */
+.fluid-chapter .chapter-head{margin-bottom:34px}
+.fluid-intro{display:flex;justify-content:space-between;align-items:center;gap:25px;padding:19px 22px;margin:0 0 18px;border:1px solid var(--ink);background:var(--sage)}
+.fluid-intro p{font-size:13px;line-height:1.6;margin:0;max-width:720px}
+.fluid-open{display:inline-flex;align-items:center;gap:14px;justify-content:center;white-space:nowrap;border:1px solid var(--ink);padding:12px 15px;background:var(--paper);font:700 12px var(--display);text-decoration:none}
+.fluid-open:hover,.fluid-open:focus-visible{background:var(--yellow)}
+.fluid-surface{border:1px solid var(--ink);background:#fff;overflow:hidden}
+.fluid-frame{display:block;width:100%;min-height:720px;height:970px;border:0;background:#f7f8f5}
+.fluid-caption{margin:15px 0 0;font:600 11px/1.6 var(--display);color:var(--ink);opacity:.8}
+@media(max-width:780px){.fluid-intro{align-items:stretch;flex-direction:column;padding:17px}.fluid-open{width:100%}.fluid-frame{height:1180px;min-height:620px}.fluid-chapter .chapter-head{margin-bottom:25px}}
+@media print{.fluid-frame{height:250mm}.fluid-open{display:none}}
+</style></head><body>
+<header class="topbar"><a aria-label="Retour à l'accueil" class="wordmark" href="#accueil"><span aria-hidden="true" class="pixel-logo"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span>PLÉNÉE<span class="hyphen">—</span>JUGON</span></a><span class="edition">SYSTÈME GRAPHIQUE <b>V.02 / 2026</b></span><button aria-controls="sidebar" aria-expanded="false" class="menu-button" id="menuButton">☰ SOMMAIRE</button><a class="motion-shortcut" href="#section-15">✳ MOTION</a><button aria-label="Changer le fond" class="theme-button" id="themeButton" title="Changer le fond">◐</button></header><div aria-label="Rubriques de la charte" class="mobile-tabs" id="mobileTabs" role="tablist"></div>
+<div class="shell"><aside class="sidebar" id="sidebar"><p class="side-caption">GUIDE DE MARQUE <span>V.01 — CONCEPT</span></p><nav aria-label="Chapitres de la charte" id="nav"></nav><div class="sidebar-bottom"><span class="status-dot"></span> PROPOSITION CRÉATIVE<br/><small>Non officielle · à valider</small></div></aside><main id="main">
+<section aria-label="Accueil" class="hero" id="accueil" role="tabpanel" tabindex="0"><div class="hero-copy"><div class="eyebrow"><span class="live-square"></span> IDENTITÉ VISUELLE / PLÉNÉE-JUGON</div><h1>UNE COMMUNE.<br/><span>1000</span> FAÇONS<br/>DE <em>VIVRE.</em></h1><p>Une identité qui assemble les lieux, les gens et les idées. Géométrique dans la forme. Humaine dans le fond.</p><div class="hero-actions"><a class="button primary" href="#section-1">EXPLORER LA CHARTE <span>↗</span></a><a class="button ghost" href="#section-2">VOIR LE LOGO ↘</a><a class="button ghost" href="#section-16">ESSAYER FLUID ↗</a></div><div class="hero-foot">48° N / 02° O <span>BRETAGNE · CÔTES-D’ARMOR</span></div></div><div class="hero-art"><div class="art-grid"></div><div class="art-label">PJ / 001 <span>CONSTRUIRE ENSEMBLE</span></div><svg aria-label="Symbole géométrique PJ construit en modules" class="main-symbol" role="img" viewbox="0 0 360 360"><g fill="#182520"><path d="M35 35h140v35H35zM35 70h35v140H35zM70 175h105v35H70zM140 70h35v105h-35z"></path><path d="M210 35h115v35H210zM290 70h35v150h-35zM210 185h80v35h-80zM210 150h35v35h-35zM210 220h35v70h-35zM245 255h45v35h-45z"></path></g><g fill="#f25a36"><rect height="35" width="35" x="35" y="255"></rect><rect height="35" width="35" x="70" y="255"></rect><rect height="35" width="35" x="105" y="255"></rect><rect height="35" width="35" x="140" y="255"></rect><rect height="35" width="35" x="140" y="220"></rect></g><rect fill="#f4c94b" height="15" width="45" x="280" y="310"></rect></svg><div class="art-bottom">PATRIMOINE <span>✳</span> NATURE <span>✳</span> PROXIMITÉ <span>✳</span> AVENIR</div><div class="crosshair one">+</div><div class="crosshair two">+</div></div></section>
+<div aria-hidden="true" class="ticker"><div>UNE IDENTITÉ À COMPOSER <b>✳</b> UN TERRITOIRE À RELIER <b>✳</b> UNE COMMUNE À PARTAGER <b>✳</b> UNE IDENTITÉ À COMPOSER <b>✳</b> UN TERRITOIRE À RELIER <b>✳</b></div></div><div class="welcome-guide"><div class="welcome-guide-heading"><div><small>EXPLOREZ LE SYSTÈME</small><h2>Une charte.<br/>15 chapitres.</h2></div><p>Choisissez une rubrique dans les onglets en haut sur mobile ou le sommaire latéral sur ordinateur. Les exemples sont interactifs et les ressources téléchargeables.</p></div><div class="welcome-grid"><a href="#section-2"><span>01 / IDENTITÉ</span><strong>LE LOGO ↗</strong><div class="welcome-pixel">▦</div></a><a href="#section-3"><span>02 / LANGAGE</span><strong>LES COULEURS ↗</strong><div class="welcome-color"></div></a><a href="#section-6"><span>03 / SYSTÈME</span><strong>LES PICTOS ↗</strong><div class="welcome-icon">✳</div></a><a href="#section-15"><span>04 / DYNAMIQUE</span><strong>LE MOTION ↗</strong><div class="welcome-motion">↗</div></a></div></div>
+<section aria-label="Introduction &amp; identité" class="chapter" hidden="" id="section-1" role="tabpanel" tabindex="0"><div class="chapter-head"><span>01 / FONDATIONS</span><h2>Une identité<br/><i>vivante.</i></h2><p>Plénée-Jugon, commune bretonne au patrimoine riche, est faite de connexions : entre bourg et campagne, patrimoine et quotidien, générations et initiatives.</p></div><div class="grid-three"><article class="value-tile warm"><span>01 ↗</span><div class="value-pict">✳</div><h3>PROXIMITÉ</h3><p>Des services et une communication accessibles à tous.</p></article><article class="value-tile olive"><span>02 ↗</span><div class="value-pict">▦</div><h3>COLLECTIF</h3><p>Un système qui relie associations, habitants et lieux.</p></article><article class="value-tile cream"><span>03 ↗</span><div class="value-pict">↗</div><h3>ÉLAN</h3><p>Une identité qui regarde l'avenir sans oublier ses racines.</p></article></div><div class="manifesto"><small>LE MANIFESTE / 001</small><h3>TOUT SE CONSTRUIT<br/><span>ENSEMBLE.</span></h3><div>Un pixel seul est un point.<br/>Assemblés, les pixels deviennent un lieu, un paysage, une histoire.</div></div></section>
+<section aria-label="Logo" class="chapter" hidden="" id="section-2" role="tabpanel" tabindex="0"><div class="chapter-head"><span>02 / SIGNATURE</span><h2>Le logo.<br/><i>Simple. Modulaire.</i></h2><p>Une signature typographique affirmée et un monogramme « PJ » pixelisé, conçus pour fonctionner sur une affiche comme sur une icône d'application.</p></div><div class="logo-display"><div class="logo-light"><span class="micro">LOGO PRINCIPAL / FOND CLAIR</span><div class="brand-sign"><span class="brand-monogram" id="logoSvgContainer"></span><strong>PLÉNÉE<br/>JUGON<span class="brand-dot">.</span></strong></div><button class="mini-btn" data-download="logo">↓ TÉLÉCHARGER SVG</button></div><div class="logo-dark"><span class="micro">VERSION INVERSÉE / FOND SOMBRE</span><div class="brand-sign inverse"><span class="brand-monogram" id="logoInverse"></span><strong>PLÉNÉE<br/>JUGON<span class="brand-dot">.</span></strong></div></div></div><div class="grid-two top-gap"><div class="rule-panel"><h3>Construction &amp; protection</h3><div class="construction"><div class="protection"><div class="small-logo">PJ<span>.</span></div></div></div><p>Module de base : <b>1 unité = 1 carré</b>. Zone de protection de 2 modules autour de la signature.</p></div><div class="rule-panel"><h3>Déclinaisons et seuils</h3><div class="logo-variations"><div class="variation">PJ<span>.</span></div><div class="variation outlined">PLÉNÉE—JUGON</div><div class="variation orange">PJ<span>.</span></div></div><p>Largeur minimale préconisée : 120 px (logo complet) et 24 px (pictogramme), à confirmer après tests.</p></div></div><div class="dont"><strong>À ÉVITER</strong><span>× Étirement</span><span>× Dégradé dans le logo</span><span>× Rotation</span><span>× Contraste insuffisant</span></div></section>
+<section aria-label="Couleurs" class="chapter" hidden="" id="section-3" role="tabpanel" tabindex="0"><div class="chapter-head"><span>03 / COULEURS</span><h2>Des couleurs<br/><i>qui parlent.</i></h2><p>Une palette chaude et contrastée : une base sobre, un orange énergique, un jaune solaire et un vert qui fait écho au paysage. Cliquez sur une couleur pour copier son code HEX.</p></div><div class="color-grid" id="colorGrid"></div><div class="grid-two top-gap"><div class="info-box"><small>ASSOCIATIONS RECOMMANDÉES</small><div class="color-duos"><span style="background:#f6f3e9;color:#182520">CLAIR / ENCRE</span><span style="background:#182520;color:#f6f3e9">ENCRE / CLAIR</span><span style="background:#f25a36;color:#182520">ORANGE / ENCRE</span><span style="background:#d9e6c7;color:#182520">VERT / ENCRE</span></div></div><div class="info-box"><small>CONTRASTE &amp; IMPRESSION</small><p>Le texte courant privilégie l'encre foncée sur crème ou blanc. Les couleurs d'accent servent aux grandes surfaces, signaux et titres courts. Vérifier WCAG AA pour chaque combinaison.</p><p class="note">CMJN : conversions indicatives à recalibrer selon profil d'impression. Pantone : équivalences à définir sur nuancier physique.</p></div></div></section>
+<section aria-label="Typographies" class="chapter" hidden="" id="section-4" role="tabpanel" tabindex="0"><div class="chapter-head"><span>04 / TYPOGRAPHIES</span><h2>La voix<br/><i>graphique.</i></h2><p>Deux typographies sans empattement : Space Grotesk pour les titres, DM Sans pour une lecture confortable dans tous les usages.</p></div><div class="type-feature"><div><small>01 / TITRES — SPACE GROTESK BOLD</small><h3>Plénée-Jugon<br/>se réinvente<span>.</span></h3><div class="alphabet">Aa Bb Cc Dd Ee Ff Gg Hh Ii Jj<br/>0123456789 &amp; ! ? @ # %</div></div><div><small>02 / CORPS — DM SANS</small><h4>Des informations claires, pour tout le monde.</h4><p>Une typographie accessible, fonctionnelle, qui accompagne les habitants au quotidien : démarches, vie associative, culture, loisirs et informations locales.</p><div class="alphabet secondary">Aa Bb Cc Dd Ee Ff Gg Hh Ii Jj<br/>0123456789 &amp; ! ? @ # %</div></div></div><div class="type-scale"><div><b>H1 / 72</b><span class="ts-xl">Titres impactants</span></div><div><b>H2 / 44</b><span class="ts-lg">Sous-titres éditoriaux</span></div><div><b>H3 / 24</b><span class="ts-md">Encarts et modules</span></div><div><b>CORPS / 16</b><span class="ts-sm">Information lisible et accessible.</span></div></div><p class="footnote">Titres : interlignage 0,95–1,1, approche négative mesurée. Corps : interlignage 1,5–1,65. Utiliser les graisses 400, 600 et 700.</p></section>
+<section aria-label="Système graphique" class="chapter" hidden="" id="section-5" role="tabpanel" tabindex="0"><div class="chapter-head"><span>05 / LANGAGE VISUEL</span><h2>Assembler.<br/><i>Relier. Créer.</i></h2><p>La grille est un langage, pas un décor. Elle permet d'imaginer des frises, des blocs et des formes inspirés des chemins, des cours d'eau et des constructions locales.</p></div><div class="system-board"><div aria-label="Motif géométrique interactif" class="system-pixel" id="pixelBoard"></div><div class="system-instructions"><span>MODULE 01 → 16</span><h3>UN SYSTÈME<br/>À GÉNÉRER.</h3><p>Le motif évolue d'une utilisation à l'autre, toujours sur la même grille orthogonale.</p><button class="button light" id="regenerate">↻ GÉNÉRER UN MOTIF</button></div></div><div class="module-row"><div><div class="module-image step"><i></i><i></i><i></i><i></i></div><h4>01 / LE PIXEL</h4><p>La plus petite unité.</p></div><div><div class="module-image line"><i></i><i></i><i></i><i></i></div><h4>02 / LE CHEMIN</h4><p>Une structure qui relie.</p></div><div><div class="module-image mixed"><i></i><i></i><i></i><i></i></div><h4>03 / LE MOTIF</h4><p>Une composition singulière.</p></div></div></section>
+<section aria-label="Pictogrammes" class="chapter" hidden="" id="section-6" role="tabpanel" tabindex="0"><div class="chapter-head"><span>06 / PICTOGRAMMES</span><h2>Des signes<br/><i>qui rassemblent.</i></h2><p>Des pictogrammes à géométrie constante. Grille de dessin 1000 × 1000, zone utile de 800 × 800, trait rond de 20 px et couleur de référence « Encre ».</p></div><div class="icon-gallery" id="iconGallery"></div><div class="spec-strip"><span>PLAN DE TRAVAIL <b>1000 × 1000</b></span><span>GRILLE <b>100 PX</b></span><span>TRAIT <b>20 PX</b></span><span>CAPS <b>ARRONDIS</b></span><span>ZONE <b>800 × 800</b></span></div></section>
+<section aria-label="Mise en page" class="chapter" hidden="" id="section-7" role="tabpanel" tabindex="0"><div class="chapter-head"><span>07 / COMPOSITION</span><h2>Une grille.<br/><i>Mille lectures.</i></h2><p>Des compositions structurées, des titres dominants et des encadrés nets. Le rythme se crée grâce aux contrastes d'échelle, pas aux effets d'ombre.</p></div><div class="layout-demo"><div class="layout-panel"><div class="layout-tag">01 / AFFICHE — 12 COLONNES</div><div class="layout-title">ON SE<br/>RETROUVE<span>!</span></div><div class="layout-footer">PLÉNÉE-JUGON <b>↗</b> CULTURE &amp; VIE LOCALE</div></div><div class="layout-guides"><div class="guides-inner"><b>01</b><b>02</b><b>03</b><b>04</b><b>05</b><b>06</b><b>07</b><b>08</b><b>09</b><b>10</b><b>11</b><b>12</b></div><span>GRILLE VISIBLE / MARGES CONSTANTES</span></div></div></section>
+<section aria-label="Photographies" class="chapter" hidden="" id="section-8" role="tabpanel" tabindex="0"><div class="chapter-head"><span>08 / PHOTOGRAPHIES</span><h2>Du vrai.<br/><i>Du vivant.</i></h2><p>La photographie montre la vie réelle : les habitants, les gestes, les lieux et les détails du territoire. Cadrages francs, lumière naturelle, couleurs authentiques.</p></div><div class="photo-collage"><figure class="photo-large"><img alt="Fontaine devant la médiathèque de Plénée-Jugon" loading="lazy" src="https://www.plenee-jugon.fr/wp-content/uploads/2026/10/de2450c0-b4e4-44c6-9630-d705c01ff469.webp"/><figcaption><b>01 / LIEUX</b><span>La médiathèque et sa fontaine</span></figcaption></figure><figure class="photo-small"><img alt="Bâtiment de l'abbaye de Boquen" loading="lazy" src="https://p.monumentum.fr/galerie/maxi/01056/1056379-.jpg"/><figcaption><b>02 / PATRIMOINE</b><span>L'abbaye de Boquen</span></figcaption></figure><div class="photo-typographic"><span>REGARDER<br/>LE <b>TERRITOIRE</b><br/>AUTREMENT<span class="accent">.</span></span><small>DES VISAGES · DES LIEUX · DES HISTOIRES</small></div></div><p class="footnote">Photos de démonstration : site officiel de la commune et Monumentum. Droits de reproduction et autorisations des personnes à confirmer avant diffusion publique.</p></section>
+<section aria-label="Illustrations &amp; cartes" class="chapter" hidden="" id="section-9" role="tabpanel" tabindex="0"><div class="chapter-head"><span>09 / ILLUSTRATION &amp; CARTE</span><h2>Le territoire<br/><i>en repères.</i></h2><p>Une cartographie stylisée et des symboles modulaires. La carte ci-dessous est un exemple d'interface schématique, non une représentation cadastrale ou géographique exacte.</p></div><div class="map-section"><div class="map-card"><div class="map-meta"><span>PLÉNÉE-JUGON / EXPLORER</span><span>CARTE CONCEPTUELLE</span></div><svg aria-label="Carte illustrative et non géographique du territoire" class="map-svg" viewbox="0 0 650 370"><path d="M0 45 H650 M0 125H650 M0 205H650 M0 285H650 M70 0V370 M160 0V370 M250 0V370 M340 0V370 M430 0V370 M520 0V370 M610 0V370" fill="none" stroke="#d2dac8" stroke-width="1"></path><path d="M-30 260 C100 180 145 310 270 210 S465 125 675 25" fill="none" stroke="#f3c853" stroke-linecap="square" stroke-width="18"></path><path d="M35 10 Q90 70 165 55 T320 160 T610 350" fill="none" stroke="#65a89b" stroke-width="13"></path><path d="M65 80 L175 45 L270 100 L380 68 L555 118 L600 234 L492 313 L345 295 L220 340 L92 280 Z" fill="none" stroke="#182520" stroke-dasharray="10 8" stroke-width="4"></path><g fill="#182520"><rect height="18" width="18" x="235" y="155"></rect><rect height="18" width="18" x="253" y="155"></rect><rect height="18" width="18" x="253" y="173"></rect></g><g class="map-point" data-place="bourg" tabindex="0"><rect fill="#f25a36" height="24" stroke="#182520" stroke-width="3" width="24" x="298" y="183"></rect><text x="330" y="203">BOURG</text></g><g class="map-point" data-place="boquen" tabindex="0"><rect fill="#f25a36" height="24" stroke="#182520" stroke-width="3" width="24" x="447" y="86"></rect><text x="482" y="106">BOQUEN</text></g><g class="map-point" data-place="mediatheque" tabindex="0"><rect fill="#f25a36" height="24" stroke="#182520" stroke-width="3" width="24" x="175" y="245"></rect><text x="205" y="265">MÉDIATHÈQUE</text></g></svg><div class="map-caption"><span id="mapCaption">Cliquez sur un point pour découvrir un lieu.</span><span>↗ PJ / CARTE 001</span></div></div><div class="map-aside"><small>ILLUSTRATION / 01</small><h3>EXPLORER<br/>EN UN CLIC<span>.</span></h3><p>Les cartes reprennent les codes du système : repères carrés, traits francs, couleurs réduites et information hiérarchisée.</p><div class="map-key"><span><i style="background:#f25a36"></i>Lieu d'intérêt</span><span><i style="background:#65a89b"></i>Cours d'eau stylisé</span><span><i style="background:#f3c853"></i>Voie stylisée</span></div><a class="textlink" href="https://www.plenee-jugon.fr/systeme/plan-interactif/" rel="noopener" target="_blank">CONSULTER LA CARTE MUNICIPALE ↗</a></div></div><div class="infographic"><div><strong>01</strong><span>PATRIMOINE</span></div><div><strong>02</strong><span>CULTURE</span></div><div><strong>03</strong><span>VIE LOCALE</span></div><div><strong>04</strong><span>NATURE</span></div></div></section>
+<section aria-label="Supports imprimés" class="chapter" hidden="" id="section-10" role="tabpanel" tabindex="0"><div class="chapter-head"><span>10 / SUPPORTS IMPRIMÉS</span><h2>La commune<br/><i>sur papier.</i></h2><p>Le système se déploie sur des supports administratifs, éditoriaux et événementiels sans perdre sa cohérence.</p></div><div class="print-showcase"><div class="poster"><div class="poster-top">PLÉNÉE—JUGON <span>AGENDA / 2027</span></div><div class="poster-head">ÇA<br/>BOUGE<span>!</span></div><div class="poster-graphic"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="poster-bottom">LA VIE LOCALE<br/>EN GRAND FORMAT <b>↗</b></div></div><div class="print-stack"><div class="bulletin"><div class="bulletin-head">PLÉN<span>’</span>INFOS <small>LE BULLETIN MUNICIPAL</small></div><img alt="Médiathèque utilisée en couverture fictive" loading="lazy" src="https://www.plenee-jugon.fr/wp-content/uploads/2026/10/de2450c0-b4e4-44c6-9630-d705c01ff469.webp"/><h4>UNE COMMUNE<br/>EN MOUVEMENT.</h4><div class="bulletin-bottom">VIE LOCALE / CULTURE / PROJETS <b>01</b></div></div><div class="stationery"><div class="stationery-brand">PJ<span>.</span> <small>PLÉNÉE-JUGON</small></div><div>MAIRIE DE PLÉNÉE-JUGON<br/>4, PLACE DE L'ÉGLISE<br/>22640 PLÉNÉE-JUGON</div><div class="stationery-lines"><i></i><i></i><i></i></div><small>COMMUNICATION MUNICIPALE / MODÈLE</small></div></div></div><div class="use-cases"><span>AFFICHES</span><span>FLYERS</span><span>BULLETINS</span><span>PAPIER À EN-TÊTE</span><span>INVITATIONS</span><span>CARTES DE VISITE</span></div></section>
+<section aria-label="Supports numériques" class="chapter" hidden="" id="section-11" role="tabpanel" tabindex="0"><div class="chapter-head"><span>11 / DIGITAL</span><h2>Une identité<br/><i>qui bouge.</i></h2><p>Du site internet aux réseaux sociaux, des composants sobres et efficaces, avec des micro-animations utiles et une adaptation mobile native.</p></div><div class="digital-showcase"><div class="browser"><div class="browser-bar"><div>● ● ●</div><span>plenee-jugon.fr / concept</span><b>↗</b></div><div class="browser-content"><div class="browser-nav">PJ<span>.</span> <small>DÉCOUVRIR　 VIVRE　 PARTICIPER</small><b>☰</b></div><div class="browser-hero"><small>BIENVENUE À PLÉNÉE-JUGON</small><h3>ICI, LA VIE<br/>A DU <em>LIEN.</em></h3><div class="browser-btn">DÉCOUVRIR LA COMMUNE ↗</div></div><div class="browser-tiles"><span>ACTUALITÉS ↗</span><span>DÉMARCHES ↗</span><span>AGENDA ↗</span></div></div></div><div class="social-mock"><div class="social-head">PJ<span>.</span><small>POST / FORMAT 4:5</small></div><div class="social-main">LE<br/>RENDEZ-<br/>VOUS<span>!</span></div><div class="social-pattern">✳ ✳ ✳</div><div class="social-bottom">LA VIE LOCALE EST ICI. <b>↗</b></div></div></div><div class="component-box"><div><small>COMPOSANTS / ÉTATS</small><div class="component-buttons"><button class="button primary" id="demoButton">BOUTON ACTIF ↗</button><button class="button ghost" id="toastButton">BOUTON SECONDAIRE ↗</button><button class="button disabled" disabled="">DÉSACTIVÉ</button></div><p aria-live="polite" id="componentMessage">Survoler, cliquer, naviguer : les interactions restent lisibles et maîtrisées.</p></div><div><small>TRANSITIONS</small><div class="motion-visual"><span></span><span></span><span></span><span></span><span></span></div><p>Durées courtes (150–300 ms), déplacement réduit et respect des préférences « réduire les animations ».</p></div></div></section>
+<section aria-label="Signalétique" class="chapter" hidden="" id="section-12" role="tabpanel" tabindex="0"><div class="chapter-head"><span>12 / SIGNALÉTIQUE</span><h2>Visible<br/><i>dans la ville.</i></h2><p>Une identité lisible à distance, déclinable sur la signalétique des bâtiments, les panneaux, l'affichage municipal et les véhicules.</p></div><div class="signage-showcase"><div class="big-sign"><div class="sign-top">PJ<span>.</span><small>ÉQUIPEMENT MUNICIPAL</small></div><div class="sign-text">MÉDIA<br/>THÈQUE<span>↗</span></div><div class="sign-foot">ENTRÉE PRINCIPALE <b>→</b></div></div><div class="direction-sign"><div><span>MAIRIE</span><b>→</b></div><div><span>MÉDIATHÈQUE</span><b>↗</b></div><div><span>SALLE L'ESCAPADE</span><b>←</b></div><div><span>ÉQUIPEMENTS SPORTIFS</span><b>→</b></div></div></div><p class="footnote">Les dimensions, couleurs et matériaux de la signalétique réelle devront respecter la réglementation de voirie et les contraintes d'accessibilité.</p></section>
+<section aria-label="Règles d’utilisation" class="chapter" hidden="" id="section-13" role="tabpanel" tabindex="0"><div class="chapter-head"><span>13 / RÈGLES D'USAGE</span><h2>Libre d'être<br/><i>cohérent.</i></h2><p>Un système flexible, mais avec des règles simples pour la mairie, les associations et les partenaires.</p></div><div class="dos-grid"><div class="do"><span>✓ À FAIRE</span><h3>RESTER LISIBLE.</h3><div class="do-demo">PLÉNÉE<br/>JUGON<span>.</span></div><p>Utiliser la palette, la grille, les typographies et les zones de respiration définies.</p></div><div class="dont-do"><span>× À ÉVITER</span><h3>TOUT MÉLANGER.</h3><div class="bad-demo">Plénée-Jugon</div><p>Ne pas déformer les proportions, multiplier les effets ni réinterpréter le logo.</p></div></div><div class="accessibility"><div><small>ACCESSIBILITÉ / PARTENARIATS</small><h3>DES RÈGLES POUR TOUS.</h3></div><ul><li>Contraste minimum : 4,5:1 pour le texte courant, 3:1 pour le grand texte.</li><li>Texte alternatif sur les images et liens explicites sur le web.</li><li>Co-branding : préserver les logos partenaires et leur zone de protection.</li><li>Ne jamais utiliser la couleur seule pour transmettre une information.</li></ul></div></section>
+<section aria-label="Ressources" class="chapter resources" hidden="" id="section-14" role="tabpanel" tabindex="0"><div class="chapter-head"><span>14 / RESSOURCES</span><h2>À vous<br/><i>de composer.</i></h2><p>Téléchargez les premiers éléments de ce concept créatif. Il s'agit d'une base de travail, pas d'un kit institutionnel officiellement validé.</p></div><div class="download-grid"><button class="download-card" data-download="logo"><span>↙</span><strong>LOGO SVG</strong><small>Vectoriel · modifiable</small></button><button class="download-card" data-download="icon"><span>↙</span><strong>PICTOGRAMMES</strong><small>SVG · bibliothèque initiale</small></button><button class="download-card" data-download="palette"><span>↙</span><strong>COULEURS</strong><small>CSS · variables</small></button><button class="download-card" id="printButton"><span>↙</span><strong>CHARTE PDF</strong><small>Via l'impression du navigateur</small></button></div><div class="resources-note"><div><b>À PRODUIRE POUR LA VERSION OFFICIELLE</b><p>Logo final validé, exports PNG/PDF, correspondances Pantone certifiées, modèles PowerPoint/Canva, kit de réseaux sociaux, photothèque sous licence et bibliothèque complète de pictogrammes.</p></div><div class="resources-symbol">PJ<span>.</span></div></div></section><section aria-label="Motion" aria-labelledby="tab-motion" class="chapter motion-chapter" hidden="" id="section-15" role="tabpanel" tabindex="0">
+<div class="chapter-head"><span>15 / MOTION DESIGN</span><h2>Une identité<br/><i>en mouvement.</i></h2><p>Un mouvement géométrique, bref et intentionnel. Les modules se positionnent, les titres se révèlent et les contenus s'assemblent. Pas d'animations gratuites : chaque mouvement aide à comprendre.</p></div>
+<div class="motion-toolbar"><div><strong>LABORATOIRE DE MOUVEMENT</strong><p>Manipulez les réglages et observez les quatre principes.</p></div><div class="motion-controls"><label for="motionSpeed">Vitesse</label><select aria-label="Vitesse de l'animation" id="motionSpeed"><option value="1">Normale · 1×</option><option value="0.5">Rapide · 2×</option><option value="1.8">Lente · 0,55×</option></select><button aria-pressed="false" class="mini-btn" id="motionToggle" type="button">Ⅱ PAUSE</button><button class="mini-btn" id="motionReplay" type="button">↻ REJOUER</button></div></div>
+<div class="motion-grid">
+<article class="motion-card"><div class="motion-stage m-stage1"><div aria-hidden="true" class="motion-pixels"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div><div class="motion-description"><span>01 / ASSEMBLAGE</span><h3>Modules en entrée</h3><p>Des carrés se raccordent avec une légère cascade. Pour titres de campagne et écrans d'ouverture.</p><code>440 ms · ease-out · décalage 55 ms</code></div></article>
+<article class="motion-card"><div class="motion-stage m-stage2"><div class="motion-reveal"><span>PLÉNÉE</span><span>JUGON<span class="motion-period">.</span></span></div></div><div class="motion-description"><span>02 / RÉVÉLATION</span><h3>Texte qui se construit</h3><p>Apparition par masquage vertical, sans distorsion des lettres. Pour les titres majeurs.</p><code>620 ms · cubic-bezier(.2,.8,.2,1)</code></div></article>
+<article class="motion-card"><div class="motion-stage m-stage3"><div class="motion-line"></div><div class="motion-dot"></div><span class="motion-label">LE TERRITOIRE<br/>EN CONNEXION</span></div><div class="motion-description"><span>03 / TRAJECTOIRE</span><h3>Relier deux points</h3><p>Un tracé s'étend sur la grille puis indique un lieu ou un événement.</p><code>750 ms · ease-in-out</code></div></article>
+<article class="motion-card"><div class="motion-stage m-stage4"><div class="motion-poster"><small>AGENDA / 2026</small><strong>ÇA<br/>BOUGE<span>↗</span></strong><div class="motion-stripes"><i></i><i></i><i></i><i></i><i></i></div></div></div><div class="motion-description"><span>04 / SIGNAL</span><h3>Accent pulsé</h3><p>Une impulsion discrète attire l'œil sur l'information. Jamais sur les textes longs.</p><code>1 800 ms · maximum 2 cycles en contexte informatif</code></div></article>
+</div>
+<div class="grid-two top-gap motion-specs"><div class="rule-panel"><h3>Durées recommandées</h3><div class="motion-duration"><div><b>120–180 ms</b><span>Micro-interaction, survol, état de bouton</span></div><div><b>240–360 ms</b><span>Carte, onglet, panneau, changement d'état</span></div><div><b>440–700 ms</b><span>Révélation de titre, assemblage du logo</span></div><div><b>750 ms max.</b><span>Transitions éditoriales exceptionnelles</span></div></div></div><div class="rule-panel"><h3>Les règles de mouvement</h3><ul class="motion-rules"><li><strong>Entrer :</strong> translater 8–24 px, opacité 0 → 1, jamais de rebond.</li><li><strong>Sortir :</strong> mouvement plus court, sans effet spectaculaire.</li><li><strong>Rythme :</strong> un seul foyer d'attention animé à la fois.</li><li><strong>Accessibilité :</strong> respecter <code>prefers-reduced-motion</code> et offrir la pause.</li><li><strong>Performance :</strong> animer <code>transform</code> et <code>opacity</code> en priorité.</li></ul></div></div>
+<div class="motion-demo-strip"><div><small>APPLICATION / BOUTON</small><button class="motion-cta" id="motionDemoButton" type="button">DÉCOUVRIR LES ACTUALITÉS <span>↗</span></button><p aria-live="polite" id="motionDemoStatus">Survol, focus ou clic : une interaction claire.</p></div><div><small>APPLICATION / CHARGEMENT</small><div aria-label="Exemple d'indicateur de progression" class="loading-line"><i></i></div><p>Un état de chargement simple et non bloquant.</p></div></div>
+<div class="motion-warning"><strong>À ÉVITER</strong><span>× Effets 3D décoratifs</span><span>× Parallaxe permanente</span><span>× Clignotements rapides</span><span>× Texte en déplacement continu</span></div>
+</section>
+
+<section aria-label="Fluid Lettering" aria-labelledby="tab-section-16" class="chapter fluid-chapter" hidden id="section-16" role="tabpanel" tabindex="0">
+  <div class="chapter-head"><span>16 / ATELIER TYPOGRAPHIQUE</span><h2>Fluid<br/><i>Lettering.</i></h2><p>Créez des lettres manuscrites en mouvement. Le dégradé suit les courbes du tracé Pacifico ; les superpositions gagnent en profondeur grâce à une ombre subtile. Dessin libre et export SVG / PNG inclus.</p></div>
+  <div class="fluid-intro"><p><strong>ATELIER INTERACTIF / PACIFICO</strong><br/>Retrouvez tous les réglages originaux : texte, épaisseur, espacement, animation du tracé, dessin à main levée et exports. L'atelier est intégré à la charte sans modifier son moteur de rendu.</p><a class="fluid-open" href="./fluid-lettering.html" target="_blank" rel="noopener">OUVRIR EN PLEIN ÉCRAN ↗</a></div>
+  <div class="fluid-surface"><iframe class="fluid-frame" id="fluidFrame" title="Fluid Lettering : atelier de lettrage Pacifico interactif" src="./fluid-lettering.html" loading="lazy"></iframe></div>
+  <p class="fluid-caption">EXPLORATION GRAPHIQUE / PROTOTYPE NON OFFICIEL — Les couleurs du tracé demeurent celles de Fluid Lettering et peuvent être explorées indépendamment de la palette institutionnelle proposée.</p>
+</section>
+<nav aria-label="Changer de rubrique" class="chapter-pager" id="chapterPager"><a href="#accueil" id="pagerPrev">← Précédent</a><span id="pagerCurrent">Accueil</span><a href="#section-1" id="pagerNext">Suivant →</a></nav><footer class="footer"><div class="footer-main">PLÉNÉE<br/>JUGON<span>.</span></div><div class="footer-side">SYSTÈME D'IDENTITÉ GRAPHIQUE<br/>CONCEPT / ÉDITION 2026<br/><br/><a href="https://www.plenee-jugon.fr" rel="noopener" target="_blank">SITE OFFICIEL ↗</a><br/><a href="#accueil">RETOUR EN HAUT ↑</a><p>Prototype indépendant. Ce document n'engage pas la commune.</p></div></footer>
+</main></div><div aria-live="polite" class="toast" id="toast" role="status"></div><script id="embedded-interactions">
 'use strict';
-const $=id=>document.getElementById(id);
-const palettes={jello:['#4bf75b','#59d78c','#65b4b2','#6995d3','#7162f6']};
-const state={word:'bonjour',font:'pacifico',freehand:null,thickness:255,fusion:-115,slant:0,palette:'jello',transparent:true,seed:11};
-let currentSvg='',svgDimensions={width:1000,height:600},lastGeneratedWord='bonjour',pendingFrame=0,toastTimer=0,renderRevision=0;
-function escapeXML(s){return String(s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]));}
-/* Font outline packs are loaded on first selection and cached. */
-
-const VALID_FONTS=new Set(['pacifico']);
-const fontCache=new Map();
-function getFontData(fontId){
- if(!VALID_FONTS.has(fontId))return Promise.reject(new Error('Police inconnue'));
- if(!fontCache.has(fontId)){
-  const loading=(async()=>{
-   const response=await fetch('./font-packs/'+encodeURIComponent(fontId)+'.json?v=1');
-   if(!response.ok)throw new Error('Chargement échoué : HTTP '+response.status);
-   const pack=await response.json();
-   if(!pack||typeof pack.z!=='string')throw new Error('Données de police incorrectes');
-   if(typeof DecompressionStream==='undefined')throw new Error('Navigateur incompatible avec le format de police');
-   const bytes=Uint8Array.from(atob(pack.z),c=>c.charCodeAt(0));
-   const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate'));
-   const data=await new Response(stream).json();
-   if(!data.u||!data.g)throw new Error('Tracés invalides');
-   return {unitsPerEm:data.u,glyphs:data.g,kerning:data.k||{},ligatures:data.l||{}};
-  })().catch(e=>{fontCache.delete(fontId);throw e;});
-  fontCache.set(fontId,loading);
- }
- return fontCache.get(fontId);
-}
-
-/* Dégradé curviligne : trajectoire approximative calculée sur l'axe médian
-   de chaque glyphe (les polices livrent des contours, pas des traits de plume).
-   Le masque de la lettre reste un authentique tracé SVG vectoriel. */
-const FLUID_FLOW=(()=>{
- const cache=new Map();
- const dx=[1,-1,0,0,1,-1,1,-1],dy=[0,0,1,-1,1,1,-1,-1];
- const clip=(n,a,b)=>Math.min(b,Math.max(a,n));
- const f=n=>Number(n.toFixed(2));
- function centerline(g,units){
-  const cacheKey=units+'|'+g.key;
-  if(cache.has(cacheKey))return cache.get(cacheKey);
-  const b=g.bounds,scale=Math.min(.29*2048/units,245/Math.max(b.width,b.height,1));
-  const pad=Math.ceil(245*units/2048*scale)+6;
-  const w=Math.max(8,Math.ceil(b.width*scale)+2*pad);
-  const h=Math.max(8,Math.ceil(b.height*scale)+2*pad);
-  const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
-  const ctx=canvas.getContext('2d',{willReadFrequently:true});
-  if(!ctx||typeof Path2D==='undefined')throw Error('Impossible de suivre le tracé');
-  ctx.setTransform(scale,0,0,-scale,pad-b.x*scale,pad+(b.y+b.height)*scale);
-  ctx.fillStyle='#fff';ctx.fill(new Path2D(g.d));
-  const rgba=ctx.getImageData(0,0,w,h).data;
-  const ink=new Uint8Array(w*h),original=[];
-  for(let y=1;y<h-1;y++)for(let x=1;x<w-1;x++){
-   const i=y*w+x; if(rgba[4*i+3]>110){ink[i]=1;original.push(i);}
-  }
-  // Amincissement de Zhang–Suen : le trait devient une ligne centrale.
-  for(let iteration=0;iteration<85;iteration++){
-   let changed=0;
-   for(let phase=0;phase<2;phase++){
-    const remove=[];
-    for(const i of original){
-     if(!ink[i])continue;
-     const n=[ink[i-w],ink[i-w+1],ink[i+1],ink[i+w+1],
-              ink[i+w],ink[i+w-1],ink[i-1],ink[i-w-1]];
-     const count=n[0]+n[1]+n[2]+n[3]+n[4]+n[5]+n[6]+n[7];
-     if(count<2||count>6)continue;
-     let turns=0;for(let k=0;k<8;k++)if(!n[k]&&n[(k+1)%8])turns++;
-     if(turns!==1)continue;
-     if(phase===0?(n[0]&&n[2]&&n[4])||(n[2]&&n[4]&&n[6])
-                 :(n[0]&&n[2]&&n[6])||(n[0]&&n[4]&&n[6]))continue;
-     remove.push(i);
-    }
-    for(const i of remove)ink[i]=0;
-    changed+=remove.length;
-   }
-   if(!changed)break;
-  }
-  const skeleton=original.filter(i=>ink[i]);
-  const seen=new Uint8Array(w*h),queue=new Int32Array(w*h);
-  const groups=[];
-  // Décompose les points, boucles et lettres non attachées.
-  for(const first of skeleton){
-   if(seen[first])continue;
-   seen[first]=1;queue[0]=first;let head=0,tail=1;
-   const items=[];let start=first,minX=w,minY=h;
-   while(head<tail){
-    const i=queue[head++],y=(i/w)|0,x=i-y*w;
-    items.push(i);
-    if(x<minX||(x===minX&&y<minY)){minX=x;minY=y;start=i;}
-    for(let d=0;d<8;d++){
-     const xx=x+dx[d],yy=y+dy[d];if(xx<1||yy<1||xx>=w-1||yy>=h-1)continue;
-     const j=yy*w+xx;if(ink[j]&&!seen[j]){seen[j]=1;queue[tail++]=j;}
-    }
-   }
-   groups.push({items,start,minX});
-  }
-  groups.sort((a,b)=>a.minX-b.minX);
-  const progress=new Float32Array(w*h),dist=new Int32Array(w*h);
-  let length=0;
-  for(const group of groups){
-   for(const i of group.items)dist[i]=-1;
-   queue[0]=group.start;let head=0,tail=1,max=0;dist[group.start]=0;
-   while(head<tail){
-    const i=queue[head++],y=(i/w)|0,x=i-y*w;
-    max=Math.max(max,dist[i]);
-    for(let d=0;d<8;d++){
-     const xx=x+dx[d],yy=y+dy[d];if(xx<1||yy<1||xx>=w-1||yy>=h-1)continue;
-     const j=yy*w+xx;if(ink[j]&&dist[j]<0){dist[j]=dist[i]+1;queue[tail++]=j;}
-    }
-   }
-   for(const i of group.items)progress[i]=length+Math.max(0,dist[i]);
-   length+=Math.max(max,2)+5;
-  }
-  // La même couleur est propagée perpendiculairement au trait.
-  const marked=new Uint8Array(w*h);let head=0,tail=0;
-  for(const i of skeleton){marked[i]=1;queue[tail++]=i;}
-  while(head<tail){
-   const i=queue[head++],y=(i/w)|0,x=i-y*w;
-   for(let d=0;d<8;d++){
-    const xx=x+dx[d],yy=y+dy[d];if(xx<0||yy<0||xx>=w||yy>=h)continue;
-    const j=yy*w+xx;if(!marked[j]){
-     marked[j]=1;progress[j]=progress[i];queue[tail++]=j;
-    }
-   }
-  }
-  if(!skeleton.length){
-   length=w;for(let y=0;y<h;y++)for(let x=0;x<w;x++)progress[y*w+x]=x;
-  }
-  // Lisse les jonctions et les embranchements.
-  for(let pass=0;pass<4;pass++){
-   const next=new Float32Array(w*h);
-   for(let y=0;y<h;y++)for(let x=0;x<w;x++){
-    const i=y*w+x;let sum=progress[i]*4,n=4;
-    if(x>0){sum+=progress[i-1];n++;}
-    if(x<w-1){sum+=progress[i+1];n++;}
-    if(y>0){sum+=progress[i-w];n++;}
-    if(y<h-1){sum+=progress[i+w];n++;}
-    next[i]=sum/n;
-   }
-   progress.set(next);
-  }
-  const result={w,h,pad,scale,progress,length:Math.max(1,length)};
-  cache.set(cacheKey,result);
-  return result;
- }
- function render(glyphs,colors,thickening,box,units){
-  const flows=glyphs.map(g=>centerline(g,units));
-  const full=flows.reduce((sum,g)=>sum+g.length,0);
-  const rgb=colors.map(h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)));
-  const lut=new Uint8Array(4096*3);
-  for(let i=0;i<4096;i++){
-   const q=i/4095*(rgb.length-1),j=Math.min(rgb.length-2,Math.floor(q)),t=q-j;
-   for(let k=0;k<3;k++)lut[i*3+k]=Math.round(rgb[j][k]*(1-t)+rgb[j+1][k]*t);
-  }
-  let traveled=0;const defs=[],layers=[];
-  // SourceAlpha only: a narrow, translucent shadow falls on earlier strokes
-  // beneath the next letter; no shadow around the outside of the word.
-  const offset=Math.max(1.2,thickening*.027);
-  const blur=Math.max(1,thickening*.019);
-  defs.push('<filter id="fluid-cross-shadow" x="-12%" y="-12%" width="124%" height="124%" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceAlpha" stdDeviation="'+f(blur)+'" result="soft"/><feOffset in="soft" dx="'+f(offset*.4)+'" dy="'+f(offset)+'" result="shift"/><feFlood flood-color="#182c37" flood-opacity="0.50" result="shade"/><feComposite in="shade" in2="shift" operator="in"/></filter>');
-  for(let n=0;n<glyphs.length;n++){
-   const g=glyphs[n],flow=flows[n],data=new Uint8ClampedArray(flow.w*flow.h*4);
-   for(let i=0;i<flow.progress.length;i++){
-    const p=Math.round(clip((traveled+flow.progress[i])/Math.max(1,full),0,1)*4095)*3;
-    data[i*4]=lut[p];data[i*4+1]=lut[p+1];data[i*4+2]=lut[p+2];data[i*4+3]=255;
-   }
-   const canvas=document.createElement('canvas');
-   canvas.width=flow.w;canvas.height=flow.h;
-   canvas.getContext('2d').putImageData(new ImageData(data,flow.w,flow.h),0,0);
-   const mid='fluid-follow-mask-'+n;
-   const shapeId='fluid-cross-shape-'+n;
-   const bounds='x="'+f(box.left)+'" y="'+f(box.top)+'" width="'+f(box.width)+'" height="'+f(box.height)+'"';
-   // Reuse vector silhouettes so the prior-ink mask stays small and precise.
-   defs.push('<g id="'+shapeId+'" transform="scale(1,-1)"><g transform="translate('+f(g.x)+' 0)"><path d="'+g.d+'" fill="white" stroke="white" stroke-width="'+f(thickening)+'" stroke-linecap="round" stroke-linejoin="round" paint-order="stroke fill" fill-rule="nonzero"/></g></g>');
-   defs.push('<mask id="'+mid+'" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" '+bounds+'><use href="#'+shapeId+'"/></mask>');
-   if(n>0){
-    const underneath='fluid-previous-ink-'+n;
-    const uses=Array.from({length:n},(_,j)=>'<use href="#fluid-cross-shape-'+j+'"/>').join('');
-    defs.push('<mask id="'+underneath+'" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" '+bounds+'>'+uses+'</mask>');
-    // Draw only the shadow landing on already painted glyphs.
-    layers.push('<g mask="url(#'+underneath+')"><use href="#'+shapeId+'" filter="url(#fluid-cross-shadow)"/></g>');
-   }
-   const x=g.x+g.bounds.x-flow.pad/flow.scale;
-   const y=-(g.bounds.y+g.bounds.height)-flow.pad/flow.scale;
-   layers.push('<image x="'+f(x)+'" y="'+f(y)+'" width="'+f(flow.w/flow.scale)+'" height="'+f(flow.h/flow.scale)+'" preserveAspectRatio="none" href="'+canvas.toDataURL('image/png')+'" mask="url(#'+mid+')"/>');
-   traveled+=flow.length;
-  }
-  return {defs:defs.join(''),layers:layers.join('')};
- }
- return {render};
-})();
-
-function getHandwrittenSVG(font){
-  const fontName=$('font').selectedOptions[0].textContent;
-  const unitScale=font.unitsPerEm/2048;
-  const word=state.word.trim().slice(0,22);
-  if(!word)return '';
-  const fmt=n=>Number(n).toFixed(2);
-
-  const source=Array.from(word.normalize('NFC'));
-  const glyphs=[];
-  let cursor=0,previous='';
-  for(let i=0;i<source.length;){
-    let glyph=null,token=source[i],count=1;
-    for(let n=Math.min(4,source.length-i);n>=2;n--){
-      const key=source.slice(i,i+n).join('');
-      if(font.ligatures[key]){glyph=font.ligatures[key];token=key;count=n;break;}
-    }
-    if(!glyph)glyph=font.glyphs[token]||font.glyphs['?'];
-    if(!glyph){cursor+=font.unitsPerEm*.4;previous='';i++;continue;}
-    const w=Array.isArray(glyph)?glyph[0]:glyph.w;
-    const d=Array.isArray(glyph)?glyph[1]:glyph.d;
-    if(previous&&font.kerning[previous+token])cursor+=font.kerning[previous+token];
-    if(d)glyphs.push({d:d,x:cursor,key:state.font+':'+token});
-    cursor+=w+state.fusion*unitScale;
-    previous=token;
-    i+=count;
-  }
-  if(!glyphs.length)return '';
-  const NS='http://www.w3.org/2000/svg';
-  const measure=document.createElementNS(NS,'svg');
-  measure.style.cssText='position:absolute;left:-99999px;top:-99999px;width:1px;height:1px;opacity:0;pointer-events:none';
-  document.body.appendChild(measure);
-  let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
-  try{
-    for(const glyph of glyphs){
-      const path=document.createElementNS(NS,'path');
-      path.setAttribute('d',glyph.d);
-      measure.appendChild(path);
-      const bounds=path.getBBox();
-      glyph.bounds={x:bounds.x,y:bounds.y,width:bounds.width,height:bounds.height};
-      minX=Math.min(minX,bounds.x+glyph.x);
-      maxX=Math.max(maxX,bounds.x+bounds.width+glyph.x);
-      minY=Math.min(minY,bounds.y);
-      maxY=Math.max(maxY,bounds.y+bounds.height);
-    }
-  }finally{measure.remove();}
-  if(!Number.isFinite(minX)||!Number.isFinite(maxX))return '';
-  const thickening=Math.max(0,(state.thickness-12)*1.45)*unitScale;
-  const padding=Math.max(65*unitScale,thickening/2+65*unitScale);
-  const left=minX-padding,top=-maxY-padding;
-  const width=Math.max(180*unitScale,maxX-minX+2*padding),height=Math.max(200*unitScale,maxY-minY+2*padding);
-  svgDimensions={width:Math.ceil(width),height:Math.ceil(height)};
-  const colors=palettes[state.palette];
-  const span=Math.max(1,maxX-minX);
-  const stops=colors.map((color,i)=>`<stop offset="${fmt(100*i/(colors.length-1))}%" stop-color="${color}"/>`).join('');
-  // Le dégradé suit désormais la distance parcourue le long de la
-  // ligne centrale de chaque caractère, pas la coordonnée X du mot.
-  try{
-    const ink=FLUID_FLOW.render(glyphs,colors,thickening,{left,top,width,height},font.unitsPerEm);
-    return '<svg xmlns="'+NS+'" width="'+Math.ceil(width)+'" height="'+Math.ceil(height)+'" viewBox="'+fmt(left)+' '+fmt(top)+' '+fmt(width)+' '+fmt(height)+'" role="img" aria-label="'+escapeXML(word)+' en '+escapeXML(fontName)+'"><title>'+escapeXML(word)+' — '+escapeXML(fontName)+'</title><desc>Dégradé de couleur suivant le parcours incurvé de chaque trait.</desc><defs>'+ink.defs+'</defs>'+ink.layers+'</svg>';
-  }catch(error){
-    console.warn('Mode courbe indisponible : retour au dégradé linéaire',error);
-    const ink=glyphs.map(g=>'<g transform="translate('+fmt(g.x)+' 0)"><path d="'+g.d+'" fill="white" stroke="white" stroke-width="'+fmt(thickening)+'" stroke-linecap="round" stroke-linejoin="round" paint-order="stroke fill"/></g>').join('');
-    return '<svg xmlns="'+NS+'" width="'+Math.ceil(width)+'" height="'+Math.ceil(height)+'" viewBox="'+fmt(left)+' '+fmt(top)+' '+fmt(width)+' '+fmt(height)+'"><defs><linearGradient id="fluid-fallback" gradientUnits="userSpaceOnUse" x1="'+fmt(minX)+'" x2="'+fmt(maxX)+'">'+stops+'</linearGradient><mask id="fluid-ink"><g transform="scale(1,-1)">'+ink+'</g></mask></defs><rect x="'+fmt(left)+'" y="'+fmt(top)+'" width="'+fmt(width)+'" height="'+fmt(height)+'" fill="url(#fluid-fallback)" mask="url(#fluid-ink)"/></svg>';
-  }
-}
-
-function maintainLetterProportions(){
- const svg=$('preview').querySelector('svg');if(!svg)return;
- const vb=svg.viewBox.baseVal;if(!vb||!vb.width||!vb.height)return;
- const targetHeight=matchMedia('(max-width:520px)').matches?188:290;
- const displayWidth=Math.max(1,Math.ceil(targetHeight*vb.width/vb.height));
- svg.style.height=targetHeight+'px';svg.style.width=displayWidth+'px';
- $('preview').style.width=displayWidth+'px';
-}
-
-async function render(revision){
- const word=state.word.trim(),fontId=state.font,isFreehand=Boolean(state.freehand);
- lastGeneratedWord=isFreehand?'dessin-main-levee':word;
- currentSvg='';
- $('downloadSVG').disabled=true;$('downloadPNG').disabled=true;
- $('fontHint').textContent=isFreehand?'Dessin à main levée · tracés monolignes · masque de fusion SVG':'Police '+$('font').selectedOptions[0].textContent+' · dégradé continu · SVG vectoriel';
- $('liveStatus').textContent=isFreehand?'Aperçu en direct':word?'Chargement…':'Aperçu en direct';
- $('liveStatus').style.color='#34875f';
- if(isFreehand){
-   currentSvg=state.freehand.svg;
-   svgDimensions={width:state.freehand.width,height:state.freehand.height};
-   $('preview').innerHTML=currentSvg;
-   maintainLetterProportions();
-   $('downloadSVG').disabled=false;
-   $('downloadPNG').disabled=false;
- }else if(!word){
-   $('preview').style.width='auto';
-   $('preview').innerHTML='<span class="empty">Écris un mot pour commencer</span>';
- }else{
-   try{
-     const font=await getFontData(fontId);
-     if(revision!==renderRevision)return;
-     const svg=getHandwrittenSVG(font);
-     if(!svg)throw new Error('Aucun tracé disponible pour ce texte.');
-     currentSvg=svg;
-     $('preview').innerHTML=svg;
-     maintainLetterProportions();
-     $('downloadSVG').disabled=false;$('downloadPNG').disabled=false;
-     $('liveStatus').textContent='Aperçu en direct';
-   }catch(e){
-     if(revision!==renderRevision)return;
-     console.error(e);
-     $('preview').style.width='auto';
-     $('preview').innerHTML='<span class="empty">Police indisponible. Choisis-en une autre.</span>';
-     $('liveStatus').textContent='Erreur de rendu';
-     $('liveStatus').style.color='#c03838';
-   }
- }
- if(revision!==renderRevision)return;
- $('preview').setAttribute('aria-label',isFreehand?'Dessin SVG à main levée':word?'Lettrage du mot '+word:'Aucun mot');
- try{
-   const url=new URL(location.href);
-   if(word)url.searchParams.set('mot',word);else url.searchParams.delete('mot');
-   if(fontId==='pacifico')url.searchParams.delete('police');else url.searchParams.set('police',fontId);
-   history.replaceState(null,'',url.toString());
- }catch(e){}
-}
-function requestRender(){
- ++renderRevision;
- if(pendingFrame)return;
- pendingFrame=requestAnimationFrame(()=>{pendingFrame=0;render(renderRevision);});
-}
-function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2200);}
-function download(blob,name){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
-function exportName(){return (lastGeneratedWord||'lettering').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9_-]/g,'-').replace(/-+/g,'-').toLowerCase();}
-$('word').addEventListener('input',e=>{state.freehand=null;state.word=e.target.value.slice(0,22);requestRender();});
-$('exampleMake').addEventListener('click',()=>{
- state.freehand=null;
- state.word='Make';$('word').value='Make';
- state.font='pacifico';$('font').value='pacifico';
- state.thickness=255;$('thickness').value='255';$('thicknessValue').textContent='255';
- state.fusion=-115;$('spacing').value='-115';$('spacingValue').textContent='-115';
- requestRender();
+const sections=['Introduction & identité','Logo','Couleurs','Typographies','Système graphique','Pictogrammes','Mise en page','Photographies','Illustrations & cartes','Supports imprimés','Supports numériques','Signalétique','Règles d’utilisation','Ressources','Motion','Fluid Lettering'];
+const items=[{id:'accueil',name:'Accueil',short:'Accueil'},...sections.map((name,i)=>({id:'section-'+(i+1),name,short:(i===0?'Identité':i===8?'Cartes':i===10?'Numérique':i===12?'Règles':i===13?'Ressources':i===15?'Fluid':name) }))];
+const nav=document.getElementById('nav'),mobileTabs=document.getElementById('mobileTabs'),side=document.getElementById('sidebar'),menu=document.getElementById('menuButton');
+items.forEach((item,i)=>{
+ const a=document.createElement('a');a.href='#'+item.id;a.innerHTML='<span>'+String(i).padStart(2,'0')+'</span>'+item.name;a.dataset.view=item.id;nav.append(a);
+ const b=document.createElement('a');b.href='#'+item.id;b.innerHTML='<span>'+String(i).padStart(2,'0')+'</span>'+item.short;b.dataset.view=item.id;b.setAttribute('role','tab');b.setAttribute('aria-controls',item.id);b.id='tab-'+(i===15?'motion':item.id);mobileTabs.append(b);
 });
-$('font').addEventListener('change',e=>{if(VALID_FONTS.has(e.target.value)){state.freehand=null;state.font=e.target.value;requestRender();}});
-$('thickness').addEventListener('input',e=>{state.freehand=null;state.thickness=Number(e.target.value);$('thicknessValue').textContent=state.thickness;requestRender();});
-$('spacing').addEventListener('input',e=>{state.freehand=null;state.fusion=Number(e.target.value);$('spacingValue').textContent=(state.fusion>0?'+':'')+state.fusion;requestRender();});
-$('downloadSVG').addEventListener('click',()=>{if(!currentSvg)return;download(new Blob([currentSvg],{type:'image/svg+xml;charset=utf-8'}),exportName()+'-fluid.svg');toast('SVG vectoriel exporté');});
-$('downloadPNG').addEventListener('click',()=>{if(!currentSvg)return;const img=new Image(),src=URL.createObjectURL(new Blob([currentSvg],{type:'image/svg+xml;charset=utf-8'}));img.onload=()=>{const factor=Math.min(3,Math.max(1,4096/svgDimensions.width));const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(svgDimensions.width*factor));canvas.height=Math.max(1,Math.round(svgDimensions.height*factor));canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);canvas.toBlob(blob=>{if(blob)download(blob,exportName()+'-fluid.png');URL.revokeObjectURL(src);toast(blob?'PNG exporté':'Impossible de créer le PNG')},'image/png');};img.onerror=()=>{URL.revokeObjectURL(src);toast('Impossible de créer le PNG');};img.src=src;});
-document.addEventListener('fluid:apply-drawing',event=>{
- const data=event.detail;
- if(!data||typeof data.svg!=='string'||!Number.isFinite(data.width)||!Number.isFinite(data.height))return;
- state.freehand={svg:data.svg,width:data.width,height:data.height};
- requestRender();
- toast('Dessin SVG ajouté à l’aperçu');
+function closeMenu(){side.classList.remove('open');menu.setAttribute('aria-expanded','false');}
+menu.addEventListener('click',()=>{const open=side.classList.toggle('open');menu.setAttribute('aria-expanded',String(open));});
+nav.addEventListener('click',e=>{if(e.target.closest('a'))closeMenu()});
+let currentView='';
+function goTo(id,updateHash=false){
+ if(!document.getElementById(id)||!items.some(x=>x.id===id))id='accueil';
+ const changed=currentView!==id;currentView=id;
+ document.querySelectorAll('#main > section.chapter, #main > section.hero').forEach(panel=>{panel.hidden=panel.id!==id});
+ for(const a of document.querySelectorAll('[data-view]')){const active=a.dataset.view===id;a.classList.toggle('active',active);if(a.getAttribute('role')==='tab'){a.setAttribute('aria-selected',String(active));a.tabIndex=active?0:-1;}if(active)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');}
+ const at=items.findIndex(x=>x.id===id),prev=document.getElementById('pagerPrev'),next=document.getElementById('pagerNext');
+ prev.href='#'+items[Math.max(0,at-1)].id;next.href='#'+items[Math.min(items.length-1,at+1)].id;
+ prev.setAttribute('aria-disabled',String(at===0));next.setAttribute('aria-disabled',String(at===items.length-1));
+ document.getElementById('pagerCurrent').textContent=String(at).padStart(2,'0')+' / '+String(items.length-1).padStart(2,'0')+' — '+items[at].name;
+ const homeExtras=document.querySelectorAll('.ticker,.welcome-guide');homeExtras.forEach(el=>el.hidden=id!=='accueil');
+ const footer=document.querySelector('main > footer');footer.hidden=id!=='accueil';
+ if(changed){window.scrollTo({top:0,behavior:'instant'});const activeTab=mobileTabs.querySelector('.active');if(activeTab)activeTab.scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'});}
+ if(updateHash&&location.hash!=='#'+id)history.pushState(null,'','#'+id);
+ closeMenu();
+}
+window.addEventListener('hashchange',()=>goTo(decodeURIComponent(location.hash.slice(1))));
+mobileTabs.addEventListener('keydown',e=>{const links=[...mobileTabs.querySelectorAll('a')];const pos=links.indexOf(document.activeElement);if(pos<0)return;if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();const target=links[(pos+(e.key==='ArrowRight'?1:-1)+links.length)%links.length];target.focus();target.click();}});
+document.getElementById('themeButton').addEventListener('click',()=>document.body.classList.toggle('dark-view'));
+
+window.addEventListener('message',event=>{
+  const frame=document.getElementById('fluidFrame');
+  if(!frame||event.source!==frame.contentWindow||event.origin!==window.location.origin)return;
+  const payload=event.data;
+  if(payload&&payload.kind==='fluid-lettering:resize'&&Number.isFinite(payload.height)&&payload.height>400&&payload.height<4500){
+    const newHeight=Math.ceil(payload.height+6);
+    if(Math.abs(frame.getBoundingClientRect().height-newHeight)>8)frame.style.height=newHeight+'px';
+  }
 });
-const wordFromUrl=new URLSearchParams(location.search).get('mot')||new URLSearchParams(location.search).get('word');
-if(wordFromUrl){state.word=wordFromUrl.slice(0,22);$('word').value=state.word;}
-const fontFromUrl=new URLSearchParams(location.search).get('police');
-if(VALID_FONTS.has(fontFromUrl)){state.font=fontFromUrl;$('font').value=fontFromUrl;}
-requestRender();window.addEventListener('resize',maintainLetterProportions);
-</script>
-<script src="signature-studio.js?v=3"></script>
-</body>
-</html>
+
+
+let toastTimer;function toast(message){const t=document.getElementById('toast');t.textContent=message;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2600)}
+const palette=[{name:'Crème',hex:'#F6F3E9',role:'Fond principal',symbol:'01'},{name:'Encre',hex:'#182520',role:'Texte & structure',symbol:'02'},{name:'Orange',hex:'#F25A36',role:'Énergie & appels',symbol:'03'},{name:'Jaune',hex:'#F3C853',role:'Signal & accent',symbol:'04'},{name:'Sauge',hex:'#D9E6C7',role:'Fond secondaire',symbol:'05'},{name:'Bleu rivière',hex:'#65A89B',role:'Repères & territoire',symbol:'06'}];
+function hexToRgb(h){const x=parseInt(h.slice(1),16);return [(x>>16)&255,(x>>8)&255,x&255]}
+function rgbToCmyk([r,g,b]){let c=1-r/255,m=1-g/255,y=1-b/255,k=Math.min(c,m,y);if(k===1)return '0 / 0 / 0 / 100';return [c,m,y].map(v=>Math.round((v-k)/(1-k)*100)).concat(Math.round(k*100)).join(' / ')}
+const cg=document.getElementById('colorGrid');palette.forEach(p=>{const rgb=hexToRgb(p.hex),card=document.createElement('button');card.type='button';card.className='color-card';card.title='Copier '+p.hex;card.innerHTML=`<div class="color-swatch" style="background:${p.hex};color:${p.name==='Encre'?'#F6F3E9':'#182520'}"><span>${p.symbol}</span></div><div class="color-detail"><strong>${p.name}</strong><div>${p.role}</div><code>HEX ${p.hex}</code><br><code>RVB ${rgb.join(' / ')}</code><br><code>CMJN* ${rgbToCmyk(rgb)}</code><br><code>PANTONE : à valider</code></div>`;card.addEventListener('click',()=>{navigator.clipboard?.writeText(p.hex).then(()=>toast(p.hex+' copié'),()=>toast('Code : '+p.hex))??toast('Code : '+p.hex)});cg.append(card)});
+const logoSvg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><g fill="#182520"><path d="M10 10h48v12H10zM10 22h12v49H10zM22 59h36v12H22zM46 22h12v37H46z"/><path d="M70 10h40v12H70zM98 22h12v53H98zM70 63h28v12H70zM70 50h12v13H70zM70 75h12v24H70zM82 87h16v12H82z"/></g><g fill="#F25A36"><rect x="10" y="88" width="12" height="12"/><rect x="22" y="88" width="12" height="12"/><rect x="34" y="88" width="12" height="12"/><rect x="46" y="88" width="12" height="12"/><rect x="46" y="76" width="12" height="12"/></g></svg>`;
+document.getElementById('logoSvgContainer').innerHTML=logoSvg;document.getElementById('logoInverse').innerHTML=logoSvg.replaceAll('#182520','#F6F3E9');
+function makeIcon(kind){const base={church:'<path d="M500 170V320 M390 270L500 170 610 270 M300 420L500 290 700 420V820H300Z M450 820V600H550V820 M370 490H420M580 490H630"/>',tree:'<path d="M500 820V520 M500 520L350 410 M500 590L650 445 M280 520L390 260 500 390 585 240 720 520 650 620H350Z"/>',water:'<path d="M190 350Q290 240 390 350T590 350T810 350 M190 510Q290 400 390 510T590 510T810 510 M190 670Q290 560 390 670T590 670T810 670"/>',people:'<circle cx="380" cy="310" r="85"/><circle cx="630" cy="340" r="70"/><path d="M220 770V690Q220 530 380 530T540 690V770 M550 555Q760 515 760 715V770"/>',book:'<path d="M500 770Q370 690 190 740V260Q370 210 500 290Q630 210 810 260V740Q630 690 500 770Z M500 290V770"/>',sports:'<rect x="190" y="260" width="620" height="480" rx="10"/><path d="M500 260V740 M190 500H810 M280 400V600 M720 400V600"/><circle cx="500" cy="500" r="115"/>',calendar:'<rect x="220" y="270" width="560" height="510"/><path d="M220 400H780 M350 190V340 M650 190V340 M340 520H420 M500 520H580 M340 650H420 M500 650H580"/>',location:'<path d="M500 830Q250 510 250 390A250 250 0 0 1 750 390Q750 510 500 830Z"/><circle cx="500" cy="390" r="100"/>'};return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" fill="none" stroke="#182520" stroke-width="20" stroke-linecap="round" stroke-linejoin="round">${base[kind]}</svg>`}
+const iconData=[['church','PATRIMOINE'],['tree','NATURE'],['water','RIVIÈRE'],['people','HABITANTS'],['book','CULTURE'],['sports','SPORT'],['calendar','AGENDA'],['location','LIEUX']];const ig=document.getElementById('iconGallery');iconData.forEach(([id,label],i)=>{const div=document.createElement('div');div.className='icon-card';div.innerHTML=makeIcon(id)+`<span>${label}</span><small>PJ / ${String(i+1).padStart(3,'0')}</small>`;ig.append(div)});
+function pixelBoard(){const board=document.getElementById('pixelBoard');board.innerHTML='';for(let i=0;i<96;i++){const el=document.createElement('i');const x=i%12,y=Math.floor(i/12);const set=(x>=2&&x<=3&&y>=2&&y<=6)||(x>=4&&x<=7&&y>=2&&y<=3)||(x===7&&y<=6&&y>=2)||(x>=8&&x<=10&&y>=5&&y<=6)||(Math.random()>.93&&y>0&&y<7);if(set)el.className=Math.random()>.84?'alt':'on';board.append(el)}}pixelBoard();document.getElementById('regenerate').addEventListener('click',()=>{pixelBoard();toast('Nouveau motif généré')});
+const places={bourg:'Le bourg : commerces, services et vie municipale.',boquen:'Abbaye de Boquen : patrimoine historique de la commune.',mediatheque:'Médiathèque : culture et lecture au cœur de la commune.'};document.querySelectorAll('.map-point').forEach(el=>{const fn=()=>{document.getElementById('mapCaption').textContent=places[el.dataset.place];document.querySelectorAll('.map-point rect').forEach(r=>r.setAttribute('fill','#F25A36'));el.querySelector('rect').setAttribute('fill','#F3C853')};el.addEventListener('click',fn);el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fn()}})});
+document.getElementById('demoButton').addEventListener('click',()=>document.getElementById('componentMessage').textContent='✓ Action confirmée : bouton actif sélectionné.');document.getElementById('toastButton').addEventListener('click',()=>toast('Composant secondaire activé'));
+function download(name,content,type='image/svg+xml'){const blob=new Blob([content],{type:type+';charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+document.querySelectorAll('[data-download]').forEach(btn=>btn.addEventListener('click',()=>{const type=btn.dataset.download;if(type==='logo')download('plenee-jugon-logo-concept.svg',logoSvg);if(type==='icon'){const payload=iconData.map(([id,label])=>`<!-- ${label} -->\n${makeIcon(id)}`).join('\n\n');download('plenee-jugon-pictogrammes-concept.svg.txt',payload,'text/plain')}if(type==='palette')download('plenee-jugon-palette.css',`:root{\n${palette.map(p=>`  --pj-${p.name.toLowerCase().replaceAll(' ','-')}: ${p.hex};`).join('\n')}\n}\n`,'text/css');toast('Fichier préparé : '+type)}));document.getElementById('printButton').addEventListener('click',()=>window.print());
+
+
+// Motion lab: animation controls, no timers, respect OS settings.
+const speed=document.getElementById('motionSpeed'),toggle=document.getElementById('motionToggle'),replay=document.getElementById('motionReplay'),motionSection=document.getElementById('section-15');
+let motionPaused=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function applyPause(){motionSection.classList.toggle('motion-paused',motionPaused);toggle.textContent=motionPaused?'▶ LANCER':'Ⅱ PAUSE';toggle.setAttribute('aria-pressed',String(motionPaused));}
+applyPause();
+speed.addEventListener('change',()=>motionSection.style.setProperty('--motion-factor',speed.value));
+toggle.addEventListener('click',()=>{motionPaused=!motionPaused;applyPause();});
+replay.addEventListener('click',()=>{motionPaused=false;applyPause();const stages=[...motionSection.querySelectorAll('.motion-stage,.loading-line')];stages.forEach(el=>{el.style.animation='none';void el.offsetWidth;el.style.animation='';});const animated=motionSection.querySelectorAll('.motion-stage *, .loading-line i');animated.forEach(el=>{el.style.animation='none';void el.offsetWidth;el.style.animation='';});});
+document.getElementById('motionDemoButton').addEventListener('click',()=>document.getElementById('motionDemoStatus').textContent='✓ Interaction confirmée : retour visuel immédiat.');
+goTo(decodeURIComponent(location.hash.slice(1))||'accueil');
+</script></body></html>
