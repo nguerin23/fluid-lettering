@@ -1,29 +1,32 @@
-# Fluid — Lettrage Pacifico
+# Plénée-Jugon — Charte graphique et Fluid Lettering
 
-**Site :** https://nguerin23.github.io/fluid-lettering/
+**Site interactif :** https://nguerin23.github.io/fluid-lettering/
 
-Un éditeur de lettrage manuscrit basé **uniquement sur la police Pacifico**, avec une palette vert → turquoise → bleu → violet dont la progression suit les courbes. Un léger relief est visible lorsque des lettres ou des traits se recouvrent.
+Ce dépôt héberge désormais la **charte graphique expérimentale de Plénée-Jugon**, avec 16 rubriques. Le moteur original **Fluid Lettering** est conservé comme atelier intégré à la rubrique **16 / Fluid Lettering**.
 
-## Fonctionnement
+## Navigation
 
-- **Police unique : Pacifico**, chargée depuis `font-packs/pacifico.json` et sélectionnée automatiquement, y compris sur les anciens liens avec un paramètre `police` obsolète.
-- Texte initial : **bonjour**, 22 caractères maximum ; le bouton **Make** charge l’exemple Pacifico.
-- Épaisseur par défaut **255**, espacement par défaut **−115**. Les deux réglages restent modifiables.
-- Dégradé suivant la **distance parcourue sur la ligne médiane estimée** de chaque glyphe, avec contours SVG conservés. Le sens du stylo est estimé à partir des contours et n’est pas garanti être celui de la personne qui a dessiné la police.
-- Ombre aux chevauchements : **50 % d’opacité**, légèrement décalée et diffusée, masquée par l’encre déjà peinte pour éviter le halo autour du mot.
-- Export **SVG** autonome (masques vectoriels, cartes de couleurs intégrées en PNG) et **PNG** haute résolution.
+- Accueil : `index.html` — interface complète de la charte graphique (identité, logo, couleurs, typographies, pictogrammes, règles, motion et atelier de lettering).
+- Atelier Fluid : `fluid-lettering.html` — version autonome, également accessible dans la charte via `#section-16`.
+- Logo concept : `logo-plenee-jugon-concept.svg` — visuel vectoriel conceptuel.
 
-## Dessin à main levée
+## Fluid Lettering
 
-Le bouton **Dessiner** ouvre un studio accessible au doigt, à la souris et au stylet : lissage réglable, épaisseur du trait, annulation, effacement, export SVG et réutilisation dans l’aperçu principal.
+- Police unique **Pacifico** — `font-packs/pacifico.json`.
+- Texte initial **bonjour** ; l'exemple **Make** reste disponible.
+- Épaisseur par défaut **255**, espacement par défaut **−115**, réglages conservés.
+- Dégradé qui suit la longueur estimée des traits et les courbes de la police.
+- Ombre sur les chevauchements à **50 %** pour le relief, sans halo extérieur.
+- Dessin libre au doigt/souris/stylet, exports **SVG** et **PNG**.
 
-La couleur suit la longueur cumulée du tracé. Une ombre plus marquée (50 % d’opacité) apparaît aux croisements de gestes distincts, tout en restant limitée aux zones de recouvrement.
+Les modules `signature-studio.js` et `signature-studio.css`, les ressources Pacifico et les licences dans `FONT-LICENSES.md` restent inchangés.
 
-## Fichiers
+## Statut et visibilité
 
-- `index.html` : interface, aperçu, moteur de courbes et export.
-- `font-packs/pacifico.json` : **unique police** (contours vectoriels compressés, chargement à la demande).
-- `signature-studio.js` et `signature-studio.css` : dessin libre.
-- `FONT-LICENSES.md` : crédits et texte de la licence SIL OFL de Pacifico.
+La charte est un **prototype créatif non officiel, à valider** ; elle ne constitue pas la charte approuvée de la commune. Les photographies et autres contenus tiers requièrent une vérification de leurs droits avant réutilisation.
 
-Les autres polices et leurs anciennes ressources ont été retirées du dépôt.
+**Attention : ce dépôt est public.** La version de la charte intégrée depuis `charte-plenee-jugon` (dépôt source privé, laissé inchangé) est donc visible publiquement sur ce site.
+
+## Publication
+
+Site statique compatible avec GitHub Pages, depuis la branche `main` et le dossier racine `/`. Depuis le répertoire du dépôt, ouvrir `index.html` pour consulter la charte, ou `fluid-lettering.html` pour l'atelier autonome.
