@@ -4,14 +4,14 @@
   'use strict';
 
   const events=[
-    {date:'03 DÉC.',heure:'18H00',lieu:'Salle polyvalente',titre:'Réunion publique',description:'Projets de fin d’année'},
-    {date:'05 DÉC.',heure:'10H30',lieu:'Médiathèque',titre:'Atelier lecture',description:'Animation pour les familles'},
-    {date:'07 DÉC.',heure:'14H00',lieu:'Mairie',titre:'Permanence des élus',description:'Échanges avec les habitants'},
-    {date:'10 DÉC.',heure:'19H00',lieu:'Espace associatif',titre:'Forum associatif',description:'Rencontre des bénévoles'},
-    {date:'12 DÉC.',heure:'15H00',lieu:'Centre-bourg',titre:'Marché de Noël',description:'Stands et animations'},
-    {date:'14 DÉC.',heure:'09H30',lieu:'École',titre:'Portes ouvertes',description:'Découverte des locaux'},
-    {date:'17 DÉC.',heure:'18H30',lieu:'Salle des fêtes',titre:'Concert d’hiver',description:'Soirée musicale'},
-    {date:'20 DÉC.',heure:'11H00',lieu:'Place de la mairie',titre:'Rencontre citoyenne',description:'Moment de partage'}
+    {date:'JEU. 03 DÉC.',heure:'18H00',lieu:'Salle polyvalente',titre:'Réunion publique',description:'Projets de fin d’année'},
+    {date:'SAM. 05 DÉC.',heure:'10H30',lieu:'Médiathèque',titre:'Atelier lecture',description:'Animation pour les familles'},
+    {date:'LUN. 07 DÉC.',heure:'14H00',lieu:'Mairie',titre:'Permanence des élus',description:'Échanges avec les habitants'},
+    {date:'JEU. 10 DÉC.',heure:'19H00',lieu:'Espace associatif',titre:'Forum associatif',description:'Rencontre des bénévoles'},
+    {date:'SAM. 12 DÉC.',heure:'15H00',lieu:'Centre-bourg',titre:'Marché de Noël',description:'Stands et animations'},
+    {date:'LUN. 14 DÉC.',heure:'09H30',lieu:'École',titre:'Portes ouvertes',description:'Découverte des locaux'},
+    {date:'JEU. 17 DÉC.',heure:'18H30',lieu:'Salle des fêtes',titre:'Concert d’hiver',description:'Soirée musicale'},
+    {date:'DIM. 20 DÉC.',heure:'11H00',lieu:'Place de la mairie',titre:'Rencontre citoyenne',description:'Moment de partage'}
   ];
 
   const C={navy:'#070B66',blue:'#3152F4',sky:'#7C99F7',pale:'#E6ECFF',paper:'#F7F9FF',white:'#FFFFFF',muted:'#50649D'};
