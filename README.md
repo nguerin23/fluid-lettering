@@ -50,12 +50,12 @@ Les tags servent à rechercher par exemple `mairie`, `conseil`, `école`, `EHPAD
 
 ## Maquettes Facebook fixes
 
-Les deux modèles utilisent la **même photographie source de Plénée-Jugon**, montrant la médiathèque et sa fontaine (`IMG_5143.jpeg`), recadrée en JPEG pour le site. Le logo vectoriel de la commune apparaît en **bas à droite**, en monochrome bleu nuit.
+Les deux modèles utilisent la **même photographie source de Plénée-Jugon**, montrant la médiathèque et sa fontaine (`IMG_5143.jpeg`), recadrée en JPEG pour le site. Le logo vectoriel de la commune apparaît en **blanc sur le large ruban Fluid bleu nuit**, en bas à droite.
 
-- **Événements à venir** : photo pleine largeur raccourcie (278 px sur une publication de 1350 px), bandeau contenant uniquement le titre, puis frise verticale. **Huit événements fictifs fixes** alternent à gauche et à droite ; la première ligne affiche **date | heure | lieu**, puis le titre et une courte description. La mention **« Agenda | Événements fictifs »** figure désormais en pied de page, et non en haut.
+- **Événements à venir** : photo pleine largeur raccourcie à **218 px** sur 1350, puis un bandeau titre bleu nuit **moins large (948 px) et moins haut (116 px)**. Les **huit événements fictifs** alternent gauche/droite. Date, heure et lieu sont sur la même ligne avec des séparateurs `|` davantage espacés, des couleurs distinctes et des caractères renforcés. Le titre est suivi d'une **description sur deux à trois lignes**, avec retour à la ligne automatique. « Agenda | Événements fictifs » figure en blanc sur le ruban inférieur.
 - **Info pratique** : couverture photographique pleine largeur raccourcie à 500 px, puis **3 petites balises fixes** (`INFORMATION`, `SERVICES`, `MAIRIE`) **alignées à gauche**. Sous les balises, une information fictive est composée sur **3 lignes alignées à gauche** : « Accueil exceptionnellement fermé », « jeudi après-midi à la mairie », « Merci de votre compréhension. ». Une mention discrète « Exemple fictif » reste visible.
 
-Les deux modèles se terminent par **une seule ligne Fluid épaisse et monochrome bleu nuit** (`#070B66`), sur toute la largeur. Les anciens dégradés, courbes secondaires, ombres et fonds décoratifs sont supprimés. Le **logo officiel monochrome** reste en bas à droite, au-dessus de la ligne. Cette dernière commence sous les événements et ne les recouvre pas.
+Les deux modèles se terminent par **un seul ruban Fluid monochrome bleu nuit** (`#070B66`), désormais **plus épais (166 px)** et occupant toute la largeur. Les dégradés, courbes secondaires, ombres et fonds décoratifs restent supprimés. Le **logo officiel blanc est directement posé sur ce ruban**, en bas à droite, tandis que les mentions de maquette figurent à gauche en blanc. Le ruban commence sous les événements.
 
 **Aucune saisie, aucun téléversement d’image et aucun bouton d’ajout ou de suppression** n’apparaissent dans la rubrique : seul le choix entre les deux modèles et le téléchargement PNG 1080 × 1350 sont disponibles. Le rendu s’effectue localement dans le navigateur.
 
