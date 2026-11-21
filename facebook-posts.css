@@ -57,3 +57,16 @@
 .fb-event-add:disabled{opacity:.5;cursor:not-allowed}
 .fb-timeline-hint{margin:12px 0 0;font:500 12px/1.6 var(--body);color:#6575A5}
 @media(max-width:480px){.fb-timeline-intro{flex-direction:column;gap:7px}.fb-event-card{padding:12px}.fb-event-fields{gap:8px}.fb-event-fields input{padding:9px 8px}}
+
+
+/* Deux modèles uniquement : frise événementielle et info pratique. */
+.fb-template-grid{grid-template-columns:repeat(2,minmax(0,1fr));margin-bottom:22px}
+.fb-template{min-height:92px;justify-content:center}
+.fb-practical-editor{border-top:1px solid var(--line);padding-top:21px;margin-top:3px}
+.fb-practical-tags{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.fb-practical-tags .fb-field{font-size:12px;min-width:0}
+.fb-practical-tags input{font-size:13px;padding:10px 9px;min-width:0}
+.fb-practical-lines{display:grid;gap:12px}
+.fb-practical-lines input{font-size:15px}
+.fb-practical-note{font:500 12px/1.5 var(--body);color:#6575A5;margin:13px 0 0}
+@media(max-width:580px){.fb-practical-tags{grid-template-columns:1fr}.fb-template{min-height:88px}.fb-template strong{font-size:15px}}
