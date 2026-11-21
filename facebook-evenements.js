@@ -46,25 +46,25 @@
     fill(paper,0,0,1080,1350);
     // Photo de la commune pleine largeur, sans frise sur la couverture.
     if(photo&&photo.complete&&photo.naturalWidth>0){
-      const iw=photo.naturalWidth,ih=photo.naturalHeight,scale=Math.max(1080/iw,328/ih);
-      const sw=1080/scale,sh=328/scale;
-      ctx.drawImage(photo,(iw-sw)/2,(ih-sh)/2,sw,sh,0,0,1080,328);
+      const iw=photo.naturalWidth,ih=photo.naturalHeight,scale=Math.max(1080/iw,278/ih);
+      const sw=1080/scale,sh=278/scale;
+      ctx.drawImage(photo,(iw-sw)/2,(ih-sh)/2,sw,sh,0,0,1080,278);
     }else{
-      const grad=ctx.createLinearGradient(0,0,1080,328);
+      const grad=ctx.createLinearGradient(0,0,1080,278);
       grad.addColorStop(0,navy);grad.addColorStop(1,blue);
-      ctx.fillStyle=grad;ctx.fillRect(0,0,1080,328);
+      ctx.fillStyle=grad;ctx.fillRect(0,0,1080,278);
     }
 
-    fill(navy,0,328,1080,172);
-    line('AGENDA  ·  EXEMPLES FICTIFS',76,350,920,24,21,sky,'700','left','Manrope');
-    line('Événements à venir',75,397,940,76,60,white,'500');
+    // Photo plus courte : seul le titre reste dans le bandeau.
+    fill(navy,0,278,1080,164);
+    line('Événements à venir',75,316,940,76,60,white,'500');
 
     // Ligne centrale commençant seulement SOUS la couverture et le titre.
-    const center=540,first=532,step=87;
+    const center=540,first=484,step=90;
     ctx.lineCap='round';
     ctx.lineWidth=4;
     ctx.strokeStyle=sky;
-    ctx.beginPath();ctx.moveTo(center,first+5);ctx.lineTo(center,first+step*(events.length-1)+81);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(center,first+5);ctx.lineTo(center,first+step*(events.length-1)+75);ctx.stroke();
 
     events.forEach((e,i)=>{
       const y=first+i*step;
@@ -82,19 +82,16 @@
       line(e.description,x,y+56,maxW,17,14,navy,'400',align,'Manrope');
     });
 
-    // Bandeau Fluid sur 100 % de la largeur, sous le dernier événement.
-    window.PJ_FB_FLUID.draw(ctx,1226);
-    ctx.fillStyle='rgba(255,255,255,0.86)';
-    ctx.beginPath();ctx.roundRect(64,1243,394,43,10);ctx.fill();
-    line('EXEMPLES FICTIFS  ·  MAQUETTE',76,1253,365,17,15,muted,'700','left','Manrope');
+    // La mention d'agenda passe en pied de page.
+    // Un seul trait Fluid monochrome remplace les anciennes courbes et fonds.
+    window.PJ_FB_FLUID.draw(ctx);
+    line('AGENDA  |  ÉVÉNEMENTS FICTIFS',76,1241,650,19,17,muted,'700','left','Manrope');
 
-    // Le vrai logo reste lisible au premier plan, en bas à droite.
-    ctx.fillStyle='rgba(255,255,255,0.92)';
-    ctx.beginPath();ctx.roundRect(786,1243,235,89,12);ctx.fill();
+    // Vrai logo monochrome, en bas à droite et au-dessus du trait.
     if(logo&&logo.complete&&logo.naturalWidth>0){
-      ctx.drawImage(logo,805,1251,200,200*88/246);
+      ctx.drawImage(logo,805,1232,200,200*88/246);
     }else{
-      line('Plénée-Jugon',801,1271,206,23,17,navy,'600');
+      line('Plénée-Jugon',800,1252,205,23,17,navy,'600');
     }
   }
 
