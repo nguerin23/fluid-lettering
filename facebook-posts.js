@@ -69,11 +69,11 @@
     ctx.fillStyle=paper;ctx.fillRect(0,0,1080,1350);
 
     // 1 — Photo source, bord à bord, sur la partie haute.
-    drawCover(0,0,1080,585);
+    drawCover(0,0,1080,500);
 
     // 2 — Exactement trois petites balises, toutes alignées à gauche.
     let x=76;
-    const y=655;
+    const y=568;
     practical.tags.forEach(tag=>{
       ctx.font='700 23px Manrope, Arial, sans-serif';
       const badgeW=Math.min(286,Math.max(112,ctx.measureText(tag).width+40));
@@ -85,25 +85,21 @@
     });
 
     // 3 — Trois lignes de texte : même origine et alignement à gauche.
-    const starts=[804,922,1040];
+    const starts=[755,872,989];
     practical.lines.forEach((line,i)=>
       drawLine(line,76,starts[i],930,72,45,navy,'600','Outfit')
     );
 
-    // 4 — Bandeau Fluid sur toute la largeur du pied du visuel.
-    window.PJ_FB_FLUID.draw(ctx,1226);
-    ctx.fillStyle='rgba(255,255,255,0.86)';
-    ctx.beginPath();ctx.roundRect(64,1243,360,43,10);ctx.fill();
-    drawLine('EXEMPLE FICTIF · MAQUETTE',76,1253,335,17,16,muted,'700','Manrope');
+    // 4 — Un seul trait Fluid épais, bleu nuit, sur toute la largeur.
+    window.PJ_FB_FLUID.draw(ctx);
+    drawLine('EXEMPLE FICTIF · MAQUETTE',76,1241,565,19,17,muted,'700','Manrope');
 
-    // Logo de la commune en bas à droite, au-dessus des rubans Fluid.
-    ctx.fillStyle='rgba(255,255,255,0.92)';
-    ctx.beginPath();ctx.roundRect(786,1243,235,89,12);ctx.fill();
+    // Logo en bas à droite, au-dessus de la ligne Fluid.
     if(logo.complete&&logo.naturalWidth>0){
       const w=200,h=w*88/246;
-      ctx.drawImage(logo,805,1251,w,h);
+      ctx.drawImage(logo,805,1232,w,h);
     }else{
-      drawLine('Plénée-Jugon',801,1271,206,23,17,navy,'600');
+      drawLine('Plénée-Jugon',800,1252,206,23,17,navy,'600');
     }
   }
 
