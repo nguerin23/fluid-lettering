@@ -20,7 +20,7 @@ La navigation est horizontale et adaptée au mobile. Le site s'ouvre directement
 - `pictogrammes.js`, `pictogrammes.css` — recherche par tags, filtres, affichage progressif (48 à la fois), copie et téléchargement SVG.
 - `PICTOGRAMMES-LUCIDE-LICENSE.txt` — mentions de la licence libre ISC et attribution Lucide.
 - `facebook-posts.css`, `facebook-posts.js` — sélecteur de deux modèles fixes, dessin Canvas et export PNG.
-- `facebook-fluid.js` — rubans Fluid bleus, en bas des deux publications Facebook, sur toute la largeur.
+- `facebook-fluid.js` — trait Fluid unique, épais et bleu nuit, sur toute la largeur en bas des deux publications Facebook.
 - `facebook-evenements.js` — huit événements de démonstration fixes et moteur de rendu d’une frise verticale alternée.
 - `images/plenee-jugon-mediatheque-banniere.jpg` — photographie source fournie par l’utilisateur (IMG_5143.jpeg), recadrée pour les couvertures des deux publications.
 - `fluid-lettering.html`, `signature-studio.js`, `signature-studio.css` — atelier de lettrage et dessin libre.
@@ -52,10 +52,10 @@ Les tags servent à rechercher par exemple `mairie`, `conseil`, `école`, `EHPAD
 
 Les deux modèles utilisent la **même photographie source de Plénée-Jugon**, montrant la médiathèque et sa fontaine (`IMG_5143.jpeg`), recadrée en JPEG pour le site. Le logo vectoriel de la commune apparaît en **bas à droite**, en monochrome bleu nuit.
 
-- **Événements à venir** : couverture photographique pleine largeur, bandeau titre, puis une frise verticale commençant en dessous. **Huit événements fictifs fixes** alternent à gauche et à droite ; la première ligne affiche **date | heure | lieu**, puis le titre et une courte description. La mention « Exemples fictifs » figure dans le visuel.
-- **Info pratique** : couverture photographique pleine largeur, puis **3 petites balises fixes** (`INFORMATION`, `SERVICES`, `MAIRIE`) **alignées à gauche**. Sous les balises, une information fictive est composée sur **3 lignes alignées à gauche** : « Accueil exceptionnellement fermé », « jeudi après-midi à la mairie », « Merci de votre compréhension. ». Une mention discrète « Exemple fictif » reste visible.
+- **Événements à venir** : photo pleine largeur raccourcie (278 px sur une publication de 1350 px), bandeau contenant uniquement le titre, puis frise verticale. **Huit événements fictifs fixes** alternent à gauche et à droite ; la première ligne affiche **date | heure | lieu**, puis le titre et une courte description. La mention **« Agenda | Événements fictifs »** figure désormais en pied de page, et non en haut.
+- **Info pratique** : couverture photographique pleine largeur raccourcie à 500 px, puis **3 petites balises fixes** (`INFORMATION`, `SERVICES`, `MAIRIE`) **alignées à gauche**. Sous les balises, une information fictive est composée sur **3 lignes alignées à gauche** : « Accueil exceptionnellement fermé », « jeudi après-midi à la mairie », « Merci de votre compréhension. ». Une mention discrète « Exemple fictif » reste visible.
 
-Les deux modèles se terminent par un **effet Fluid bleu sur toute la largeur** du visuel, composé de courbes aux extrémités arrondies et de dégradés. Le **logo officiel monochrome** reste à droite, sur un support clair pour conserver sa lisibilité. Ce bandeau commence sous les événements et ne les recouvre pas.
+Les deux modèles se terminent par **une seule ligne Fluid épaisse et monochrome bleu nuit** (`#070B66`), sur toute la largeur. Les anciens dégradés, courbes secondaires, ombres et fonds décoratifs sont supprimés. Le **logo officiel monochrome** reste en bas à droite, au-dessus de la ligne. Cette dernière commence sous les événements et ne les recouvre pas.
 
 **Aucune saisie, aucun téléversement d’image et aucun bouton d’ajout ou de suppression** n’apparaissent dans la rubrique : seul le choix entre les deux modèles et le téléchargement PNG 1080 × 1350 sont disponibles. Le rendu s’effectue localement dans le navigateur.
 
