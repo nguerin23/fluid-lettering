@@ -32,7 +32,7 @@
     img.src=url;
   }
   redrawOnLoad(photo,'images/plenee-jugon-mediatheque-banniere.jpg');
-  redrawOnLoad(logo,'logo-plenee-jugon-monochrome-bleu-nuit.svg');
+  redrawOnLoad(logo,'logo-plenee-jugon-monochrome-blanc.svg');
 
   function drawCover(x,y,w,h){
     if(photo.complete&&photo.naturalWidth>0&&photo.naturalHeight>0){
@@ -90,16 +90,16 @@
       drawLine(line,76,starts[i],930,72,45,navy,'600','Outfit')
     );
 
-    // 4 — Un seul trait Fluid épais, bleu nuit, sur toute la largeur.
+    // 4 — Large ruban Fluid : la signature et le logo blanc y prennent place.
     window.PJ_FB_FLUID.draw(ctx);
-    drawLine('EXEMPLE FICTIF · MAQUETTE',76,1241,565,19,17,muted,'700','Manrope');
+    drawLine('EXEMPLE FICTIF · MAQUETTE',76,1271,565,19,17,white,'700','Manrope');
 
-    // Logo en bas à droite, au-dessus de la ligne Fluid.
+    // Logo communal réellement intégré dans la bande bleu nuit.
     if(logo.complete&&logo.naturalWidth>0){
       const w=200,h=w*88/246;
-      ctx.drawImage(logo,805,1232,w,h);
+      ctx.drawImage(logo,808,1254,w,h);
     }else{
-      drawLine('Plénée-Jugon',800,1252,206,23,17,navy,'600');
+      drawLine('Plénée-Jugon',800,1275,206,25,19,white,'650');
     }
   }
 
