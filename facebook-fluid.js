@@ -1,19 +1,21 @@
-/* Pied de page Fluid partagé : un trait unique, épais et monochrome.
-   Canvas 1080×1350. Aucun dégradé, aucune ombre, aucune ligne secondaire. */
+/* Pied de page Fluid partagé entre les deux visuels Facebook.
+   Un seul ruban monochrome bleu nuit, très épais et traversant 1080 px.
+   Le logo blanc est dessiné par-dessus depuis les modèles. */
 (() => {
   'use strict';
   function draw(ctx) {
     ctx.save();
     ctx.beginPath();
-    ctx.rect(0,1285,1080,65);
+    ctx.rect(0,1177,1080,173);
     ctx.clip();
+
     ctx.beginPath();
-    ctx.moveTo(-60,1331);
-    ctx.bezierCurveTo(130,1297,250,1354,409,1326);
-    ctx.bezierCurveTo(557,1298,690,1349,834,1325);
-    ctx.bezierCurveTo(971,1300,1067,1346,1140,1317);
+    ctx.moveTo(-100,1314);
+    ctx.bezierCurveTo(115,1257,244,1337,405,1297);
+    ctx.bezierCurveTo(562,1255,695,1336,840,1292);
+    ctx.bezierCurveTo(986,1255,1064,1315,1180,1276);
     ctx.strokeStyle='#070B66';
-    ctx.lineWidth=30;
+    ctx.lineWidth=166;
     ctx.lineCap='round';
     ctx.lineJoin='round';
     ctx.stroke();
