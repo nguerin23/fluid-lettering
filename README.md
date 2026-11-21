@@ -8,7 +8,7 @@ Une **proposition graphique non officielle** de Plénée-Jugon, organisée en **
 2. **Typographies** — Outfit pour les titres, Manrope pour le texte. Inspiration du style géométrique de Nuuday 2025 ; Nuu Type (police propriétaire) n'est pas distribuée.
 3. **Couleurs** — six nuances de bleu avec codes HEX copiables.
 4. **Pictogrammes** — **300 icônes SVG distinctes**, regroupées en **20 thématiques municipales**, chacune avec **3 tags au maximum**. Recherche par nom, tag ou thématique. Aperçu détaillé, copie du SVG et téléchargement indépendant.
-5. **Facebook 4:5** — **2 modèles uniquement** : **« Événements à venir »**, avec photo, titre, frise verticale et de 1 à 8 événements (date, heure, lieu, titre et description), et **« Info pratique »**, avec photo pleine largeur en haut, **3 balises de mots-clés** et **exactement 3 lignes de texte** personnalisables. Export PNG **1080 × 1350** local.
+5. **Facebook 4:5** — **2 maquettes fixes, sans saisie** : **« Événements à venir »** avec 8 événements fictifs (date, heure, lieu, titre, courte description) sur une frise verticale alternée, et **« Info pratique »** avec photo pleine largeur, 3 balises et 3 lignes de texte alignées à gauche. Le logo communal figure en bas à droite dans les deux visuels. Export PNG **1080 × 1350**.
 6. **Fluid** — générateur Pacifico et studio de dessin libre avec lissage, épaisseur, dégradé bleu et exports SVG/PNG. Les contrôles et le rendu d'origine sont conservés, mais l'affichage embarqué masque le second en-tête.
 
 La navigation est horizontale et adaptée au mobile. Le site s'ouvre directement sur **Logo**. Les anciens liens d'accueil redirigent vers cette page.
@@ -19,8 +19,9 @@ La navigation est horizontale et adaptée au mobile. Le site s'ouvre directement
 - `pictogrammes-data.js` — 300 tracés SVG Lucide sélectionnés, noms français, 3 tags au maximum, 15 icônes dans chacune des 20 thématiques.
 - `pictogrammes.js`, `pictogrammes.css` — recherche par tags, filtres, affichage progressif (48 à la fois), copie et téléchargement SVG.
 - `PICTOGRAMMES-LUCIDE-LICENSE.txt` — mentions de la licence libre ISC et attribution Lucide.
-- `facebook-posts.css`, `facebook-posts.js` — deux modèles Facebook, formulaires et export PNG.
-- `facebook-evenements.js` — frise « Événements à venir », saisie de 1 à 8 dates/horaires/lieux/titres/descriptions, alternance gauche/droite et affichage adapté.
+- `facebook-posts.css`, `facebook-posts.js` — sélecteur de deux modèles fixes, dessin Canvas et export PNG.
+- `facebook-evenements.js` — huit événements de démonstration fixes et moteur de rendu d’une frise verticale alternée.
+- `images/plenee-jugon-mediatheque-banniere.jpg` — photographie source fournie par l’utilisateur (IMG_5143.jpeg), recadrée pour les couvertures des deux publications.
 - `fluid-lettering.html`, `signature-studio.js`, `signature-studio.css` — atelier de lettrage et dessin libre.
 - `logo-plenee-jugon-monochrome-bleu-nuit.svg` — logo vectoriel issu du PDF fourni, intégralement bleu nuit (#070B66).
 - `logo-plenee-jugon-monochrome-blanc.svg` — le même logo vectoriel, intégralement blanc pour fond bleu nuit.
@@ -46,16 +47,13 @@ Les pictogrammes sont **harmonisés en bleu nuit** (`#070B66`), avec une épaiss
 
 Les tags servent à rechercher par exemple `mairie`, `conseil`, `école`, `EHPAD`, `commerces`, `agriculture`, `eau`, `bâtiments`, `santé`, `travaux`, `mobilité`, `nature`, etc. Une sélection affiche jusqu'à 48 résultats, puis un bouton « Afficher plus » permet de parcourir le reste du catalogue.
 
-## Modèle Facebook « Événements à venir »
+## Maquettes Facebook fixes
 
-Le haut du visuel 4:5 réserve toute la largeur à une **photo de couverture** (facultative) puis à un **titre**, avant le départ de la frise. Chaque événement est disposé alternativement à gauche ou à droite de la ligne verticale. Un marqueur et un connecteur horizontal matérialisent sa position.
+Les deux modèles utilisent la **même photographie source de Plénée-Jugon**, montrant la médiathèque et sa fontaine (`IMG_5143.jpeg`), recadrée en JPEG pour le site. Le logo vectoriel de la commune apparaît en **bas à droite**, en monochrome bleu nuit.
 
-L'éditeur propose jusqu'à **8 événements**. Les champs sont **Date**, **Heure**, **Titre de l’événement**, **Lieu** et **Description brève**. Les événements sont triés automatiquement selon la date et l'heure dans l'image, tout en préservant l'ordre de saisie dans le formulaire. Les champs restent entièrement modifiables. Trois **exemples fictifs** sont préremplis pour montrer la composition ; remplacez-les par les informations réelles avant publication. Pour les séries de 6 à 8 événements, les tailles de caractères et la longueur du texte affiché sont automatiquement ajustées (les descriptions longues sont abrégées dans l'aperçu).
+- **Événements à venir** : couverture photographique pleine largeur, bandeau titre, puis une frise verticale commençant en dessous. **Huit événements fictifs fixes** alternent à gauche et à droite ; ils contiennent chacun **date, heure, lieu, titre et description courte**. La mention « Exemples fictifs » figure dans le visuel.
+- **Info pratique** : couverture photographique pleine largeur, puis **3 petites balises fixes** (`INFORMATION`, `SERVICES`, `MAIRIE`) **alignées à gauche**. Sous les balises, une information fictive est composée sur **3 lignes alignées à gauche** : « Accueil exceptionnellement fermé », « jeudi après-midi à la mairie », « Merci de votre compréhension. ». Une mention discrète « Exemple fictif » reste visible.
 
-Une signature monochrome issue du vrai logo Plénée-Jugon figure en bas à gauche. Aucun événement ni aucune photo n'est envoyé à un serveur : tout est calculé localement dans le navigateur, puis exporté en PNG 1080 × 1350.
+**Aucune saisie, aucun téléversement d’image et aucun bouton d’ajout ou de suppression** n’apparaissent dans la rubrique : seul le choix entre les deux modèles et le téléchargement PNG 1080 × 1350 sont disponibles. Le rendu s’effectue localement dans le navigateur.
 
-## Modèle Facebook « Info pratique »
-
-Cette publication comporte uniquement, dans cet ordre : **photo de couverture pleine largeur** (ou visuel de remplacement), **trois balises de mots-clés**, puis **trois lignes d'information** saisies individuellement. Une signature monochrome du logo communal reste discrètement en pied de visuel. Les trois balises et les trois lignes sont modifiables ; leurs tailles s'ajustent pour tenir sur chaque ligne. Aucun titre, texte supplémentaire, date ou encart ne vient encombrer cette composition. Le format exporté est 1080 × 1350 px.
-
-L'éditeur Facebook ne propose plus que les deux modèles `evenements` et `pratique`. Les anciens modèles « Annonce », « Événement » et « En images » ont été retirés de l'interface.
+Ces contenus sont des **maquettes fictives** et ne doivent pas être publiés comme des informations réelles sans remplacement préalable des textes dans le code.
