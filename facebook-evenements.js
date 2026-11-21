@@ -1,28 +1,28 @@
-/* Maquette fixe : 8 événements fictifs sur une frise verticale 4:5.
-   Les données ne sont pas modifiables dans l'éditeur. */
+/* Maquette Facebook fixe : huit événements fictifs en frise 4:5.
+   Descriptions sur deux à trois lignes et informations séparées visuellement. */
 (() => {
   'use strict';
 
   const events=[
-    {date:'JEU. 03 DÉC.',heure:'18H00',lieu:'Salle polyvalente',titre:'Réunion publique',description:'Projets de fin d’année'},
-    {date:'SAM. 05 DÉC.',heure:'10H30',lieu:'Médiathèque',titre:'Atelier lecture',description:'Animation pour les familles'},
-    {date:'LUN. 07 DÉC.',heure:'14H00',lieu:'Mairie',titre:'Permanence des élus',description:'Échanges avec les habitants'},
-    {date:'JEU. 10 DÉC.',heure:'19H00',lieu:'Espace associatif',titre:'Forum associatif',description:'Rencontre des bénévoles'},
-    {date:'SAM. 12 DÉC.',heure:'15H00',lieu:'Centre-bourg',titre:'Marché de Noël',description:'Stands et animations'},
-    {date:'LUN. 14 DÉC.',heure:'09H30',lieu:'École',titre:'Portes ouvertes',description:'Découverte des locaux'},
-    {date:'JEU. 17 DÉC.',heure:'18H30',lieu:'Salle des fêtes',titre:'Concert d’hiver',description:'Soirée musicale'},
-    {date:'DIM. 20 DÉC.',heure:'11H00',lieu:'Place de la mairie',titre:'Rencontre citoyenne',description:'Moment de partage'}
+    {date:'JEU. 03 DÉC.',heure:'18H00',lieu:'Salle polyvalente',titre:'Réunion publique',description:'Présentation des projets communaux à venir, suivie d’un temps d’échange ouvert à tous les habitants.'},
+    {date:'SAM. 05 DÉC.',heure:'10H30',lieu:'Médiathèque',titre:'Atelier lecture',description:'Des histoires à écouter et des découvertes pour les petits comme pour les grands, dans une ambiance conviviale.'},
+    {date:'LUN. 07 DÉC.',heure:'14H00',lieu:'Mairie',titre:'Permanence des élus',description:'Venez poser vos questions et partager vos idées avec les élus sur les projets de la commune.'},
+    {date:'JEU. 10 DÉC.',heure:'19H00',lieu:'Espace associatif',titre:'Forum associatif',description:'Rencontrez les associations locales, leurs bénévoles et découvrez les activités proposées tout au long de l’année.'},
+    {date:'SAM. 12 DÉC.',heure:'15H00',lieu:'Centre-bourg',titre:'Marché de Noël',description:'Stands artisanaux, gourmandises et animations pour profiter ensemble de l’esprit des fêtes au centre-bourg.'},
+    {date:'LUN. 14 DÉC.',heure:'09H30',lieu:'École',titre:'Portes ouvertes',description:'Visites guidées, rencontres avec les équipes pédagogiques et présentation des projets de l’établissement.'},
+    {date:'JEU. 17 DÉC.',heure:'18H30',lieu:'Salle des fêtes',titre:'Concert d’hiver',description:'Une soirée musicale ouverte à toutes et tous, pour partager un moment chaleureux avant les fêtes.'},
+    {date:'DIM. 20 DÉC.',heure:'11H00',lieu:'Place de la mairie',titre:'Rencontre citoyenne',description:'Une matinée conviviale pour se retrouver, discuter et découvrir ensemble les initiatives locales.'}
   ];
 
-  const C={navy:'#070B66',blue:'#3152F4',sky:'#7C99F7',pale:'#E6ECFF',paper:'#F7F9FF',white:'#FFFFFF',muted:'#50649D'};
+  const C={navy:'#070B66',blue:'#3152F4',sky:'#7C99F7',paper:'#F7F9FF',white:'#FFFFFF',muted:'#50649D'};
 
   function draw(ctx,{photo,logo}){
-    const {navy,blue,sky,pale,paper,white,muted}=C;
+    const {navy,blue,sky,paper,white,muted}=C;
     const fill=(color,x,y,w,h)=>{ctx.fillStyle=color;ctx.fillRect(x,y,w,h);};
     const font=(size,weight='500',family='Outfit')=>{
       ctx.font=weight+' '+size+'px '+family+', Arial, sans-serif';
     };
-    const line=(value,x,y,maxW,size,minSize,color,weight='500',align='left',family='Outfit')=>{
+    function line(value,x,y,maxW,size,minSize,color,weight='500',align='left',family='Outfit'){
       let text=String(value??'').replace(/\s+/g,' ').trim();
       if(!text)return;
       let pt=size;
@@ -41,57 +41,114 @@
       ctx.textAlign=align;
       ctx.fillText(text,x,y);
       ctx.textAlign='left';
-    };
-
-    fill(paper,0,0,1080,1350);
-    // Photo de la commune pleine largeur, sans frise sur la couverture.
-    if(photo&&photo.complete&&photo.naturalWidth>0){
-      const iw=photo.naturalWidth,ih=photo.naturalHeight,scale=Math.max(1080/iw,278/ih);
-      const sw=1080/scale,sh=278/scale;
-      ctx.drawImage(photo,(iw-sw)/2,(ih-sh)/2,sw,sh,0,0,1080,278);
-    }else{
-      const grad=ctx.createLinearGradient(0,0,1080,278);
-      grad.addColorStop(0,navy);grad.addColorStop(1,blue);
-      ctx.fillStyle=grad;ctx.fillRect(0,0,1080,278);
     }
 
-    // Photo plus courte : seul le titre reste dans le bandeau.
-    fill(navy,0,278,1080,164);
-    line('Événements à venir',75,316,940,76,60,white,'500');
+    // Ligne d'information lisible : date | heure | lieu, espaces généreux
+    // et nuances distinctes. L'ensemble s'aligne sur la colonne.
+    function drawMetadata(e,x,y,align,maxWidth){
+      const values=[
+        {text:e.date,color:navy,weight:'750'},
+        {text:e.heure,color:blue,weight:'750'},
+        {text:e.lieu,color:muted,weight:'650'}
+      ];
+      let size=18,space=12,widths=[],total=0;
+      for(;size>=14;size--){
+        space=size>=16?12:8;
+        widths=values.map(v=>{font(size,v.weight,'Manrope');return ctx.measureText(v.text).width;});
+        font(size,'600','Manrope');
+        const pipeWidth=ctx.measureText('|').width;
+        total=widths.reduce((a,b)=>a+b,0)+2*(pipeWidth+space*2);
+        if(total<=maxWidth)break;
+      }
+      size=Math.max(14,size);
+      let cursor=align==='right'?x-total:x;
+      ctx.textBaseline='top';ctx.textAlign='left';
+      values.forEach((v,i)=>{
+        font(size,v.weight,'Manrope');
+        ctx.fillStyle=v.color;ctx.fillText(v.text,cursor,y);
+        cursor+=widths[i];
+        if(i<2){
+          cursor+=space;
+          font(size,'600','Manrope');
+          ctx.fillStyle=sky;ctx.fillText('|',cursor,y);
+          cursor+=ctx.measureText('|').width+space;
+        }
+      });
+    }
 
-    // Ligne centrale commençant seulement SOUS la couverture et le titre.
-    const center=540,first=484,step=90;
-    ctx.lineCap='round';
-    ctx.lineWidth=4;
-    ctx.strokeStyle=sky;
-    ctx.beginPath();ctx.moveTo(center,first+5);ctx.lineTo(center,first+step*(events.length-1)+75);ctx.stroke();
+    // Retour automatique à la ligne, sans dépasser trois lignes.
+    function drawDescription(description,x,y,maxWidth,align){
+      const size=17,leading=18;
+      font(size,'450','Manrope');
+      const words=String(description||'').trim().split(/\s+/).filter(Boolean);
+      const lines=[];
+      let current='';
+      for(const word of words){
+        const candidate=current?current+' '+word:word;
+        if(current&&ctx.measureText(candidate).width>maxWidth){
+          lines.push(current);
+          current=word;
+        }else current=candidate;
+      }
+      if(current)lines.push(current);
+      const visible=lines.slice(0,3);
+      if(lines.length>3&&visible.length){
+        let last=visible[2];
+        while(last.length>1&&ctx.measureText(last+'…').width>maxWidth)last=last.slice(0,-1);
+        visible[2]=last.trimEnd()+'…';
+      }
+      ctx.fillStyle=navy;ctx.textBaseline='top';ctx.textAlign=align;
+      visible.forEach((value,i)=>ctx.fillText(value,x,y+i*leading));
+      ctx.textAlign='left';
+    }
+
+    fill(paper,0,0,1080,1350);
+    // Photo moins haute pour laisser de la place aux descriptions développées.
+    const photoHeight=218;
+    if(photo&&photo.complete&&photo.naturalWidth>0&&photo.naturalHeight>0){
+      const iw=photo.naturalWidth,ih=photo.naturalHeight;
+      const scale=Math.max(1080/iw,photoHeight/ih);
+      const sw=1080/scale,sh=photoHeight/scale;
+      ctx.drawImage(photo,(iw-sw)/2,(ih-sh)/2,sw,sh,0,0,1080,photoHeight);
+    }else{
+      const grad=ctx.createLinearGradient(0,0,1080,photoHeight);
+      grad.addColorStop(0,navy);grad.addColorStop(1,blue);
+      ctx.fillStyle=grad;ctx.fillRect(0,0,1080,photoHeight);
+    }
+
+    // Bandeau du titre moins haut ET moins large que précédemment.
+    fill(navy,0,218,948,116);
+    line('Événements à venir',74,245,840,74,61,white,'500');
+
+    const center=540,first=355,step=104;
+    ctx.lineCap='round';ctx.lineWidth=3;ctx.strokeStyle=sky;
+    ctx.beginPath();
+    ctx.moveTo(center,first+28);
+    ctx.lineTo(center,first+step*(events.length-1)+34);
+    ctx.stroke();
 
     events.forEach((e,i)=>{
       const y=first+i*step;
       const left=i%2===0;
-      const x=left?472:608,align=left?'right':'left',maxW=402;
-      const cy=y+29;
+      const x=left?470:610,align=left?'right':'left',maxW=400;
+      const cy=y+26;
       ctx.strokeStyle=sky;ctx.lineWidth=3;
-      ctx.beginPath();ctx.moveTo(center,cy);ctx.lineTo(left?497:583,cy);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(center,cy);ctx.lineTo(left?494:586,cy);ctx.stroke();
       ctx.fillStyle=white;ctx.strokeStyle=blue;ctx.lineWidth=4;
-      ctx.beginPath();ctx.arc(center,cy,9,0,Math.PI*2);ctx.fill();ctx.stroke();
+      ctx.beginPath();ctx.arc(center,cy,8,0,Math.PI*2);ctx.fill();ctx.stroke();
 
-      // Toutes les informations pratiques sur une même ligne, séparées par « | ».
-      line(e.date+' | '+e.heure+' | '+e.lieu,x,y,maxW,18,14,blue,'700',align,'Manrope');
-      line(e.titre,x,y+27,maxW,26,22,navy,'600',align);
-      line(e.description,x,y+56,maxW,17,14,navy,'400',align,'Manrope');
+      drawMetadata(e,x,y,align,maxW);
+      line(e.titre,x,y+24,maxW,26,23,navy,'650',align);
+      drawDescription(e.description,x,y+51,maxW,align);
     });
 
-    // La mention d'agenda passe en pied de page.
-    // Un seul trait Fluid monochrome remplace les anciennes courbes et fonds.
+    // Le ruban Fluid large sert de support au texte et au logo blanc.
     window.PJ_FB_FLUID.draw(ctx);
-    line('AGENDA  |  ÉVÉNEMENTS FICTIFS',76,1241,650,19,17,muted,'700','left','Manrope');
-
-    // Vrai logo monochrome, en bas à droite et au-dessus du trait.
+    line('AGENDA  |  ÉVÉNEMENTS FICTIFS',76,1271,620,19,17,white,'700','left','Manrope');
     if(logo&&logo.complete&&logo.naturalWidth>0){
-      ctx.drawImage(logo,805,1232,200,200*88/246);
+      ctx.drawImage(logo,808,1254,200,200*88/246);
     }else{
-      line('Plénée-Jugon',800,1252,205,23,17,navy,'600');
+      line('Plénée-Jugon',800,1275,208,25,19,white,'650');
     }
   }
 
