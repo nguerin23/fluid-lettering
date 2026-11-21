@@ -90,15 +90,20 @@
       drawLine(line,76,starts[i],930,72,45,navy,'600','Outfit')
     );
 
-    // 4 — Logo de la commune dans le coin inférieur droit.
-    ctx.strokeStyle='#CBD6F5';ctx.lineWidth=2;
-    ctx.beginPath();ctx.moveTo(76,1212);ctx.lineTo(1006,1212);ctx.stroke();
-    drawLine('EXEMPLE FICTIF · MAQUETTE',76,1279,560,17,16,muted,'700','Manrope');
+    // 4 — Bandeau Fluid sur toute la largeur du pied du visuel.
+    window.PJ_FB_FLUID.draw(ctx,1226);
+    ctx.fillStyle='rgba(255,255,255,0.86)';
+    ctx.beginPath();ctx.roundRect(64,1243,360,43,10);ctx.fill();
+    drawLine('EXEMPLE FICTIF · MAQUETTE',76,1253,335,17,16,muted,'700','Manrope');
+
+    // Logo de la commune en bas à droite, au-dessus des rubans Fluid.
+    ctx.fillStyle='rgba(255,255,255,0.92)';
+    ctx.beginPath();ctx.roundRect(786,1243,235,89,12);ctx.fill();
     if(logo.complete&&logo.naturalWidth>0){
-      const w=244,h=w*88/246;
-      ctx.drawImage(logo,1080-76-w,1230,w,h);
+      const w=200,h=w*88/246;
+      ctx.drawImage(logo,805,1251,w,h);
     }else{
-      drawLine('Plénée-Jugon',785,1260,216,26,20,navy,'600');
+      drawLine('Plénée-Jugon',801,1271,206,23,17,navy,'600');
     }
   }
 
