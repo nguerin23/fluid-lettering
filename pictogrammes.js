@@ -47,7 +47,8 @@
     const shown = matches.slice(0, visibleCount);
     grid.innerHTML = shown.map(card).join('');
     count.textContent = matches.length + ' pictogramme' + (matches.length > 1 ? 's' : '') +
-      ' · ' + (shown.length < matches.length ? shown.length + ' affichés' : 'sur 300 au total');
+      (matches.length === icons.length ? ' dans le catalogue' : ' trouvé' + (matches.length > 1 ? 's' : '')) +
+      (shown.length < matches.length ? ' · ' + shown.length + ' affichés' : '');
     more.hidden = shown.length >= matches.length;
     more.textContent = 'Afficher ' + Math.min(48, matches.length - shown.length) + ' pictogrammes de plus';
     empty.hidden = matches.length !== 0;
