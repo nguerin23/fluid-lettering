@@ -76,19 +76,25 @@
       ctx.fillStyle=white;ctx.strokeStyle=blue;ctx.lineWidth=4;
       ctx.beginPath();ctx.arc(center,cy,9,0,Math.PI*2);ctx.fill();ctx.stroke();
 
-      line(e.date+'  ·  '+e.heure,x,y,maxW,19,17,blue,'700',align,'Manrope');
-      line(e.titre,x,y+23,maxW,26,22,navy,'600',align);
-      line(e.lieu,x,y+51,maxW,18,16,muted,'600',align,'Manrope');
-      line(e.description,x,y+70,maxW,16,14,navy,'400',align,'Manrope');
+      // Toutes les informations pratiques sur une même ligne, séparées par « | ».
+      line(e.date+' | '+e.heure+' | '+e.lieu,x,y,maxW,18,14,blue,'700',align,'Manrope');
+      line(e.titre,x,y+27,maxW,26,22,navy,'600',align);
+      line(e.description,x,y+56,maxW,17,14,navy,'400',align,'Manrope');
     });
 
-    // Signature officielle à droite, réservée au bas du visuel.
-    fill(pale,0,1266,1080,84);
-    line('EXEMPLES FICTIFS  ·  MAQUETTE',76,1295,615,18,16,muted,'700','left','Manrope');
+    // Bandeau Fluid sur 100 % de la largeur, sous le dernier événement.
+    window.PJ_FB_FLUID.draw(ctx,1226);
+    ctx.fillStyle='rgba(255,255,255,0.86)';
+    ctx.beginPath();ctx.roundRect(64,1243,394,43,10);ctx.fill();
+    line('EXEMPLES FICTIFS  ·  MAQUETTE',76,1253,365,17,15,muted,'700','left','Manrope');
+
+    // Le vrai logo reste lisible au premier plan, en bas à droite.
+    ctx.fillStyle='rgba(255,255,255,0.92)';
+    ctx.beginPath();ctx.roundRect(786,1243,235,89,12);ctx.fill();
     if(logo&&logo.complete&&logo.naturalWidth>0){
-      ctx.drawImage(logo,808,1274,200,200*88/246);
+      ctx.drawImage(logo,805,1251,200,200*88/246);
     }else{
-      line('Plénée-Jugon',793,1290,215,23,17,navy,'600');
+      line('Plénée-Jugon',801,1271,206,23,17,navy,'600');
     }
   }
 
