@@ -172,7 +172,7 @@
     // Signature officielle discrète, en bas à gauche.
     fill(pale,0,1284,W,66);
     if(logo&&logo.complete&&logo.naturalWidth>0){
-      ctx.drawImage(logo,66,1296,164,58.67);
+      ctx.drawImage(logo,66,1291,150,53.66);
     }else text('Plénée-Jugon',74,1306,30,navy,'600');
     text('ÉVÉNEMENTS À VENIR',1008,1305,19,muted,'700','right','Manrope');
   }
