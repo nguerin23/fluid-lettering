@@ -14,13 +14,15 @@
     annonce: {eyebrow:'INFORMATION MUNICIPALE', title:'Plénée-Jugon\nse transforme.', subtitle:'Retrouvez les informations et les projets qui font vivre notre commune.', date:'À LA UNE', footer:'PLÉNÉE-JUGON · ACTUALITÉS'},
     agenda: {eyebrow:'À VOS AGENDAS', title:'On se retrouve\nbientôt !', subtitle:'Un événement pour se rencontrer, partager et profiter ensemble.', date:'SAMEDI 28 NOV.', footer:'PLÉNÉE-JUGON · AGENDA'},
     images: {eyebrow:'RETOUR EN IMAGES', title:'Revivez les\nbeaux moments.', subtitle:'Une belle journée de rencontres et de convivialité à Plénée-Jugon.', date:'EN IMAGES', footer:'PLÉNÉE-JUGON · LA VIE LOCALE'},
-    pratique: {eyebrow:'INFO PRATIQUE', title:'Une information\nà retenir.', subtitle:'Les informations essentielles pour faciliter votre quotidien.', date:'À SAVOIR', footer:'PLÉNÉE-JUGON · SERVICES'}
+    pratique: {eyebrow:'INFO PRATIQUE', title:'Une information\nà retenir.', subtitle:'Les informations essentielles pour faciliter votre quotidien.', date:'À SAVOIR', footer:'PLÉNÉE-JUGON · SERVICES'},
+    evenements: {eyebrow:'AGENDA', title:'Événements à venir', subtitle:'', date:'', footer:'PLÉNÉE-JUGON · AGENDA'}
   };
   const fields = {eyebrow:$('fbEyebrow'),title:$('fbHeadline'),subtitle:$('fbSubtitle'),date:$('fbDate'),footer:$('fbFooter')};
   const templateButtons = [...document.querySelectorAll('[data-fb-template]')];
   const status = $('fbStatus');
   const imageField = $('fbImage');
   const removeImage = $('fbRemovePhoto');
+  const timeline = window.PJ_FB_TIMELINE;
   let current = 'annonce', uploaded = null, queued = 0;
   // Official supplied logo, recolored in monochrome (same-origin SVG images).
   const logoImages={navy:new Image(),white:new Image()};
@@ -168,6 +170,8 @@
       const bottom=textFit(d.title,76,894,920,76,47,3,1.08,WHITE,'500');
       textFit(d.subtitle,76,Math.min(bottom+25,1130),920,29,22,2,1.35,PALE,'500','Manrope');
       footer(d.footer,'white',1283);
+    } else if (current==='evenements') {
+      timeline.draw(ctx,{title:d.title,photo:uploaded,logo:logoImages.navy});
     } else {
       rect(0,0,W,H,PALE);
       rect(0,0,50,H,BLUE);
@@ -193,9 +197,15 @@
     for(const [key,field] of Object.entries(fields))field.value=templates[template][key];
     templateButtons.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.fbTemplate===template)));
     const photoRow=$('fbPhotoRow');
-    if(photoRow)photoRow.hidden=template!=='images';
+    if(photoRow)photoRow.hidden=template!=='images' && template!=='evenements';
+    const timelineMode=template==='evenements';
+    $('fbTimelineEditor').hidden=!timelineMode;
+    $('fbSubtitleRow').hidden=timelineMode;
+    $('fbDateRow').hidden=timelineMode;
+    $('fbAdvanced').hidden=timelineMode;
     schedule();
   }
+  timeline.mount(schedule);
   templateButtons.forEach(button=>button.addEventListener('click',()=>choose(button.dataset.fbTemplate)));
   Object.values(fields).forEach(input=>input.addEventListener('input',schedule));
   imageField.addEventListener('change',()=>{
@@ -210,7 +220,7 @@
     reader.readAsDataURL(file);
   });
   removeImage.addEventListener('click',()=>{uploaded=null;imageField.value='';schedule();});
-  $('fbReset').addEventListener('click',()=>{uploaded=null;imageField.value='';choose(current);});
+  $('fbReset').addEventListener('click',()=>{uploaded=null;imageField.value='';if(current==='evenements')timeline.reset();choose(current);});
   $('fbExport').addEventListener('click',()=>{
     render();
     canvas.toBlob(blob=>{
