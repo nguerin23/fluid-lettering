@@ -151,38 +151,43 @@ h2,h3{font-family:var(--display)}
 <p class="picto-credit">Pictogrammes vectoriels issus de <a href="https://lucide.dev" target="_blank" rel="noopener">Lucide</a>, licence <a href="PICTOGRAMMES-LUCIDE-LICENSE.txt" target="_blank" rel="noopener">ISC</a>. Style harmonisé avec le logo : traits fins et arrondis. Cliquez sur une icône pour la copier ou télécharger son SVG.</p>
 </section>
 <section id="section-facebook" aria-labelledby="heading-fb" hidden>
-<div class="page-head"><p class="kicker">05 / 06</p><h1 id="heading-fb">Publications Facebook</h1><p>Choisissez un modèle, écrivez votre texte et téléchargez votre visuel 4:5.</p></div>
+<div class="page-head"><p class="kicker">05 / 06</p><h1 id="heading-fb">Publications Facebook</h1><p>Deux modèles simples au format vertical 4:5. Modifiez le contenu et téléchargez votre PNG.</p></div>
 <div class="fb-workbench">
 <div class="fb-editor">
-<p class="fb-section-label">Modèle</p>
+<p class="fb-section-label">Choisir le modèle</p>
 <div class="fb-template-grid" role="group" aria-label="Choisir un modèle Facebook">
-<button class="fb-template" data-fb-template="annonce" aria-pressed="true" type="button"><strong>Annonce</strong><small>Actualités</small></button>
-<button class="fb-template" data-fb-template="agenda" aria-pressed="false" type="button"><strong>Événement</strong><small>Agenda</small></button>
-<button class="fb-template" data-fb-template="images" aria-pressed="false" type="button"><strong>En images</strong><small>Avec photo</small></button>
-<button class="fb-template" data-fb-template="pratique" aria-pressed="false" type="button"><strong>Info pratique</strong><small>Services</small></button>
-<button class="fb-template fb-template-timeline" data-fb-template="evenements" aria-pressed="false" type="button"><strong>Événements à venir</strong><small>Frise chronologique · jusqu’à 8 événements</small></button>
+<button class="fb-template" data-fb-template="evenements" aria-pressed="true" type="button"><strong>Événements à venir</strong><small>Frise · 1 à 8 événements</small></button>
+<button class="fb-template" data-fb-template="pratique" aria-pressed="false" type="button"><strong>Info pratique</strong><small>3 tags · 3 lignes</small></button>
 </div>
-<p class="fb-section-label">Votre publication</p>
 <div class="fb-fields">
-<label class="fb-field" for="fbHeadline">Titre<textarea id="fbHeadline" rows="3" maxlength="100">Plénée-Jugon
-se transforme.</textarea></label>
-<label class="fb-field" id="fbSubtitleRow" for="fbSubtitle">Texte<textarea id="fbSubtitle" rows="3" maxlength="180">Retrouvez les informations et les projets qui font vivre notre commune.</textarea></label>
-<label class="fb-field" id="fbDateRow" for="fbDate">Date ou information courte<input id="fbDate" type="text" maxlength="42" value="À LA UNE"></label>
-<div id="fbPhotoRow" class="fb-file" hidden><label for="fbImage">Photo de couverture (facultative)</label><input id="fbImage" type="file" accept="image/jpeg,image/png,image/webp"><button id="fbRemovePhoto" class="fb-file-remove" type="button">Retirer la photo</button></div>
-<div id="fbTimelineEditor" class="fb-timeline-editor" hidden>
-<div class="fb-timeline-intro"><div><strong>Événements de la frise</strong><p>Alternés à gauche et à droite, triés automatiquement par date et heure.</p></div><span id="fbTimelineCount">3 / 8 événements</span></div>
+<label class="fb-field" id="fbTitleRow" for="fbHeadline">Titre de la publication<input id="fbHeadline" type="text" maxlength="65" value="Événements à venir"></label>
+<div id="fbPhotoRow" class="fb-file"><label for="fbImage">Photo de couverture · pleine largeur (facultative)</label><input id="fbImage" type="file" accept="image/jpeg,image/png,image/webp" aria-label="Ajouter une photo de couverture"><button id="fbRemovePhoto" class="fb-file-remove" type="button">Retirer la photo</button></div>
+<div id="fbTimelineEditor" class="fb-timeline-editor">
+<div class="fb-timeline-intro"><div><strong>Événements de la frise</strong><p>Alternance gauche-droite, tri automatique par date et heure.</p></div><span id="fbTimelineCount">3 / 8 événements</span></div>
 <div id="fbTimelineItems" class="fb-timeline-items"></div>
 <button class="fb-event-add" id="fbEventAdd" type="button">+ Ajouter un événement</button>
-<p class="fb-timeline-hint">Les événements préremplis sont des exemples fictifs, à remplacer avant publication. La mise en page s’adapte au nombre d’événements.</p>
+<p class="fb-timeline-hint">Les événements proposés sont des exemples fictifs. Remplacez-les par les vôtres avant publication.</p>
 </div>
-<details class="fb-advanced" id="fbAdvanced"><summary>Plus d’options</summary><div class="fb-advanced-inner">
-<label class="fb-field" for="fbEyebrow">Rubrique<input id="fbEyebrow" type="text" maxlength="42" value="INFORMATION MUNICIPALE"></label>
-<label class="fb-field" for="fbFooter">Pied de page<input id="fbFooter" type="text" maxlength="55" value="PLÉNÉE-JUGON · ACTUALITÉS"></label>
-</div></details>
+<div id="fbPracticalEditor" class="fb-practical-editor" hidden>
+<p class="fb-section-label">Trois mots-clés</p>
+<div class="fb-practical-tags">
+<label class="fb-field" for="fbTag1">Balise 1<input id="fbTag1" type="text" maxlength="22" value="INFORMATION"></label>
+<label class="fb-field" for="fbTag2">Balise 2<input id="fbTag2" type="text" maxlength="22" value="SERVICES"></label>
+<label class="fb-field" for="fbTag3">Balise 3<input id="fbTag3" type="text" maxlength="22" value="COMMUNE"></label>
+</div>
+<p class="fb-section-label" style="margin-top:18px">Information sur trois lignes</p>
+<div class="fb-practical-lines">
+<label class="fb-field" for="fbLine1">Ligne 1<input id="fbLine1" type="text" maxlength="58" value="Votre information"></label>
+<label class="fb-field" for="fbLine2">Ligne 2<input id="fbLine2" type="text" maxlength="58" value="s’affiche ici"></label>
+<label class="fb-field" for="fbLine3">Ligne 3<input id="fbLine3" type="text" maxlength="58" value="sur trois lignes."></label>
+</div>
+<p class="fb-practical-note">Les trois balises apparaissent au-dessus du texte, sous la photo.</p>
 </div>
 </div>
-<div class="fb-preview-box"><div class="fb-preview-bar"><span>Aperçu · 1080 × 1350 px</span><span id="fbStatus" role="status" aria-live="polite"></span></div>
-<div class="fb-canvas-frame"><canvas id="fbCanvas" width="1080" height="1350" role="img" aria-label="Aperçu de la publication au format vertical 4:5"></canvas></div>
+</div>
+<div class="fb-preview-box">
+<div class="fb-preview-bar"><span>Aperçu · 1080 × 1350 px</span><span id="fbStatus" role="status" aria-live="polite"></span></div>
+<div class="fb-canvas-frame"><canvas id="fbCanvas" width="1080" height="1350" role="img" aria-label="Aperçu de la publication Facebook au format 4:5"></canvas></div>
 <div class="fb-actions"><button id="fbReset" type="button">Réinitialiser</button><button id="fbExport" class="fb-export" type="button">↓ Télécharger le PNG</button></div>
 </div>
 </div>
@@ -236,6 +241,6 @@ window.addEventListener('message',e=>{
 <script src="pictogrammes-data.js?v=1"></script>
 <script src="pictogrammes.js?v=1"></script>
 <script src="facebook-evenements.js?v=1"></script>
-<script src="facebook-posts.js?v=3"></script>
+<script src="facebook-posts.js?v=4"></script>
 </body>
 </html>
