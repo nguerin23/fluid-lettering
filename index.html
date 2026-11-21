@@ -160,15 +160,22 @@ h2,h3{font-family:var(--display)}
 <button class="fb-template" data-fb-template="agenda" aria-pressed="false" type="button"><strong>Événement</strong><small>Agenda</small></button>
 <button class="fb-template" data-fb-template="images" aria-pressed="false" type="button"><strong>En images</strong><small>Avec photo</small></button>
 <button class="fb-template" data-fb-template="pratique" aria-pressed="false" type="button"><strong>Info pratique</strong><small>Services</small></button>
+<button class="fb-template fb-template-timeline" data-fb-template="evenements" aria-pressed="false" type="button"><strong>Événements à venir</strong><small>Frise chronologique · jusqu’à 8 événements</small></button>
 </div>
 <p class="fb-section-label">Votre publication</p>
 <div class="fb-fields">
 <label class="fb-field" for="fbHeadline">Titre<textarea id="fbHeadline" rows="3" maxlength="100">Plénée-Jugon
 se transforme.</textarea></label>
-<label class="fb-field" for="fbSubtitle">Texte<textarea id="fbSubtitle" rows="3" maxlength="180">Retrouvez les informations et les projets qui font vivre notre commune.</textarea></label>
-<label class="fb-field" for="fbDate">Date ou information courte<input id="fbDate" type="text" maxlength="42" value="À LA UNE"></label>
-<div id="fbPhotoRow" class="fb-file" hidden><label for="fbImage">Ajouter une photo</label><input id="fbImage" type="file" accept="image/jpeg,image/png,image/webp"><button id="fbRemovePhoto" class="fb-file-remove" type="button">Retirer la photo</button></div>
-<details class="fb-advanced"><summary>Plus d’options</summary><div class="fb-advanced-inner">
+<label class="fb-field" id="fbSubtitleRow" for="fbSubtitle">Texte<textarea id="fbSubtitle" rows="3" maxlength="180">Retrouvez les informations et les projets qui font vivre notre commune.</textarea></label>
+<label class="fb-field" id="fbDateRow" for="fbDate">Date ou information courte<input id="fbDate" type="text" maxlength="42" value="À LA UNE"></label>
+<div id="fbPhotoRow" class="fb-file" hidden><label for="fbImage">Photo de couverture (facultative)</label><input id="fbImage" type="file" accept="image/jpeg,image/png,image/webp"><button id="fbRemovePhoto" class="fb-file-remove" type="button">Retirer la photo</button></div>
+<div id="fbTimelineEditor" class="fb-timeline-editor" hidden>
+<div class="fb-timeline-intro"><div><strong>Événements de la frise</strong><p>Alternés à gauche et à droite, triés automatiquement par date et heure.</p></div><span id="fbTimelineCount">3 / 8 événements</span></div>
+<div id="fbTimelineItems" class="fb-timeline-items"></div>
+<button class="fb-event-add" id="fbEventAdd" type="button">+ Ajouter un événement</button>
+<p class="fb-timeline-hint">Les événements préremplis sont des exemples fictifs, à remplacer avant publication. La mise en page s’adapte au nombre d’événements.</p>
+</div>
+<details class="fb-advanced" id="fbAdvanced"><summary>Plus d’options</summary><div class="fb-advanced-inner">
 <label class="fb-field" for="fbEyebrow">Rubrique<input id="fbEyebrow" type="text" maxlength="42" value="INFORMATION MUNICIPALE"></label>
 <label class="fb-field" for="fbFooter">Pied de page<input id="fbFooter" type="text" maxlength="55" value="PLÉNÉE-JUGON · ACTUALITÉS"></label>
 </div></details>
@@ -228,6 +235,7 @@ window.addEventListener('message',e=>{
 </script>
 <script src="pictogrammes-data.js?v=1"></script>
 <script src="pictogrammes.js?v=1"></script>
-<script src="facebook-posts.js?v=2"></script>
+<script src="facebook-evenements.js?v=1"></script>
+<script src="facebook-posts.js?v=3"></script>
 </body>
 </html>
