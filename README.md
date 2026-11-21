@@ -2,19 +2,23 @@
 
 **Site :** https://nguerin23.github.io/fluid-lettering/
 
-Une **proposition graphique non officielle** de Plénée-Jugon, organisée en **5 pages courtes** :
+Une **proposition graphique non officielle** de Plénée-Jugon, organisée en **6 pages courtes** :
 
 1. **Logo** — le logo fourni en source, avec versions monochromes bleu nuit / blanc ; téléchargement SVG.
 2. **Typographies** — Outfit pour les titres, Manrope pour le texte. Inspiration du style géométrique de Nuuday 2025 ; Nuu Type (police propriétaire) n'est pas distribuée.
 3. **Couleurs** — six nuances de bleu avec codes HEX copiables.
-4. **Facebook 4:5** — quatre modèles : annonce, événement, retour en images, information pratique. Titre, texte et date visibles ; rubrique et pied de page sous « Plus d'options ». Ajout d'une photo seulement sur le modèle « En images ». Export PNG **1080 × 1350** local.
-5. **Fluid** — générateur Pacifico et studio de dessin libre avec lissage, épaisseur, dégradé bleu et exports SVG/PNG. Les contrôles et le rendu d'origine sont conservés, mais l'affichage embarqué masque le second en-tête.
+4. **Pictogrammes** — **300 icônes SVG distinctes**, regroupées en **20 thématiques municipales**, chacune avec **3 tags au maximum**. Recherche par nom, tag ou thématique. Aperçu détaillé, copie du SVG et téléchargement indépendant.
+5. **Facebook 4:5** — quatre modèles : annonce, événement, retour en images, information pratique. Titre, texte et date visibles ; rubrique et pied de page sous « Plus d'options ». Ajout d'une photo seulement sur le modèle « En images ». Export PNG **1080 × 1350** local.
+6. **Fluid** — générateur Pacifico et studio de dessin libre avec lissage, épaisseur, dégradé bleu et exports SVG/PNG. Les contrôles et le rendu d'origine sont conservés, mais l'affichage embarqué masque le second en-tête.
 
 La navigation est horizontale et adaptée au mobile. Le site s'ouvre directement sur **Logo**. Les anciens liens d'accueil redirigent vers cette page.
 
 ## Fichiers
 
-- `index.html` — site principal, 5 pages, navigation et palette.
+- `index.html` — site principal, 6 pages, navigation et palette.
+- `pictogrammes-data.js` — 300 tracés SVG Lucide sélectionnés, noms français, 3 tags au maximum, 15 icônes dans chacune des 20 thématiques.
+- `pictogrammes.js`, `pictogrammes.css` — recherche par tags, filtres, affichage progressif (48 à la fois), copie et téléchargement SVG.
+- `PICTOGRAMMES-LUCIDE-LICENSE.txt` — mentions de la licence libre ISC et attribution Lucide.
 - `facebook-posts.css`, `facebook-posts.js` — modèles Facebook et générateur PNG.
 - `fluid-lettering.html`, `signature-studio.js`, `signature-studio.css` — atelier de lettrage et dessin libre.
 - `logo-plenee-jugon-monochrome-bleu-nuit.svg` — logo vectoriel issu du PDF fourni, intégralement bleu nuit (#070B66).
@@ -32,3 +36,11 @@ Les polices d'interface sont chargées via Google Fonts (Outfit et Manrope). Le 
 ## Publication
 
 Site statique GitHub Pages depuis la branche `main`. `fluid-lettering.html` est aussi accessible seul ; avec `?embed=1`, il affiche sa version minimaliste pour intégration.
+
+## Source et style des pictogrammes
+
+Le catalogue de 300 icônes a été sélectionné dans [Lucide](https://lucide.dev/icons), collection vectorielle sous licence [ISC](PICTOGRAMMES-LUCIDE-LICENSE.txt). Les données SVG ont été récupérées depuis [le miroir libre Iconify](https://github.com/iconify/icon-sets/blob/master/json/lucide.json).
+
+Les pictogrammes sont **harmonisés en bleu nuit** (`#070B66`), avec une épaisseur de **1,5 unité sur une grille 24 × 24**, sans remplissage et avec des extrémités et jointures arrondies. Ce traitement évoque la finesse des cinq pictogrammes du logo fourni, mais les 300 motifs sont ceux de Lucide, **pas des dessins originaux de la commune**.
+
+Les tags servent à rechercher par exemple `mairie`, `conseil`, `école`, `EHPAD`, `commerces`, `agriculture`, `eau`, `bâtiments`, `santé`, `travaux`, `mobilité`, `nature`, etc. Une sélection affiche jusqu'à 48 résultats, puis un bouton « Afficher plus » permet de parcourir le reste du catalogue.
