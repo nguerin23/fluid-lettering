@@ -4,12 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#070B66">
-<meta name="description" content="Charte graphique simplifiée de Plénée-Jugon : logo, typographies, couleurs, publications Facebook et Fluid Lettering.">
+<meta name="description" content="Charte graphique de Plénée-Jugon : logo, typographies, couleurs, 300 pictogrammes, publications Facebook et Fluid Lettering.">
 <title>Plénée-Jugon · Charte graphique</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="facebook-posts.css?v=2">
+<link rel="stylesheet" href="pictogrammes.css?v=1">
 <style>
 :root{color-scheme:light;--ink:#070B66;--blue:#3152F4;--sky:#7C99F7;--pale:#E6ECFF;--paper:#F7F9FF;--line:#D6DEFA;--body:'Manrope',Arial,sans-serif;--display:'Outfit',Arial,sans-serif}
 *{box-sizing:border-box}
@@ -92,13 +93,14 @@ h2,h3{font-family:var(--display)}
 <a href="#section-2" data-view="section-2">Logo</a>
 <a href="#section-4" data-view="section-4">Typographies</a>
 <a href="#section-3" data-view="section-3">Couleurs</a>
+<a href="#section-pictos" data-view="section-pictos">Pictogrammes</a>
 <a href="#section-facebook" data-view="section-facebook">Facebook 4:5</a>
 <a href="#section-16" data-view="section-16">Fluid</a>
 </nav>
 </div></header>
 <main class="wrap" id="main">
 <section id="section-2" aria-labelledby="heading-logo">
-<div class="page-head"><p class="kicker">01 / 05</p><h1 id="heading-logo">Logo</h1><p>Le logo de la commune, décliné en une seule couleur.</p></div>
+<div class="page-head"><p class="kicker">01 / 06</p><h1 id="heading-logo">Logo</h1><p>Le logo de la commune, décliné en une seule couleur.</p></div>
 <div class="logo-grid">
   <div class="logo-card"><p class="card-label">Bleu nuit · fond clair</p>
     <div class="logo-lockup"><img src="logo-plenee-jugon-monochrome-bleu-nuit.svg" width="492" height="176" alt="Logo officiel Plénée-Jugon, avec ses cinq pictogrammes, en bleu nuit"></div>
@@ -114,7 +116,7 @@ h2,h3{font-family:var(--display)}
 <p class="muted">Logo vectoriel issu du PDF fourni · version monochrome de travail. La charte reste un prototype non officiel.</p>
 </section>
 <section id="section-4" aria-labelledby="heading-typo" hidden>
-<div class="page-head"><p class="kicker">02 / 05</p><h1 id="heading-typo">Typographies</h1><p>Deux polices simples et lisibles, dans l’esprit géométrique et arrondi du rapport Nuuday.</p></div>
+<div class="page-head"><p class="kicker">02 / 06</p><h1 id="heading-typo">Typographies</h1><p>Deux polices simples et lisibles, dans l’esprit géométrique et arrondi du rapport Nuuday.</p></div>
 <div class="font-grid">
 <div class="font-card"><div><span class="role">Titres · Regular / Medium</span><p class="font-name">Outfit</p><p class="sample">Plénée-Jugon<br>se réinvente.</p></div><p class="micro">Titres, chiffres et accroches.</p></div>
 <div class="font-card body-type"><div><span class="role">Textes · Regular / Semibold</span><p class="font-name">Manrope</p><p class="sample">Des informations claires, pour tous les habitants.</p></div><p class="micro">Paragraphes, légendes et interfaces.</p></div>
@@ -122,12 +124,25 @@ h2,h3{font-family:var(--display)}
 <p class="muted">Outfit et Manrope sont des alternatives libres ; la police propriétaire Nuu Type n’est pas distribuée avec ce projet.</p>
 </section>
 <section id="section-3" aria-labelledby="heading-colors" hidden>
-<div class="page-head"><p class="kicker">03 / 05</p><h1 id="heading-colors">Couleurs</h1><p>Six bleus, du plus profond au plus clair. Cliquez sur une couleur pour copier son code.</p></div>
+<div class="page-head"><p class="kicker">03 / 06</p><h1 id="heading-colors">Couleurs</h1><p>Six bleus, du plus profond au plus clair. Cliquez sur une couleur pour copier son code.</p></div>
 <div class="color-grid" id="colorGrid"></div>
 <p class="color-note" id="colorStatus" role="status" aria-live="polite">Palette adaptée de l’univers Nuuday, valeurs indicatives.</p>
 </section>
+<section id="section-pictos" aria-labelledby="heading-pictos" hidden>
+<div class="page-head"><p class="kicker">04 / 06</p><h1 id="heading-pictos">Pictogrammes</h1><p>300 pictogrammes pour la vie communale : mairie, école, EHPAD, commerces, eau, agriculture et bien plus. Recherchez par mot-clé ou par tag.</p></div>
+<div class="picto-tools">
+  <div class="picto-search-wrap"><label for="pictoSearch">Rechercher un pictogramme ou un tag</label><input id="pictoSearch" type="search" placeholder="Ex. : école, bâtiment, santé, eau…" autocomplete="off" spellcheck="false"></div>
+  <div class="picto-theme-wrap"><label for="pictoTheme">Thématique</label><select id="pictoTheme"><option value="">Toutes les thématiques</option></select></div>
+  <button id="pictoClear" class="picto-reset" type="button" hidden>Effacer les filtres</button>
+</div>
+<div class="picto-meta"><span id="pictoCount" aria-live="polite">Chargement des pictogrammes…</span><span>Trait fin · bleu nuit</span></div>
+<div id="pictoGrid" class="picto-grid"></div>
+<p id="pictoEmpty" class="picto-empty" hidden>Aucun pictogramme trouvé. Essayez une autre recherche ou effacez les filtres.</p>
+<button id="pictoMore" class="picto-more" type="button" hidden>Afficher plus</button>
+<p class="picto-credit">Pictogrammes vectoriels issus de <a href="https://lucide.dev" target="_blank" rel="noopener">Lucide</a>, licence <a href="PICTOGRAMMES-LUCIDE-LICENSE.txt" target="_blank" rel="noopener">ISC</a>. Style harmonisé avec le logo : traits fins et arrondis. Cliquez sur une icône pour la copier ou télécharger son SVG.</p>
+</section>
 <section id="section-facebook" aria-labelledby="heading-fb" hidden>
-<div class="page-head"><p class="kicker">04 / 05</p><h1 id="heading-fb">Publications Facebook</h1><p>Choisissez un modèle, écrivez votre texte et téléchargez votre visuel 4:5.</p></div>
+<div class="page-head"><p class="kicker">05 / 06</p><h1 id="heading-fb">Publications Facebook</h1><p>Choisissez un modèle, écrivez votre texte et téléchargez votre visuel 4:5.</p></div>
 <div class="fb-workbench">
 <div class="fb-editor">
 <p class="fb-section-label">Modèle</p>
@@ -157,15 +172,24 @@ se transforme.</textarea></label>
 </div>
 </section>
 <section id="section-16" aria-labelledby="heading-fluid" hidden>
-<div class="page-head"><p class="kicker">05 / 05</p><h1 id="heading-fluid">Générateur Fluid</h1><p>Créez un lettrage ou dessinez à main levée, puis exportez en SVG ou PNG.</p></div>
+<div class="page-head"><p class="kicker">06 / 06</p><h1 id="heading-fluid">Générateur Fluid</h1><p>Créez un lettrage ou dessinez à main levée, puis exportez en SVG ou PNG.</p></div>
 <div class="fluid-top"><span class="muted" style="margin:0">Éditeur intégré · Pacifico · courbes SVG</span><a class="btn btn-secondary" href="fluid-lettering.html" target="_blank" rel="noopener">Ouvrir en plein écran ↗</a></div>
 <div class="fluid-shell"><iframe id="fluidFrame" class="fluid-frame" src="fluid-lettering.html?embed=1" title="Fluid Lettering, générateur de lettrage SVG" loading="lazy"></iframe></div>
 </section>
 </main>
+<dialog id="pictoDialog" class="picto-dialog" aria-labelledby="pictoDialogName">
+<div class="picto-dialog-inner">
+  <div class="picto-dialog-head"><h2 id="pictoDialogName">Pictogramme</h2><button id="pictoClose" type="button" class="picto-close" aria-label="Fermer">×</button></div>
+  <div id="pictoDialogIcon" class="picto-dialog-preview"></div>
+  <div id="pictoDialogTags" class="picto-dialog-tags"></div>
+  <div class="picto-dialog-actions"><button id="pictoCopy" type="button">Copier le SVG</button><button id="pictoDownload" type="button" class="picto-download">Télécharger SVG</button></div>
+  <div id="pictoDialogStatus" class="picto-dialog-status" role="status" aria-live="polite"></div>
+</div>
+</dialog>
 <footer class="footer"><span>Plénée-Jugon · Charte graphique expérimentale</span><span>Prototype non officiel · 2026</span></footer>
 <script>
 'use strict';
-const views=['section-2','section-4','section-3','section-facebook','section-16'];
+const views=['section-2','section-4','section-3','section-pictos','section-facebook','section-16'];
 const legacy={'accueil':'section-2','section-1':'section-2','section-15':'section-16'};
 function activateView(){
  let id=decodeURIComponent(location.hash.slice(1));id=legacy[id]||id;
@@ -193,6 +217,8 @@ window.addEventListener('message',e=>{
  if(e.data&&e.data.kind==='fluid-lettering:resize'&&Number.isFinite(e.data.height)&&e.data.height>400&&e.data.height<5500){frame.style.height=Math.ceil(e.data.height+8)+'px';}
 });
 </script>
+<script src="pictogrammes-data.js?v=1"></script>
+<script src="pictogrammes.js?v=1"></script>
 <script src="facebook-posts.js?v=2"></script>
 </body>
 </html>
