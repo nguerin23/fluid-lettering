@@ -1,0 +1,42 @@
+/* Pictogrammes municipaux : trait fin arrondi, palette bleu nuit. */
+.picto-tools{display:flex;gap:12px;flex-wrap:wrap;align-items:end;margin:0 0 20px}
+.picto-search-wrap{flex:2 1 320px;min-width:0}
+.picto-theme-wrap{flex:1 1 180px;min-width:0}
+.picto-tools label{display:block;font:700 13px/1.4 var(--body);color:var(--ink);margin:0 0 7px}
+.picto-tools input,.picto-tools select{width:100%;min-height:49px;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:9px;padding:11px 14px;font:550 14px var(--body)}
+.picto-tools input:focus,.picto-tools select:focus{border-color:var(--blue);outline:2px solid #3152F428}
+.picto-reset{background:var(--pale);color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:12px 16px;min-height:49px;font:700 13px var(--body)}
+.picto-meta{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:0 0 18px;color:#5B6A9C;font:650 13px var(--body)}
+.picto-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:11px}
+.picto-card{min-width:0;background:white;border:1px solid var(--line);border-radius:12px;padding:14px 10px 12px;display:flex;flex-direction:column;gap:12px;transition:border-color .14s,background .14s}
+.picto-card:hover{border-color:var(--sky);background:#FBFCFF}
+.picto-select{background:transparent;border:0;color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:start;gap:14px;width:100%;padding:5px 2px;cursor:pointer;text-align:center}
+.picto-select svg{width:62px;height:62px;display:block;flex-shrink:0;transition:transform .16s}
+.picto-select:hover svg{transform:scale(1.07)}
+.picto-name{font:650 12px/1.35 var(--body);min-height:32px;display:grid;place-items:center;color:var(--ink);overflow-wrap:anywhere}
+.picto-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:4px}
+.picto-tag{font:600 10px/1.3 var(--body);padding:4px 6px;color:#3252AD;background:#EEF2FF;border:0;border-radius:5px;max-width:100%;overflow-wrap:anywhere;cursor:pointer}
+.picto-tag:hover{background:#D6E1FF;color:var(--ink)}
+.picto-more{display:block;margin:24px auto 6px;background:var(--ink);color:white;border:0;border-radius:9px;padding:13px 24px;font:700 14px var(--body)}
+.picto-more:hover{background:#243AAA}
+.picto-empty{padding:45px 20px;border:1px dashed var(--line);border-radius:12px;text-align:center;color:#5A6CA0;font-size:14px}
+.picto-credit{font:500 12px/1.7 var(--body);color:#6475A6;margin:20px 0 0}
+.picto-credit a{text-decoration:underline;text-underline-offset:3px;color:var(--blue)}
+.picto-dialog{border:1px solid var(--line);border-radius:16px;box-shadow:0 25px 80px #070B6630;background:#fff;color:var(--ink);padding:0;max-width:min(440px,calc(100vw - 26px));width:100%}
+.picto-dialog::backdrop{background:#070B6680}
+.picto-dialog-inner{padding:26px;display:grid;gap:15px}
+.picto-dialog-head{display:flex;justify-content:space-between;align-items:start;gap:15px}
+.picto-dialog h2{font:550 26px/1.1 var(--display);letter-spacing:-.03em;margin:0}
+.picto-close{background:var(--pale);border:0;border-radius:8px;color:var(--ink);width:39px;height:39px;font:500 24px var(--display)}
+.picto-dialog-preview{min-height:180px;background:#F7F9FF;border-radius:11px;display:grid;place-items:center;padding:26px;color:var(--ink)}
+.picto-dialog-preview svg{height:150px;width:150px;display:block}
+.picto-dialog-tags{display:flex;flex-wrap:wrap;gap:7px}
+.picto-dialog-tags span{background:#E6ECFF;color:#2A46A0;padding:7px 11px;border-radius:5px;font-size:12px}
+.picto-dialog-actions{display:flex;gap:9px}
+.picto-dialog-actions button{flex:1;padding:13px 10px;border-radius:8px;border:1px solid var(--ink);font:700 13px var(--body);background:white;color:var(--ink)}
+.picto-dialog-actions .picto-download{background:var(--blue);color:white;border-color:var(--blue)}
+.picto-dialog-status{font:500 12px var(--body);color:#4764B3;min-height:18px}
+@media(max-width:1120px){.picto-grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media(max-width:890px){.picto-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:700px){.picto-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.picto-select svg{width:54px;height:54px}}
+@media(max-width:480px){.picto-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.picto-card{padding:12px 8px}.picto-tools{gap:9px}.picto-search-wrap,.picto-theme-wrap{flex-basis:100%}.picto-dialog-inner{padding:19px}}
